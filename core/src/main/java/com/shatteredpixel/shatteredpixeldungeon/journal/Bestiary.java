@@ -21,6 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Shade;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.BrassGolem;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalCrawler;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.PrisonHound;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.SewerLeech;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Archlich;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FallenAngel;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MirrorBeast;
@@ -224,7 +229,8 @@ public enum Bestiary {
 				Bat.class, Brute.class, Shaman.RedShaman.class, Shaman.BlueShaman.class, Shaman.PurpleShaman.class, Spinner.class, DM200.class,
 				Ghoul.class, Elemental.FireElemental.class, Elemental.FrostElemental.class, Elemental.ShockElemental.class, Warlock.class, Monk.class, Golem.class,
 				RipperDemon.class, DemonSpawner.class, Succubus.class, Eye.class, Scorpio.class,
-				VoidWalker.class, LightEater.class, MirrorBeast.class, FallenAngel.class);
+				VoidWalker.class, LightEater.class, MirrorBeast.class, FallenAngel.class,
+				SewerLeech.class, PrisonHound.class, CrystalCrawler.class, BrassGolem.class, Shade.class);
 
 		BOSSES.addEntities(Goo.class, RatMatriarch.class, Jailer.class, CrystalQueen.class, GolemArchmage.class, VoidHerald.class, Archlich.class,
 				Tengu.class,

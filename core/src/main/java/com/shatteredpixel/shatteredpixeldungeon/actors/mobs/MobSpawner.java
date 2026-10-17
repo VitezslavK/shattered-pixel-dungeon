@@ -61,6 +61,7 @@ public class MobSpawner extends Actor {
 
 	public static ArrayList<Class<? extends Mob>> getMobRotation(int depth ){
 		ArrayList<Class<? extends Mob>> mobs = standardMobRotation( depth );
+		addModMobs(depth, mobs);
 		addRareMobs(depth, mobs);
 		swapMobAlts(mobs);
 		Random.shuffle(mobs);
@@ -237,6 +238,15 @@ public class MobSpawner extends Actor {
 						FallenAngel.class, FallenAngel.class));
 		}
 
+	}
+
+	//new monsters added by the mod, one kind per region
+	private static void addModMobs( int depth, ArrayList<Class<? extends Mob>> rotation ){
+		if (depth >= 2 && depth <= 4)        rotation.add(SewerLeech.class);
+		else if (depth >= 7 && depth <= 9)   rotation.add(PrisonHound.class);
+		else if (depth >= 12 && depth <= 14) rotation.add(CrystalCrawler.class);
+		else if (depth >= 17 && depth <= 19) rotation.add(BrassGolem.class);
+		else if (depth >= 22 && depth <= 24) rotation.add(Shade.class);
 	}
 
 	//has a chance to add a rarely spawned mobs to the rotation

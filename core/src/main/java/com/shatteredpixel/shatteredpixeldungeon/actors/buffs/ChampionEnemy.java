@@ -106,6 +106,14 @@ public abstract class ChampionEnemy extends Buff {
 			case 5:             buffCls = Growing.class;      break;
 		}
 
+		//without the challenge, roughly 1 in 30 enemies from floor 4 on is an elite
+		boolean eliteRoll = Random.Int(30) == 0;
+		if (!Dungeon.isChallenged(Challenges.CHAMPION_ENEMIES) && eliteRoll && Dungeon.scalingDepth() >= 4
+				&& !(m instanceof Crab) && !(m instanceof Thief) && !(m instanceof Guard) && !(m instanceof Bat)){
+			Buff.affect(m, buffCls);
+			if (m.state != m.PASSIVE) m.state = m.WANDERING;
+		}
+
 		if (Dungeon.mobsToChampion <= 0 && Dungeon.isChallenged(Challenges.CHAMPION_ENEMIES)) {
 
 			//we block certain standout enemies on floor <10 from becoming champions

@@ -894,6 +894,12 @@ public abstract class Mob extends Char {
 
 			rollToDropLoot();
 
+			//elite enemies outside of the champion challenge carry extra loot
+			if (buff(ChampionEnemy.class) != null && !Dungeon.isChallenged(Challenges.CHAMPION_ENEMIES)){
+				Item extra = Generator.random();
+				if (extra != null) Dungeon.level.drop(extra, pos).sprite.drop();
+			}
+
 			if (cause instanceof Char && cause != Dungeon.hero && ((Char) cause).alignment == Alignment.ALLY){
 				Evolution.onAllyKill((Char) cause);
 			}
