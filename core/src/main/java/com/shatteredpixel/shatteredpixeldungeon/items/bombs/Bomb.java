@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -157,7 +158,7 @@ public class Bomb extends Item {
 			boolean[] explodable = new boolean[Dungeon.level.length()];
 			BArray.not( Dungeon.level.solid, explodable);
 			BArray.or( Dungeon.level.flamable, explodable, explodable);
-			PathFinder.buildDistanceMap( cell, explodable, explosionRange() );
+			PathFinder.buildDistanceMap( cell, explodable, explosionRange() + Alchemy.bombRangeBonus() );
 			for (int i = 0; i < PathFinder.distance.length; i++) {
 				if (PathFinder.distance[i] != Integer.MAX_VALUE) {
 					affectedCells.add(i);
@@ -195,6 +196,7 @@ public class Bomb extends Item {
 
 				int dmg = Random.NormalIntRange(4 + Dungeon.scalingDepth(), 12 + 3*Dungeon.scalingDepth());
 				dmg -= ch.drRoll();
+				dmg = Alchemy.bombDamage(this, ch, dmg);
 
 				if (dmg > 0) {
 					ch.damage(dmg, this);
@@ -209,6 +211,8 @@ public class Bomb extends Item {
 				}
 			}
 			
+			Alchemy.afterBombExplode(this, cell, affectedChars);
+
 			if (terrainAffected) {
 				Dungeon.observe();
 			}

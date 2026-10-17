@@ -181,6 +181,9 @@ public class Wandmaker extends NPC {
 				case ARCANIST:
 					msg1 += Messages.get(this, "intro_arcanist");
 					break;
+				case ALCHEMIST:
+					msg1 += Messages.get(this, "intro_alchemist");
+					break;
 			}
 
 			msg1 += Messages.get(this, "intro_1");
@@ -379,6 +382,11 @@ public class Wandmaker extends NPC {
 				
 			}
 			return rooms;
+		}
+
+		//the hero has received their reward wand
+		public static boolean completed(){
+			return given && wand1 == null && wand2 == null;
 		}
 
 		//quest is active if:

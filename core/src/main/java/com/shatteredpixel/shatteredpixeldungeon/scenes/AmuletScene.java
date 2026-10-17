@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Endings;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
@@ -78,31 +79,8 @@ public class AmuletScene extends PixelScene {
 		btnExit = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "exit") ) {
 			@Override
 			protected void onClick() {
-				Dungeon.win( Amulet.class );
-				Dungeon.deleteGame( GamesInProgress.curSlot, true );
-				Badges.saveGlobal();
-				btnExit.enable(false);
-				btnStay.enable(false);
-
-				AmuletScene.this.add(new Delayer(0.1f){
-					@Override
-					protected void onComplete() {
-						if (BadgeBanner.isShowingBadges()){
-							AmuletScene.this.add(new Delayer(3f){
-								@Override
-								protected void onComplete() {
-									Game.switchScene( RankingsScene.class );
-								}
-							});
-						} else {
-							Game.switchScene( RankingsScene.class );
-						}
-					}
-				});
-				Music.INSTANCE.playTracks(
-						new String[]{Assets.Music.THEME_2, Assets.Music.THEME_1},
-						new float[]{1, 1},
-						false);
+				disableAll();
+				finishWithDelay(Endings.liberatorAvailable() ? Endings.Ending.LIBERATOR : Endings.Ending.ESCAPE);
 			}
 		};
 		btnExit.icon(new ItemSprite(ItemSpriteSheet.AMULET));
@@ -121,13 +99,50 @@ public class AmuletScene extends PixelScene {
 		btnStay.setSize( WIDTH, BTN_HEIGHT );
 		add( btnStay );
 
+		//alternative endings
+		extraButtons.clear();
+		StyledButton btnDestroy = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "destroy") ) {
+			@Override
+			protected void onClick() {
+				disableAll();
+				Endings.startDestruction(Dungeon.hero);
+			}
+		};
+		extraButtons.add(btnDestroy);
+
+		StyledButton btnClaim = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "claim") ) {
+			@Override
+			protected void onClick() {
+				disableAll();
+				finishWithDelay(Endings.Ending.DARK_LORD);
+			}
+		};
+		extraButtons.add(btnClaim);
+
+		if (Endings.keeperAvailable(Dungeon.hero)){
+			StyledButton btnKeeper = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "keeper") ) {
+				@Override
+				protected void onClick() {
+					disableAll();
+					finishWithDelay(Endings.Ending.KEEPER);
+				}
+			};
+			btnKeeper.textColor(0x66CCFF);
+			extraButtons.add(btnKeeper);
+		}
+
+		for (StyledButton b : extraButtons){
+			b.setSize( WIDTH, BTN_HEIGHT );
+			add( b );
+		}
+
 		RectF insets = getCommonInsets();
 		int w = (int) (Camera.main.width - insets.left + insets.right);
 		int h = (int) (Camera.main.height - insets.top + insets.bottom);
 
 		float height;
 		if (noText) {
-			height = amulet.height + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height();
+			height = amulet.height + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height() + extraButtons.size()*(BTN_HEIGHT + SMALL_GAP);
 			
 			amulet.x = insets.left + (w - amulet.width) / 2;
 			amulet.y = insets.top + (h - height) / 2;
@@ -137,7 +152,7 @@ public class AmuletScene extends PixelScene {
 			btnStay.setPos( btnExit.left(), btnExit.bottom() + SMALL_GAP );
 			
 		} else {
-			height = amulet.height + LARGE_GAP + text.height() + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height();
+			height = amulet.height + LARGE_GAP + text.height() + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height() + extraButtons.size()*(BTN_HEIGHT + SMALL_GAP);
 
 			amulet.x = insets.left + (w - amulet.width) / 2;
 			amulet.y = insets.top + (h - height) / 2;
@@ -151,11 +166,43 @@ public class AmuletScene extends PixelScene {
 			btnStay.setPos( btnExit.left(), btnExit.bottom() + SMALL_GAP );
 		}
 
+		float btnY = btnStay.bottom() + SMALL_GAP;
+		for (StyledButton b : extraButtons){
+			b.setPos( btnExit.left(), btnY );
+			btnY = b.bottom() + SMALL_GAP;
+		}
+
 		new Flare( 8, 48 ).color( 0xFFDDBB, true ).show( amulet, 0 ).angularSpeed = +30;
 		
 		fadeIn();
 	}
 	
+	private final java.util.ArrayList<StyledButton> extraButtons = new java.util.ArrayList<>();
+
+	private void disableAll(){
+		btnExit.enable(false);
+		btnStay.enable(false);
+		for (StyledButton b : extraButtons) b.enable(false);
+	}
+
+	private void finishWithDelay( Endings.Ending ending ){
+		AmuletScene.this.add(new Delayer(0.1f){
+			@Override
+			protected void onComplete() {
+				if (BadgeBanner.isShowingBadges()){
+					AmuletScene.this.add(new Delayer(3f){
+						@Override
+						protected void onComplete() {
+							Endings.finish(ending);
+						}
+					});
+				} else {
+					Endings.finish(ending);
+				}
+			}
+		});
+	}
+
 	@Override
 	protected void onBackPressed() {
 		if (btnExit.isActive()) {

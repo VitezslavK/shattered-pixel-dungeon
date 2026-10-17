@@ -127,6 +127,11 @@ public class HeroIcon extends Image {
 	public static final int ARCANE_DISCHARGE= 130;
 	public static final int ARTIFACT_OVERLOAD=131;
 	public static final int MIRROR_BARRIER  = 132;
+	public static final int BOMBARDIER      = 133;
+	public static final int TRANSMUTER      = 134;
+	public static final int ACID_RAIN       = 135;
+	public static final int ELIXIR_OF_FURY  = 136;
+	public static final int POLYMORPH       = 137;
 	//evolutions for subclasses past the first 14
 	public static final int EVOLUTIONS_EXT  = 144;
 

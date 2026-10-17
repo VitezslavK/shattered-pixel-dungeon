@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -696,7 +697,7 @@ public class Item implements Bundlable {
 	}
 	
 	public float castDelay( Char user, int cell ){
-		return TIME_TO_THROW;
+		return TIME_TO_THROW * Alchemy.throwDelayFactor(user, this);
 	}
 
 	public float pickupDelay(){

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -290,7 +291,9 @@ public class Potion extends Item {
 		
 		hero.spend( TIME_TO_DRINK );
 		hero.busy();
+		boolean wasKnown = isKnown();
 		apply( hero );
+		Alchemy.onPotionDrunk( hero, this, wasKnown );
 		
 		Sample.INSTANCE.play( Assets.Sounds.DRINK );
 		
@@ -317,6 +320,7 @@ public class Potion extends Item {
 				Dungeon.level.pressCell( cell );
 			}
 			shatter( cell );
+			Alchemy.onPotionShatter( this, cell );
 
 			if (!anonymous) {
 				Catalog.countUse(getClass());

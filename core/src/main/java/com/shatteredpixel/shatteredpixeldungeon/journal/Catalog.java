@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.FieldCauldron;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenFlask;
 import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneCodex;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.RuneFragment;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.ArcaneCore;
@@ -269,9 +271,9 @@ public enum Catalog {
 				IronKey.class, GoldenKey.class, CrystalKey.class, WornKey.class,
 				TrinketCatalyst.class, Stylus.class, Torch.class, Honeypot.class, Ankh.class,
 				CorpseDust.class, Embers.class, CeremonialCandle.class, DarkGold.class, DwarfToken.class,
-				ArcaneCodex.class, GooBlob.class, PlagueGland.class, ChainLink.class, CrystalHeart.class, ArcaneCore.class, TengusMask.class, MetalShard.class, KingsCrown.class, EssenceOfAscension.class,
+				ArcaneCodex.class, FieldCauldron.class, GooBlob.class, PlagueGland.class, ChainLink.class, CrystalHeart.class, ArcaneCore.class, TengusMask.class, MetalShard.class, KingsCrown.class, EssenceOfAscension.class,
 				LiquidMetal.class, ArcaneResin.class,
-				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, CrackedLantern.class, RuneFragment.class);
+				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, CrackedLantern.class, RuneFragment.class, BrokenFlask.class);
 
 	}
 

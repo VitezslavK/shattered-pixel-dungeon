@@ -161,6 +161,8 @@ public class ItemSpriteSheet {
 	public static final int ESSENCE         = MISC_CONSUMABLE +24;
 	public static final int ARCANE_CODEX    = MISC_CONSUMABLE +25;
 	public static final int RUNE_FRAGMENT   = MISC_CONSUMABLE +26;
+	public static final int FIELD_CAULDRON  = MISC_CONSUMABLE +27;
+	public static final int BROKEN_FLASK    = MISC_CONSUMABLE +28;
 
 	static{
 		assignItemRect(ANKH,            10, 16);
@@ -194,6 +196,8 @@ public class ItemSpriteSheet {
 		assignItemRect(ESSENCE,         12, 12);
 		assignItemRect(ARCANE_CODEX,    13, 16);
 		assignItemRect(RUNE_FRAGMENT,   11, 13);
+		assignItemRect(FIELD_CAULDRON,  14, 13);
+		assignItemRect(BROKEN_FLASK,    12, 12);
 	}
 	
 	private static final int BOMBS          =                               xy(1, 6);   //16 slots
@@ -393,6 +397,7 @@ public class ItemSpriteSheet {
 	public static final int ARMOR_CLERIC    = ARMOR+10;
 	public static final int ARMOR_NECROMANCER = ARMOR+11;
 	public static final int ARMOR_ARCANIST  = ARMOR+12;
+	public static final int ARMOR_ALCHEMIST = ARMOR+13;
 	static{
 		assignItemRect(ARMOR_CLOTH,     15, 12);
 		assignItemRect(ARMOR_LEATHER,   14, 13);
@@ -407,6 +412,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_CLERIC,    13, 14);
 		assignItemRect(ARMOR_NECROMANCER, 15, 15);
 		assignItemRect(ARMOR_ARCANIST,  15, 15);
+		assignItemRect(ARMOR_ALCHEMIST, 14, 13);
 	}
 
 	                                                                                    //16 free slots

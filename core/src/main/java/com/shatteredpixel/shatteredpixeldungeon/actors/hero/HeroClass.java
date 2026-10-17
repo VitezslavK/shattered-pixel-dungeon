@@ -21,6 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.alchemist.Polymorph;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.alchemist.ElixirOfFury;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.alchemist.AcidRain;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
+import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.FieldCauldron;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.MirrorBarrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.ArtifactOverload;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.ArcaneDischarge;
@@ -109,7 +115,8 @@ public enum HeroClass {
 	DUELIST( HeroSubClass.CHAMPION, HeroSubClass.MONK ),
 	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN ),
 	NECROMANCER( HeroSubClass.BONELORD, HeroSubClass.SOUL_REAPER ),
-	ARCANIST( HeroSubClass.RUNESMITH, HeroSubClass.RELIC_KEEPER );
+	ARCANIST( HeroSubClass.RUNESMITH, HeroSubClass.RELIC_KEEPER ),
+	ALCHEMIST( HeroSubClass.BOMBARDIER, HeroSubClass.TRANSMUTER );
 
 	private HeroSubClass[] subClasses;
 
@@ -168,6 +175,10 @@ public enum HeroClass {
 			case ARCANIST:
 				initArcanist( hero );
 				break;
+
+			case ALCHEMIST:
+				initAlchemist( hero );
+				break;
 		}
 
 		//debug builds only: a testing kit for subclasses and evolutions
@@ -206,6 +217,8 @@ public enum HeroClass {
 				return Badges.Badge.MASTERY_NECROMANCER;
 			case ARCANIST:
 				return Badges.Badge.MASTERY_ARCANIST;
+			case ALCHEMIST:
+				return Badges.Badge.MASTERY_ALCHEMIST;
 		}
 		return null;
 	}
@@ -336,6 +349,26 @@ public enum HeroClass {
 		new PotionOfHaste().identify();
 	}
 
+	private static void initAlchemist( Hero hero ) {
+
+		(hero.belongings.weapon = new Dagger()).identify();
+
+		FieldCauldron cauldron = new FieldCauldron();
+		cauldron.identify().collect();
+		FieldCauldron.ensureBuff(hero);
+
+		Bomb bombs = new Bomb();
+		bombs.quantity(2).identify().collect();
+
+		Dungeon.quickslot.setSlot(0, cauldron);
+		Dungeon.quickslot.setSlot(1, bombs);
+
+		Dungeon.energy += 5;
+
+		new PotionOfLiquidFlame().identify();
+		new PotionOfFrost().identify();
+	}
+
 	public String title() {
 		return Messages.get(HeroClass.class, name());
 	}
@@ -370,6 +403,8 @@ public enum HeroClass {
 				return new ArmorAbility[]{new ArmyOfTheDead(), new CorpseExplosion(), new SoulSwap()};
 			case ARCANIST:
 				return new ArmorAbility[]{new ArcaneDischarge(), new ArtifactOverload(), new MirrorBarrier()};
+			case ALCHEMIST:
+				return new ArmorAbility[]{new AcidRain(), new ElixirOfFury(), new Polymorph()};
 		}
 	}
 
@@ -391,6 +426,8 @@ public enum HeroClass {
 				return Assets.Sprites.NECROMANCER;
 			case ARCANIST:
 				return Assets.Sprites.ARCANIST;
+			case ALCHEMIST:
+				return Assets.Sprites.ALCHEMIST;
 		}
 	}
 
@@ -412,6 +449,8 @@ public enum HeroClass {
 				return Assets.Splashes.NECROMANCER;
 			case ARCANIST:
 				return Assets.Splashes.ARCANIST;
+			case ALCHEMIST:
+				return Assets.Splashes.ALCHEMIST;
 		}
 	}
 	
@@ -434,6 +473,7 @@ public enum HeroClass {
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
 			case NECROMANCER:
 			case ARCANIST:
+			case ALCHEMIST:
 				return true;
 		}
 	}

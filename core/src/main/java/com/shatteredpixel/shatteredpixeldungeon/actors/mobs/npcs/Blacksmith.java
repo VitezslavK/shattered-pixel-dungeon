@@ -98,6 +98,7 @@ public class Blacksmith extends NPC {
 				case CLERIC:    msg1 += Messages.get(Blacksmith.this, "intro_quest_cleric"); break;
 				case NECROMANCER: msg1 += Messages.get(Blacksmith.this, "intro_quest_necromancer"); break;
 				case ARCANIST:  msg1 += Messages.get(Blacksmith.this, "intro_quest_arcanist"); break;
+				case ALCHEMIST: msg1 += Messages.get(Blacksmith.this, "intro_quest_alchemist"); break;
 			}
 
 			msg1 += "\n\n" + Messages.get(Blacksmith.this, "intro_quest_start");
