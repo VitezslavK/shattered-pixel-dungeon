@@ -19,6 +19,11 @@ task updateRoboVMProps(){
     props.setProperty ('appName', appName)
     //append .apple because com.shatteredpixel.shatteredpixeldungeon was taken =(
     props.setProperty ('appApplePackageName', appPackageName + ".apple")
+    //mod builds signed with a personal Apple ID need their own bundle id, e.g. -PiosBundleId=com.example.spdmod
+    if (project.hasProperty('iosBundleId')) {
+        props.setProperty ('appName', 'SPD Mod')
+        props.setProperty ('appApplePackageName', project.property('iosBundleId'))
+    }
 
     props.setProperty ('appVersionCode', appVersionCode.toString())
     props.setProperty ('appVersionName', appVersionName)

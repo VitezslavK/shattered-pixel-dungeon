@@ -36,6 +36,11 @@ allprojects {
         layout.buildDirectory = new File(home, '.spd-build/' + (project.path == ':' ? 'root' : project.path.substring(1).replace(':', '_')))
     }
 
+    //RoboVM (iOS) has no StringConcatFactory, so string concatenation is compiled the Java 8 way
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs += ['-XDstringConcat=inline']
+    }
+
     repositories {
         google()
         mavenCentral()
