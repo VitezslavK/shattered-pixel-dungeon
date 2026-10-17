@@ -100,6 +100,7 @@ public class WndJournal extends WndTabbed {
 	private NotesTab notesTab;
 	private CatalogTab catalogTab;
 	private BadgesTab badgesTab;
+	private DiscoveriesTab discoveriesTab;
 	
 	public static int last_index = 0;
 
@@ -139,6 +140,11 @@ public class WndJournal extends WndTabbed {
 		add(badgesTab);
 		badgesTab.setRect(0, 0, width, height);
 		badgesTab.updateList();
+
+		discoveriesTab = new DiscoveriesTab();
+		add(discoveriesTab);
+		discoveriesTab.setRect(0, 0, width, height);
+		discoveriesTab.updateList();
 		
 		Tab[] tabs = {
 				new IconTab( Icons.JOURNAL.get() ) {
@@ -199,6 +205,18 @@ public class WndJournal extends WndTabbed {
 					@Override
 					protected String hoverText() {
 						return Messages.get(badgesTab, "title");
+					}
+				},
+				new IconTab( Icons.TALENT.get() ) {
+					protected void select( boolean value ) {
+						super.select( value );
+						discoveriesTab.active = discoveriesTab.visible = value;
+						if (value) last_index = 5;
+					}
+
+					@Override
+					protected String hoverText() {
+						return Messages.get(DiscoveriesTab.class, "tab");
 					}
 				}
 		};

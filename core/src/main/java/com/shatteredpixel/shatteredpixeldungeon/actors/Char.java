@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Reactions;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.Necromancy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -356,10 +357,16 @@ public abstract class Char extends Actor {
 		HP = bundle.getInt( TAG_HP );
 		HT = bundle.getInt( TAG_HT );
 		
-		for (Bundlable b : bundle.getCollection( BUFFS )) {
-			if (b != null) {
-				((Buff)b).attachTo( this );
+		//restoring saved buffs must not trigger elemental reactions
+		Reactions.suspended = true;
+		try {
+			for (Bundlable b : bundle.getCollection( BUFFS )) {
+				if (b != null) {
+					((Buff)b).attachTo( this );
+				}
 			}
+		} finally {
+			Reactions.suspended = false;
 		}
 	}
 
@@ -848,6 +855,8 @@ public abstract class Char extends Actor {
 				}
 			}
 		}
+
+		dmg = Reactions.onDamage(this, dmg, src);
 
 		//temporarily assign to a float to avoid rounding a bunch
 		float damage = dmg;

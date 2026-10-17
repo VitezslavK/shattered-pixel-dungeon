@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Reactions;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -74,6 +75,7 @@ public class Buff extends Actor {
 
 		if (target.add( this )){
 			if (target.sprite != null) fx( true );
+			Reactions.onBuffAttached( target, this );
 			return true;
 		} else {
 			this.target = null;
