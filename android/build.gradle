@@ -12,9 +12,29 @@ android {
                           'it', 'tr', 'vi', 'uk', 'id', 'cs', 'nl', 'sv', 'hu', 'fi', 'el', 'be', 'eo' ]
     }
 
+    //the mod's own signing key lives outside the repository, see docs/ANDROID_CZ.md
+    def releaseKeyProps = new Properties()
+    def releaseKeyFile = new File(System.getProperty('user.home'), '.android/spdmod-release.properties')
+    if (releaseKeyFile.exists()) {
+        releaseKeyFile.withInputStream { releaseKeyProps.load(it) }
+    }
+
+    signingConfigs {
+        if (releaseKeyFile.exists()) {
+            release {
+                storeFile file(releaseKeyProps['storeFile'])
+                storePassword releaseKeyProps['storePassword']
+                keyAlias releaseKeyProps['keyAlias']
+                keyPassword releaseKeyProps['keyPassword']
+            }
+        }
+    }
+
     defaultConfig {
         manifestPlaceholders = [appName:appName]
-        applicationId appPackageName
+        //the mod has its own identity so it installs beside the official game and isn't
+        // mistaken for a tampered copy of it
+        applicationId 'com.vitezslavkubis.spdmod'
 
         versionCode appVersionCode
         versionName appVersionName
@@ -34,9 +54,10 @@ android {
         }
         release {
 
-            //the modded game installs alongside the official one
-            applicationIdSuffix ".mod"
-            manifestPlaceholders = [appName: appName + ' Mod']
+            manifestPlaceholders = [appName: 'SPD Mod']
+            if (releaseKeyFile.exists()) {
+                signingConfig signingConfigs.release
+            }
 
             //These lines enable R8, which is a code shrinker/optimizer/obfuscator.
             //This makes release APKs smaller and more efficient, but also makes debugging trickier
@@ -47,7 +68,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             dependencies {
-                releaseImplementation project(':services:updates:githubUpdates')
+                //no update checks, the official ones would offer the unmodded game
+                releaseImplementation project(':services:updates:debugUpdates')
                 releaseImplementation project(':services:news:shatteredNews')
             }
         }
