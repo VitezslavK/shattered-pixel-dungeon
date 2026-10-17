@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Archlich;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FallenAngel;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MirrorBeast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.LightEater;
@@ -225,7 +226,7 @@ public enum Bestiary {
 				RipperDemon.class, DemonSpawner.class, Succubus.class, Eye.class, Scorpio.class,
 				VoidWalker.class, LightEater.class, MirrorBeast.class, FallenAngel.class);
 
-		BOSSES.addEntities(Goo.class, RatMatriarch.class, Jailer.class, CrystalQueen.class, GolemArchmage.class, VoidHerald.class,
+		BOSSES.addEntities(Goo.class, RatMatriarch.class, Jailer.class, CrystalQueen.class, GolemArchmage.class, VoidHerald.class, Archlich.class,
 				Tengu.class,
 				Pylon.class, DM300.class,
 				DwarfKing.class,
@@ -279,6 +280,7 @@ public enum Bestiary {
 		classConversions.put(CrystalQueen.QueenShard.class,     CrystalWisp.class);
 		classConversions.put(GolemArchmage.ConjuredGolem.class, Golem.class);
 		classConversions.put(VoidHerald.HeraldWalker.class,     VoidWalker.class);
+		classConversions.put(Archlich.LichSkeleton.class,       Skeleton.class);
 
 		classConversions.put(TenguDartTrap.class,              PoisonDartTrap.class);
 		classConversions.put(GnollRockfallTrap.class,          RockfallTrap.class);

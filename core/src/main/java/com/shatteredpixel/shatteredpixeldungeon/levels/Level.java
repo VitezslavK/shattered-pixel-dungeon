@@ -570,19 +570,21 @@ public abstract class Level implements Bundlable {
 			return false;
 		}
 
-		//the first time the hero leaves floor 10, they choose which path the caves take
-		if (transition.type == LevelTransition.Type.REGULAR_EXIT
-				&& Dungeon.branch == 0 && Dungeon.depth == 10 && Dungeon.cavesPath == -1){
+		//the first time the hero leaves floors 10 and 15, they choose which path the next region takes
+		if (transition.type == LevelTransition.Type.REGULAR_EXIT && Dungeon.branch == 0
+				&& ((Dungeon.depth == 10 && Dungeon.cavesPath == -1) || (Dungeon.depth == 15 && Dungeon.cityPath == -1))){
+			final boolean caves = Dungeon.depth == 10;
 			GameScene.show(new WndOptions(
 					Icons.get(Icons.STAIRS),
 					Messages.titleCase(Messages.get(Level.class, "path_title")),
-					Messages.get(Level.class, "path_desc"),
-					Messages.get(Level.class, "path_classic"),
-					Messages.get(Level.class, "path_ice")){
+					Messages.get(Level.class, caves ? "path_desc" : "path_desc_city"),
+					Messages.get(Level.class, caves ? "path_classic" : "path_classic_city"),
+					Messages.get(Level.class, caves ? "path_ice" : "path_burned")){
 				@Override
 				protected void onSelect(int index) {
 					if (index == 0 || index == 1){
-						Dungeon.cavesPath = index;
+						if (caves) Dungeon.cavesPath = index;
+						else Dungeon.cityPath = index;
 						activateTransition(hero, transition);
 					}
 				}

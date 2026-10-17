@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.BurnedCityLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.HallsArenaLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.AbyssArenaLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.AbyssLevel;
 import com.shatteredpixel.shatteredpixeldungeon.online.GhostPool;
@@ -207,6 +209,8 @@ public class Dungeon {
 	public static final int LAST_DEPTH = 31;
 	//the path chosen when leaving floor 10: -1 not chosen yet, 0 classic caves, 1 ice caves
 	public static int cavesPath = -1;
+	//the path chosen when leaving floor 15: -1 not chosen yet, 0 classic city, 1 burned city
+	public static int cityPath = -1;
 
 	//keeps track of what levels the game should try to load instead of creating fresh
 	public static ArrayList<Integer> generatedLevels = new ArrayList<>();
@@ -278,6 +282,7 @@ public class Dungeon {
 		depth = 1;
 		branch = 0;
 		cavesPath = -1;
+		cityPath = -1;
 
 		GhostPool.refresh();
 		generatedLevels.clear();
@@ -351,7 +356,7 @@ public class Dungeon {
 				case 17:
 				case 18:
 				case 19:
-					level = new CityLevel();
+					level = cityPath == 1 ? new BurnedCityLevel() : new CityLevel();
 					break;
 				case 20:
 					level = ArenaLevels.bossVariant(20) == 0 ? new CityBossLevel() : new CityArenaLevel();
@@ -363,7 +368,7 @@ public class Dungeon {
 					level = new HallsLevel();
 					break;
 				case 25:
-					level = new HallsBossLevel();
+					level = ArenaLevels.bossVariant(25) == 0 ? new HallsBossLevel() : new HallsArenaLevel();
 					break;
 				case 26:
 				case 27:
@@ -643,6 +648,7 @@ public class Dungeon {
 	private static final String DEPTH		= "depth";
 	private static final String BRANCH		= "branch";
 	private static final String CAVES_PATH	= "caves_path";
+	private static final String CITY_PATH	= "city_path";
 	private static final String GENERATED_LEVELS    = "generated_levels";
 	private static final String GOLD		= "gold";
 	private static final String ENERGY		= "energy";
@@ -671,6 +677,7 @@ public class Dungeon {
 			bundle.put( DEPTH, depth );
 			bundle.put( BRANCH, branch );
 			bundle.put( CAVES_PATH, cavesPath );
+			bundle.put( CITY_PATH, cityPath );
 
 			bundle.put( GOLD, gold );
 			bundle.put( ENERGY, energy );
@@ -849,6 +856,7 @@ public class Dungeon {
 		depth = bundle.getInt( DEPTH );
 		branch = bundle.getInt( BRANCH );
 		cavesPath = bundle.contains( CAVES_PATH ) ? bundle.getInt( CAVES_PATH ) : -1;
+		cityPath = bundle.contains( CITY_PATH ) ? bundle.getInt( CITY_PATH ) : -1;
 
 		gold = bundle.getInt( GOLD );
 		energy = bundle.getInt( ENERGY );

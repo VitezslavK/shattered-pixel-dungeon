@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Emberbound;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frostbound;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Reactions;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague;
@@ -737,6 +738,10 @@ public abstract class Char extends Actor {
 		Frostbound frostbound = buff(Frostbound.class);
 		if (frostbound != null){
 			frostbound.onAttackProc( enemy );
+		}
+		Emberbound emberbound = buff(Emberbound.class);
+		if (emberbound != null){
+			emberbound.onAttackProc( enemy );
 		}
 		return damage;
 	}
