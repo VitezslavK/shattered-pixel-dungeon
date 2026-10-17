@@ -260,7 +260,7 @@ public enum Catalog {
 		TIPPED_DARTS.addItems(TippedDart.types.values().toArray(new Class[0]));
 
 		BREWS_ELIXIRS.addItems( UnstableBrew.class, InfernalBrew.class, BlizzardBrew.class,
-				ShockingBrew.class, CausticBrew.class, PlagueBrew.class, BindingBrew.class, ElixirOfCrystalSkin.class, ElixirOfArcanum.class, AquaBrew.class, ElixirOfHoneyedHealing.class,
+				ShockingBrew.class, CausticBrew.class, PlagueBrew.class, BindingBrew.class, ElixirOfCrystalSkin.class, ElixirOfArcanum.class, com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.Mutagen.class, AquaBrew.class, ElixirOfHoneyedHealing.class,
 				ElixirOfAquaticRejuvenation.class, ElixirOfArcaneArmor.class, ElixirOfDragonsBlood.class,
 				ElixirOfIcyTouch.class, ElixirOfToxicEssence.class, ElixirOfMight.class, ElixirOfFeatherFall.class);
 

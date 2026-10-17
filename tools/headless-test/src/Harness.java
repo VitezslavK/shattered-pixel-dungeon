@@ -139,6 +139,13 @@ public class Harness {
       { Field mf = com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene.class.getDeclaredField("mobs"); mf.setAccessible(true); com.shatteredpixel.shatteredpixeldungeon.actors.Sim.spriteGroup = (com.watabou.noosa.Group) mf.get(gs); } GSF = gsf;
       sf.set(g, gs);
     }
+    Gdx.net = (Net) Proxy.newProxyInstance(Harness.class.getClassLoader(), new Class[]{Net.class}, (p,m,args)->{
+      if (m.getName().equals("sendHttpRequest") && args.length > 1 && args[1] != null){
+        ((Net.HttpResponseListener) args[1]).failed(new Exception("offline test"));
+      }
+      Class<?> r = m.getReturnType();
+      if (r==boolean.class) return false; return null;
+    });
     Game.version = "3.3.8"; Game.versionCode = 900;
     int seeds = Integer.parseInt(a[1]);
     Thread main = Thread.currentThread();
@@ -191,7 +198,7 @@ public class Harness {
                 cur=ctx+" switch"; curT=System.currentTimeMillis();
                 Dungeon.switchLevel(l, -1);
                 com.shatteredpixel.shatteredpixeldungeon.actors.Sim.ensureSprites();
-                String[] extra = {"items.potions.brews.BindingBrew","items.potions.brews.PlagueBrew","items.potions.elixirs.ElixirOfArcanum","items.potions.elixirs.ElixirOfCrystalSkin","items.EssenceOfAscension","items.quest.VoidShard","items.quest.PlagueGland","items.wands.WandOfPlague","items.rings.RingOfBloodlust","items.weapon.melee.VoidBlade"};
+                String[] extra = {"items.potions.brews.BindingBrew","items.potions.brews.PlagueBrew","items.potions.elixirs.ElixirOfArcanum","items.potions.elixirs.ElixirOfCrystalSkin","items.potions.elixirs.Mutagen","items.potions.PotionOfLiquidFlame","items.potions.PotionOfHealing","items.potions.PotionOfToxicGas","items.potions.PotionOfStrength","items.potions.PotionOfLevitation","items.EssenceOfAscension","items.quest.VoidShard","items.quest.PlagueGland","items.wands.WandOfPlague","items.rings.RingOfBloodlust","items.weapon.melee.VoidBlade"};
                 for (String ex : extra){
                   try { Item gi = (Item) Class.forName("com.shatteredpixel.shatteredpixeldungeon."+ex).getDeclaredConstructor().newInstance(); gi.identify(); gi.collect(); } catch (Throwable t){ problem("GENEXTRA "+ex+" "+t); }
                 }

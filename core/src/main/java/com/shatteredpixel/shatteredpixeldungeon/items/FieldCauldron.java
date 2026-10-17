@@ -21,6 +21,22 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
+import com.watabou.utils.Random;
+import com.watabou.utils.PathFinder;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.Mutagen;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.WeaponCoating;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Mutations;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Homunculus;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -48,6 +64,13 @@ public class FieldCauldron extends Item {
 
 	public static final String AC_BREW       = "BREW";
 	public static final String AC_TRANSMUTE  = "TRANSMUTE";
+	public static final String AC_HOMUNCULUS = "HOMUNCULUS";
+	public static final String AC_FEED       = "FEED";
+	public static final String AC_COMMAND    = "COMMAND";
+	public static final String AC_MUTAGEN    = "MUTAGEN";
+
+	public static final int HOMUNCULUS_COST = 10;
+	public static final int MUTAGEN_COST    = 8;
 
 	public static final int BASE_TRANSMUTE_COST = 5;
 
@@ -63,6 +86,13 @@ public class FieldCauldron extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add(AC_BREW);
+		if (Homunculus.get() == null){
+			actions.add(AC_HOMUNCULUS);
+		} else {
+			actions.add(AC_FEED);
+			actions.add(AC_COMMAND);
+		}
+		actions.add(AC_MUTAGEN);
 		if (hero.subClass == HeroSubClass.TRANSMUTER){
 			actions.add(AC_TRANSMUTE);
 		}
@@ -80,6 +110,40 @@ public class FieldCauldron extends Item {
 			}
 			AlchemyScene.clearToolkit();
 			Game.switchScene(AlchemyScene.class);
+		} else if (action.equals(AC_HOMUNCULUS)){
+			createHomunculus(hero);
+		} else if (action.equals(AC_FEED)){
+			if (Homunculus.get() == null){
+				GLog.w(Messages.get(this, "no_homunculus"));
+			} else {
+				GameScene.selectItem(new Feeder());
+			}
+		} else if (action.equals(AC_COMMAND)){
+			if (Homunculus.get() == null){
+				GLog.w(Messages.get(this, "no_homunculus"));
+			} else {
+				GameScene.selectCell(new CellSelector.Listener() {
+					@Override
+					public void onSelect(Integer cell) {
+						Homunculus h = Homunculus.get();
+						if (cell == null || h == null) return;
+						h.directTocell(cell);
+					}
+
+					@Override
+					public String prompt() {
+						return Messages.get(FieldCauldron.class, "prompt_command");
+					}
+				});
+			}
+		} else if (action.equals(AC_MUTAGEN)){
+			if (Mutations.count(hero) >= Mutations.MAX_MUTATIONS){
+				GLog.w(Messages.get(this, "mutagen_max"));
+			} else if (Dungeon.energy < MUTAGEN_COST){
+				GLog.w(Messages.get(this, "no_energy", MUTAGEN_COST));
+			} else {
+				GameScene.selectItem(new Distiller());
+			}
 		} else if (action.equals(AC_TRANSMUTE)){
 			if (Dungeon.energy < transmuteCost(hero)){
 				GLog.w(Messages.get(this, "no_energy", transmuteCost(hero)));
@@ -87,6 +151,40 @@ public class FieldCauldron extends Item {
 				GameScene.selectItem(new Transmuter());
 			}
 		}
+	}
+
+	private void createHomunculus( Hero hero ){
+		if (Homunculus.get() != null){
+			GLog.w(Messages.get(this, "homunculus_exists"));
+			return;
+		}
+		if (Dungeon.energy < HOMUNCULUS_COST){
+			GLog.w(Messages.get(this, "no_energy", HOMUNCULUS_COST));
+			return;
+		}
+		ArrayList<Integer> cells = new ArrayList<>();
+		for (int i : PathFinder.NEIGHBOURS8){
+			int cell = hero.pos + i;
+			if (Dungeon.level.passable[cell] && !Dungeon.level.avoid[cell] && Actor.findChar(cell) == null){
+				cells.add(cell);
+			}
+		}
+		if (cells.isEmpty()){
+			GLog.w(Messages.get(this, "no_space"));
+			return;
+		}
+		Dungeon.energy -= HOMUNCULUS_COST;
+		Homunculus h = new Homunculus();
+		h.pos = Random.element(cells);
+		GameScene.add(h);
+		ScrollOfTeleportation.appear(h, h.pos);
+		h.sprite.emitter().burst(Speck.factory(Speck.BUBBLE), 10);
+		Catalog.countUse(FieldCauldron.class);
+		GLog.p(Messages.get(this, "homunculus_born"));
+		Sample.INSTANCE.play(Assets.Sounds.DRINK);
+		hero.sprite.operate(hero.pos);
+		hero.spendAndNext(Actor.TICK);
+		updateQuickslot();
 	}
 
 	public static int transmuteCost( Hero hero ){
@@ -137,6 +235,81 @@ public class FieldCauldron extends Item {
 	private static class TransmuteCheck extends ScrollOfTransmutation {
 		public boolean canTransmute( Item item ){
 			return usableOnItem(item);
+		}
+	}
+
+	private class Feeder extends WndBag.ItemSelector {
+		@Override
+		public String textPrompt() {
+			return Messages.get(FieldCauldron.class, "prompt_feed");
+		}
+
+		@Override
+		public Class<? extends Bag> preferredBag() {
+			return PotionBandolier.class;
+		}
+
+		@Override
+		public boolean itemSelectable(Item item) {
+			return item instanceof Potion && (WeaponCoating.Kind.of((Potion) item) != null
+					|| item instanceof PotionOfStrength || item instanceof PotionOfExperience);
+		}
+
+		@Override
+		public void onSelect(Item item) {
+			if (!(item instanceof Potion)) return;
+			Homunculus h = Homunculus.get();
+			if (h == null) return;
+			String result = h.feed((Potion) item);
+			if (result == null) return;
+			Hero hero = Dungeon.hero;
+			item.detach(hero.belongings.backpack);
+			((Potion) item).identify();
+			if (h.sprite != null){
+				h.sprite.emitter().burst(Speck.factory(Speck.BUBBLE), 10);
+				h.sprite.showStatus(CharSprite.POSITIVE, Messages.get(FieldCauldron.class, "fed"));
+			}
+			GLog.p(result);
+			Sample.INSTANCE.play(Assets.Sounds.DRINK);
+			hero.sprite.operate(hero.pos);
+			hero.spendAndNext(Actor.TICK);
+		}
+	}
+
+	private class Distiller extends WndBag.ItemSelector {
+		@Override
+		public String textPrompt() {
+			return Messages.get(FieldCauldron.class, "prompt_mutagen", MUTAGEN_COST);
+		}
+
+		@Override
+		public Class<? extends Bag> preferredBag() {
+			return VelvetPouch.class;
+		}
+
+		@Override
+		public boolean itemSelectable(Item item) {
+			return item instanceof Plant.Seed;
+		}
+
+		@Override
+		public void onSelect(Item item) {
+			if (!(item instanceof Plant.Seed)) return;
+			Hero hero = Dungeon.hero;
+			if (Dungeon.energy < MUTAGEN_COST) return;
+			Dungeon.energy -= MUTAGEN_COST;
+			item.detach(hero.belongings.backpack);
+			Mutagen mutagen = new Mutagen();
+			if (!mutagen.collect()){
+				Dungeon.level.drop(mutagen, hero.pos).sprite.drop();
+			}
+			Catalog.countUse(FieldCauldron.class);
+			GLog.p(Messages.get(FieldCauldron.class, "mutagen_done"));
+			hero.sprite.emitter().burst(Speck.factory(Speck.BUBBLE), 8);
+			Sample.INSTANCE.play(Assets.Sounds.PUFF);
+			hero.sprite.operate(hero.pos);
+			hero.spendAndNext(Actor.TICK);
+			updateQuickslot();
 		}
 	}
 

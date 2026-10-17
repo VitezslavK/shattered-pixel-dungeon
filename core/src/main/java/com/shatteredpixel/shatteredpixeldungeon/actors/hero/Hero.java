@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Mutations;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
@@ -266,7 +267,7 @@ public class Hero extends Char {
 		
 		HT = 20 + 5*(lvl-1) + HTBoost;
 		if (Runes.Rune.URUZ.active()) HT += 5;
-		HT = Math.max(1, Math.round(HT * RunModifier.hpFactor()));
+		HT = Math.max(1, Math.round(HT * RunModifier.hpFactor() * Mutations.htFactor(this)));
 		float multiplier = RingOfMight.HTMultiplier(this);
 		HT = Math.round(multiplier * HT);
 		

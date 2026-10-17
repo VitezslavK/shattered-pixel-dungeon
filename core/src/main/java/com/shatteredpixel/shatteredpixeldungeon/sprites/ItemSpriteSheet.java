@@ -687,9 +687,11 @@ public class ItemSpriteSheet {
 	//modded elixirs live in free slots of the bags row
 	public static final int ELIXIR_CRYSTAL  = xy(9, 31);
 	public static final int ELIXIR_ARCANUM  = xy(10, 31);
+	public static final int MUTAGEN         = xy(11, 31);
 	static{
 		assignItemRect(ELIXIR_CRYSTAL, 12, 14);
 		assignItemRect(ELIXIR_ARCANUM, 12, 14);
+		assignItemRect(MUTAGEN,        12, 14);
 	}
 
 	private static final int ELIXIRS        =                               xy(9, 26);  //8 slots

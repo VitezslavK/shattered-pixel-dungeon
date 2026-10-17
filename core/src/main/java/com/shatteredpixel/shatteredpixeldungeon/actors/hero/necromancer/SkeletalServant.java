@@ -64,6 +64,21 @@ public class SkeletalServant extends DirectableAlly {
 	//used by the deathless servant talent
 	protected boolean revived = false;
 
+	//permanent ranks from the lantern's empower soul art, each one makes the servant stronger
+	public static final int MAX_RANK = 3;
+	public int rank = 0;
+
+	public boolean empower(){
+		HP = HT;
+		if (rank < MAX_RANK){
+			rank++;
+			updateStats();
+			HP = HT;
+			return true;
+		}
+		return false;
+	}
+
 	public SkeletalServant(){
 		super();
 		updateStats();
@@ -81,7 +96,7 @@ public class SkeletalServant extends DirectableAlly {
 	}
 
 	public void updateStats(){
-		int newHT = Math.round((8 + 4*heroLevel() + 3*lanternLevel()) * Evolution.servantHealthFactor());
+		int newHT = Math.round((8 + 4*heroLevel() + 3*lanternLevel()) * Evolution.servantHealthFactor() * (1f + 0.25f*rank));
 		if (newHT > HT){
 			HP += newHT - HT;
 		}
@@ -111,12 +126,13 @@ public class SkeletalServant extends DirectableAlly {
 	public int damageRoll() {
 		int lvl = heroLevel();
 		int lantern = lanternLevel();
-		return Random.NormalIntRange(1 + (lvl + lantern)/4, 3 + Math.round(lvl*0.8f) + lantern/2);
+		int dmg = Random.NormalIntRange(1 + (lvl + lantern)/4, 3 + Math.round(lvl*0.8f) + lantern/2);
+		return Math.round(dmg * (1f + 0.2f*rank));
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 1 + heroLevel()/4) + Evolution.servantArmor();
+		return super.drRoll() + Random.NormalIntRange(0, 1 + heroLevel()/4 + rank) + Evolution.servantArmor();
 	}
 
 	@Override
@@ -218,18 +234,30 @@ public class SkeletalServant extends DirectableAlly {
 		return servants;
 	}
 
+	@Override
+	public String description() {
+		String desc = super.description();
+		if (rank > 0 && !(this instanceof RisenSkeleton)){
+			desc += "\n\n" + Messages.get(SkeletalServant.class, "desc_rank", rank, MAX_RANK);
+		}
+		return desc;
+	}
+
 	private static final String REVIVED = "revived";
+	private static final String RANK = "rank";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
 		bundle.put(REVIVED, revived);
+		bundle.put(RANK, rank);
 	}
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		revived = bundle.getBoolean(REVIVED);
+		rank = bundle.getInt(RANK);
 	}
 
 	//temporary skeletons, from army of the dead and cracked lanterns

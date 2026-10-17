@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.WeaponCoating;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -82,6 +84,7 @@ import java.util.LinkedHashMap;
 public class Potion extends Item {
 
 	public static final String AC_DRINK = "DRINK";
+	public static final String AC_COAT  = "COAT";
 	
 	//used internally for potions that can be drunk or thrown
 	public static final String AC_CHOOSE = "CHOOSE";
@@ -222,6 +225,10 @@ public class Potion extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add( AC_DRINK );
+		//the alchemist can coat their weapon with most potions
+		if (hero.heroClass == HeroClass.ALCHEMIST && WeaponCoating.Kind.of(this) != null){
+			actions.add( AC_COAT );
+		}
 		return actions;
 	}
 	
@@ -230,7 +237,20 @@ public class Potion extends Item {
 
 		super.execute( hero, action );
 		
-		if (action.equals( AC_CHOOSE )){
+		if (action.equals( AC_COAT )){
+
+			WeaponCoating.Kind kind = WeaponCoating.Kind.of(this);
+			if (kind == null || hero.heroClass != HeroClass.ALCHEMIST) return;
+			detach( hero.belongings.backpack );
+			identify();
+			WeaponCoating.coat(hero, kind);
+			GLog.p(Messages.get(Potion.class, "coated", kind.title(), WeaponCoating.coatHits(hero)));
+			Catalog.countUse(getClass());
+			hero.sprite.operate(hero.pos);
+			Sample.INSTANCE.play(Assets.Sounds.DRINK);
+			hero.spendAndNext(1f);
+
+		} else if (action.equals( AC_CHOOSE )){
 			
 			GameScene.show(new WndUseItem(null, this) );
 			

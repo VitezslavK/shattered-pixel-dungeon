@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -171,6 +172,14 @@ public class Alchemy {
 
 	//called from Hero.damage
 	public static int modifyDamageTaken( Hero hero, int dmg, Object src ){
+		if (Mutations.has(hero, Mutations.Mutation.TOXIC_BLOOD) && (src instanceof ToxicGas || src instanceof CorrosiveGas
+				|| src instanceof Corrosion || src instanceof com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison)){
+			return 0;
+		}
+		Mutations muts = hero.buff(Mutations.class);
+		if (muts != null && dmg > 0){
+			muts.onDamaged(hero.HP - dmg);
+		}
 		if (hero.hasTalent(Talent.HAZMAT) && (src instanceof Burning || src instanceof Fire
 				|| src instanceof ToxicGas || src instanceof CorrosiveGas || src instanceof Corrosion || src instanceof Ooze)){
 			return Math.round(dmg * (1f - 0.25f*hero.pointsInTalent(Talent.HAZMAT)));
@@ -182,6 +191,14 @@ public class Alchemy {
 		ElixirFury fury = hero.buff(ElixirFury.class);
 		if (fury != null){
 			dmg = Math.round(dmg * (1.25f + 0.05f*hero.pointsInTalent(Talent.STRONG_BREW)));
+		}
+		boolean melee = !(hero.belongings.attackingWeapon() instanceof MissileWeapon);
+		if (melee && Mutations.has(hero, Mutations.Mutation.FEROCITY)){
+			dmg = Math.round(dmg * 1.15f);
+		}
+		WeaponCoating coating = hero.buff(WeaponCoating.class);
+		if (coating != null && melee){
+			dmg = coating.onHit(hero, enemy, dmg);
 		}
 		return dmg;
 	}
@@ -208,10 +225,14 @@ public class Alchemy {
 	}
 
 	public static int bonusArmor( Hero hero ){
+		int armor = 0;
 		if (hero.subClass == HeroSubClass.TRANSMUTER){
-			return Random.NormalIntRange(0, hero.pointsInTalent(Talent.MIDAS_SKIN));
+			armor += Random.NormalIntRange(0, hero.pointsInTalent(Talent.MIDAS_SKIN));
 		}
-		return 0;
+		if (Mutations.has(hero, Mutations.Mutation.THICK_HIDE)){
+			armor += Random.NormalIntRange(0, 3 + hero.lvl/10);
+		}
+		return armor;
 	}
 
 	public static void onFoodEaten( Hero hero ){

@@ -32,10 +32,24 @@ public class Sim {
 		if (actions.isEmpty()) return;
 		String a = Random.element(actions);
 		used.merge(it.getClass().getSimpleName()+":"+a, 1, Integer::sum);
+		Dungeon.energy = Math.max(Dungeon.energy, 30);
 		try {
 			hero.curAction = null;
-			it.execute(hero, a);
-		} catch (Throwable t){
+			if (a.equals("ARTS") && it instanceof com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SoulLantern){
+				//the arts menu is a window, call the arts directly
+				String[] arts = {"consume", "boneWard", "empower", "wail", "enthrall"};
+				String art = Random.element(arts);
+				used.merge("SoulArt:"+art, 1, Integer::sum);
+				java.lang.reflect.Field cf = com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact.class.getDeclaredField("charge");
+				cf.setAccessible(true); cf.setInt(it, 10);
+				java.lang.reflect.Method m = it.getClass().getDeclaredMethod(art, Hero.class);
+				m.setAccessible(true);
+				m.invoke(it, hero);
+			} else {
+				it.execute(hero, a);
+			}
+		} catch (Throwable t0){
+			Throwable t = t0 instanceof java.lang.reflect.InvocationTargetException ? t0.getCause() : t0;
 			StringBuilder sb = new StringBuilder("USE "+it.getClass().getName()+" "+a+": "+t);
 			int n=0; for (StackTraceElement e : t.getStackTrace()){ sb.append("\n    at ").append(e); if (++n>=9) break; }
 			errors.merge(sb.toString(), 1, Integer::sum);

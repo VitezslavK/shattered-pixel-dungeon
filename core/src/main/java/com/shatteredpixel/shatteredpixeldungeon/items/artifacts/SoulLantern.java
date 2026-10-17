@@ -21,6 +21,16 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.Thrall;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -74,6 +84,14 @@ public class SoulLantern extends Artifact {
 	public static final String AC_SUMMON    = "SUMMON";
 	public static final String AC_COMMAND   = "COMMAND";
 	public static final String AC_CONSUME   = "CONSUME";
+	public static final String AC_ARTS      = "ARTS";
+
+	//costs of the soul arts
+	public static final int COST_CONSUME = 1;
+	public static final int COST_WARD    = 1;
+	public static final int COST_EMPOWER = 2;
+	public static final int COST_WAIL    = 2;
+	public static final int COST_THRALL  = 4;
 
 	public static final int BASE_SUMMON_COST = 3;
 
@@ -85,7 +103,7 @@ public class SoulLantern extends Artifact {
 			if (!SkeletalServant.getServants().isEmpty()) {
 				actions.add(AC_COMMAND);
 			}
-			actions.add(AC_CONSUME);
+			actions.add(AC_ARTS);
 		}
 		return actions;
 	}
@@ -106,7 +124,7 @@ public class SoulLantern extends Artifact {
 
 		if (hero.buff(MagicImmune.class) != null) return;
 
-		if (action.equals(AC_SUMMON) || action.equals(AC_COMMAND) || action.equals(AC_CONSUME)) {
+		if (action.equals(AC_SUMMON) || action.equals(AC_COMMAND) || action.equals(AC_CONSUME) || action.equals(AC_ARTS)) {
 			if (!isEquipped(hero)) {
 				GLog.i(Messages.get(Artifact.class, "need_to_equip"));
 				return;
@@ -122,6 +140,8 @@ public class SoulLantern extends Artifact {
 			command();
 		} else if (action.equals(AC_CONSUME)) {
 			consume(hero);
+		} else if (action.equals(AC_ARTS)) {
+			showArts(hero);
 		}
 	}
 
@@ -202,6 +222,146 @@ public class SoulLantern extends Artifact {
 		});
 	}
 
+	//the soul arts give the necromancer something to spend souls on once their servants are raised
+	private void showArts( final Hero hero ){
+		final int[] costs = {COST_CONSUME, COST_WARD, COST_EMPOWER, COST_WAIL, COST_THRALL};
+		final String[] keys = {"art_consume", "art_ward", "art_empower", "art_wail", "art_thrall"};
+		String[] labels = new String[keys.length];
+		StringBuilder body = new StringBuilder(Messages.get(SoulLantern.class, "arts_body", charge));
+		for (int i = 0; i < keys.length; i++){
+			labels[i] = Messages.get(SoulLantern.class, keys[i]) + " (" + costs[i] + ")";
+			body.append("\n\n_").append(Messages.get(SoulLantern.class, keys[i])).append(":_ ")
+					.append(Messages.get(SoulLantern.class, keys[i] + "_desc", wardAmount(), wailDamage(), thrallDuration()));
+		}
+		GameScene.show(new WndOptions(new ItemSprite(this), Messages.titleCase(Messages.get(SoulLantern.class, "arts_title")),
+				body.toString(), labels){
+			@Override
+			protected boolean enabled(int index) {
+				if (charge < costs[index]) return false;
+				if (index == 2) return !SkeletalServant.getServants().isEmpty();
+				return true;
+			}
+
+			@Override
+			protected void onSelect(int index) {
+				switch (index){
+					case 0: consume(hero); break;
+					case 1: boneWard(hero); break;
+					case 2: empower(hero); break;
+					case 3: wail(hero); break;
+					case 4: enthrall(hero); break;
+				}
+			}
+		});
+	}
+
+	private int wardAmount(){
+		return 4 + 2*level() + (Dungeon.hero == null ? 0 : Dungeon.hero.lvl/3);
+	}
+
+	private int wailDamage(){
+		return 3 + 2*level() + Dungeon.scalingDepth()/2;
+	}
+
+	private int thrallDuration(){
+		return 20 + 3*level();
+	}
+
+	private void finishArt( Hero hero, int cost ){
+		spendCharge(cost);
+		Talent.onArtifactUsed(hero);
+		hero.sprite.operate(hero.pos);
+		Invisibility.dispel();
+		hero.spendAndNext(Actor.TICK);
+	}
+
+	private void boneWard( Hero hero ){
+		int shield = wardAmount();
+		Buff.affect(hero, Barrier.class).setShield(shield);
+		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
+		CellEmitter.center(hero.pos).burst(Speck.factory(Speck.BONE), 8);
+		Sample.INSTANCE.play(Assets.Sounds.BONES);
+		finishArt(hero, COST_WARD);
+	}
+
+	private void empower( Hero hero ){
+		ArrayList<SkeletalServant> servants = SkeletalServant.getServants();
+		if (servants.isEmpty()){
+			GLog.w(Messages.get(this, "no_servants"));
+			return;
+		}
+		for (SkeletalServant s : servants){
+			boolean ranked = s.empower();
+			if (s.sprite != null){
+				s.sprite.emitter().burst(ShadowParticle.UP, 10);
+				s.sprite.showStatus(CharSprite.POSITIVE, ranked
+						? Messages.get(this, "empowered_rank", s.rank)
+						: Messages.get(this, "empowered_heal"));
+			}
+		}
+		Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
+		finishArt(hero, COST_EMPOWER);
+	}
+
+	private void wail( Hero hero ){
+		int dmg = wailDamage();
+		ArrayList<Char> targets = new ArrayList<>();
+		for (Char ch : Actor.chars()){
+			if (ch.alignment == Char.Alignment.ENEMY && Dungeon.level.distance(hero.pos, ch.pos) <= 3
+					&& Dungeon.level.heroFOV[ch.pos]){
+				targets.add(ch);
+			}
+		}
+		for (Char ch : targets){
+			ch.damage(dmg, this);
+			if (ch.isAlive() && !ch.isImmune(Terror.class)){
+				Buff.affect(ch, Terror.class, 3f).object = hero.id();
+			}
+			if (ch.sprite != null) ch.sprite.emitter().burst(ShadowParticle.CURSE, 6);
+		}
+		hero.sprite.centerEmitter().burst(ShadowParticle.UP, 16);
+		Sample.INSTANCE.play(Assets.Sounds.GHOST);
+		GameScene.flash(0x8833AA66);
+		finishArt(hero, COST_WAIL);
+	}
+
+	private void enthrall( final Hero hero ){
+		GameScene.selectCell(new CellSelector.Listener() {
+			@Override
+			public void onSelect(Integer cell) {
+				if (cell == null) return;
+				Char ch = Actor.findChar(cell);
+				if (!(ch instanceof Mob) || ch.alignment != Char.Alignment.ENEMY || !Dungeon.level.heroFOV[cell]){
+					GLog.w(Messages.get(SoulLantern.class, "thrall_no_target"));
+					return;
+				}
+				Mob mob = (Mob) ch;
+				if (Char.hasProp(mob, Char.Property.BOSS) || Char.hasProp(mob, Char.Property.MINIBOSS)
+						|| mob.isImmune(Thrall.class) || mob.buff(AllyBuff.class) != null){
+					GLog.w(Messages.get(SoulLantern.class, "thrall_immune"));
+					return;
+				}
+				if (mob.HP > mob.HT/2){
+					GLog.w(Messages.get(SoulLantern.class, "thrall_too_healthy"));
+					return;
+				}
+				if (charge < COST_THRALL) return;
+				AllyBuff.affectAndLoot(mob, hero, Thrall.class);
+				Thrall thrall = mob.buff(Thrall.class);
+				if (thrall != null) thrall.set(thrallDuration());
+				if (mob.sprite != null) mob.sprite.emitter().burst(ShadowParticle.UP, 12);
+				Sample.INSTANCE.play(Assets.Sounds.GHOST);
+				GLog.p(Messages.get(SoulLantern.class, "thrall_done", mob.name()));
+				finishArt(hero, COST_THRALL);
+			}
+
+			@Override
+			public String prompt() {
+				return Messages.get(SoulLantern.class, "prompt_thrall");
+			}
+		});
+	}
+
 	private void consume( Hero hero ){
 		if (charge < 1){
 			GLog.w(Messages.get(this, "no_charge"));
@@ -257,6 +417,17 @@ public class SoulLantern extends Artifact {
 	//adds souls directly, used when enemies die and by talents
 	public void gainSouls( float amount ){
 		if (cursed || Dungeon.hero == null || Dungeon.hero.buff(MagicImmune.class) != null) return;
+		if (charge >= chargeCap){
+			//a full lantern feeds extra souls to the servants instead of wasting them
+			for (SkeletalServant s : SkeletalServant.getServants()){
+				int heal = Math.min(Math.round(s.HT * 0.15f * amount), s.HT - s.HP);
+				if (heal > 0){
+					s.HP += heal;
+					if (s.sprite != null) s.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
+				}
+			}
+			return;
+		}
 		if (charge < chargeCap) {
 			partialCharge += amount;
 			while (partialCharge >= 1f) {
