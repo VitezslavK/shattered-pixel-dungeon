@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle;
+import com.watabou.utils.Callback;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.FloorEvent;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -218,6 +220,10 @@ public abstract class Level implements Bundlable {
 	private static final String EVENT		= "event";
 
 	public FloorEvent event = FloorEvent.NONE;
+
+	//puzzles placed on this level, see PuzzleRoom
+	public ArrayList<Puzzle> puzzles = new ArrayList<>();
+	private static final String PUZZLES = "puzzles";
 
 	public void create() {
 
@@ -455,6 +461,12 @@ public abstract class Level implements Bundlable {
 			viewDistance = Math.round(5 * viewDistance / 8f);
 		}
 		event = bundle.contains( EVENT ) ? bundle.getEnum( EVENT, FloorEvent.class ) : FloorEvent.NONE;
+		puzzles = new ArrayList<>();
+		if (bundle.contains( PUZZLES )){
+			for (Bundlable b : bundle.getCollection( PUZZLES )){
+				if (b instanceof Puzzle) puzzles.add((Puzzle) b);
+			}
+		}
 		if (event == FloorEvent.MIST) {
 			viewDistance = Math.max(2, viewDistance - 3);
 		}
@@ -493,6 +505,7 @@ public abstract class Level implements Bundlable {
 		bundle.put( BLOBS, blobs.values() );
 		bundle.put( FEELING, feeling );
 		bundle.put( EVENT, event );
+		bundle.put( PUZZLES, puzzles );
 		bundle.put( "mobs_to_spawn", mobsToSpawn.toArray(new Class[0]));
 		bundle.put( "respawner", respawner );
 	}
@@ -602,19 +615,26 @@ public abstract class Level implements Bundlable {
 		if (transition.type == LevelTransition.Type.REGULAR_EXIT && Dungeon.branch == 0
 				&& ((Dungeon.depth == 10 && Dungeon.cavesPath == -1) || (Dungeon.depth == 15 && Dungeon.cityPath == -1))){
 			final boolean caves = Dungeon.depth == 10;
-			GameScene.show(new WndOptions(
-					Icons.get(Icons.STAIRS),
-					Messages.titleCase(Messages.get(Level.class, "path_title")),
-					Messages.get(Level.class, caves ? "path_desc" : "path_desc_city"),
-					Messages.get(Level.class, caves ? "path_classic" : "path_classic_city"),
-					Messages.get(Level.class, caves ? "path_ice" : "path_burned")){
+			//this is called from the actor thread, windows must be created on the render thread
+			// (creating it here crashed the game on Android after the second boss)
+			Game.runOnRenderThread(new Callback() {
 				@Override
-				protected void onSelect(int index) {
-					if (index == 0 || index == 1){
-						if (caves) Dungeon.cavesPath = index;
-						else Dungeon.cityPath = index;
-						activateTransition(hero, transition);
-					}
+				public void call() {
+					GameScene.show(new WndOptions(
+							Icons.get(Icons.STAIRS),
+							Messages.titleCase(Messages.get(Level.class, "path_title")),
+							Messages.get(Level.class, caves ? "path_desc" : "path_desc_city"),
+							Messages.get(Level.class, caves ? "path_classic" : "path_classic_city"),
+							Messages.get(Level.class, caves ? "path_ice" : "path_burned")){
+						@Override
+						protected void onSelect(int index) {
+							if (index == 0 || index == 1){
+								if (caves) Dungeon.cavesPath = index;
+								else Dungeon.cityPath = index;
+								activateTransition(hero, transition);
+							}
+						}
+					});
 				}
 			});
 			return false;

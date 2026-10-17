@@ -859,6 +859,15 @@ public class GameScene extends PixelScene {
 	}
 
 	private static Thread actorThread;
+
+	public static boolean sceneActive(){
+		return scene != null;
+	}
+
+	//windows build textures, which on mobile only works on the render thread
+	public static boolean onActorThread(){
+		return actorThread != null && Thread.currentThread() == actorThread;
+	}
 	
 	//sometimes UI changes can be prompted by the actor thread.
 	// We queue any removed element destruction, rather than destroying them in the actor thread.
@@ -894,6 +903,8 @@ public class GameScene extends PixelScene {
 		}
 
 		super.update();
+
+		AutoTour.update(this);
 
 		if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 

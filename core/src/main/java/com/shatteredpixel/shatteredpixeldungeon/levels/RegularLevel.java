@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.RegionTreasure;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.PuzzleRoom;
 import com.shatteredpixel.shatteredpixeldungeon.online.OnlineExtras;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shrine;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TreasureGoblin;
@@ -128,7 +130,9 @@ public abstract class RegularLevel extends Level {
 			rooms = builder.build((ArrayList<Room>)initRooms.clone());
 		} while (rooms == null);
 		
-		return painter().paint(this, rooms);
+		if (!painter().paint(this, rooms)) return false;
+		PuzzleRoom.placeRemoteParts(this, rooms);
+		return true;
 		
 	}
 	
@@ -153,6 +157,12 @@ public abstract class RegularLevel extends Level {
 		
 		if (Dungeon.shopOnLevel())
 			initRooms.add(new ShopRoom());
+
+		if (RegionTreasure.onThisFloor()){
+			initRooms.add(PuzzleRoom.signatureRoom());
+		} else if (PuzzleRoom.shouldSpawn()){
+			initRooms.add(PuzzleRoom.create());
+		}
 
 		//force max special rooms and add one more for large levels
 		int specials = specialRooms(feeling == Feeling.LARGE);

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Mutations;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
@@ -865,6 +866,8 @@ public class Hero extends Char {
 		//calls to dungeon.observe will also update hero's local FOV.
 		fieldOfView = Dungeon.level.heroFOV;
 
+		Puzzle.tick(this);
+
 		if (buff(Endure.EndureTracker.class) != null){
 			buff(Endure.EndureTracker.class).endEnduring();
 		}
@@ -1237,6 +1240,13 @@ public class Hero extends Char {
 		int doorCell = action.dst;
 		if (Dungeon.level.adjacent( pos, doorCell )) {
 			path = null;
+
+			//puzzle doors only open when their puzzle is solved
+			if (Puzzle.isGate(Dungeon.level, doorCell)){
+				GLog.w(Messages.get(Puzzle.class, "gate_locked"));
+				ready();
+				return false;
+			}
 			
 			boolean hasKey = false;
 			int door = Dungeon.level.map[doorCell];

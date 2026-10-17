@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -145,7 +146,7 @@ public class SkeletonKey extends Artifact {
 						return;
 					}
 					if (Dungeon.level.map[target] == Terrain.LOCKED_DOOR){
-						if (Dungeon.level.locked){
+						if (Dungeon.level.locked || Puzzle.isGate(Dungeon.level, target)){
 							GLog.w(Messages.get(SkeletonKey.class, "wont_open"));
 							return;
 						}
@@ -587,7 +588,7 @@ public class SkeletonKey extends Artifact {
 			}
 
 			for (int i = 0; i < Dungeon.level.length(); i++){
-				if (Dungeon.level.map[i] == Terrain.LOCKED_DOOR){
+				if (Dungeon.level.map[i] == Terrain.LOCKED_DOOR && !Puzzle.isGate(Dungeon.level, i)){
 					ironKeysNeeded[Dungeon.depth]++;
 				} else if (Dungeon.level.map[i] == Terrain.CRYSTAL_DOOR){
 					crystalKeysNeeded[Dungeon.depth]++;

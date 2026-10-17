@@ -61,6 +61,98 @@ public class Harness {
       problem("BUILDHERO "+hc+" "+e+sb);
     }
   }
+  static Map<String,Integer> puzzleStats = new TreeMap<>();
+  static boolean reachable(com.shatteredpixel.shatteredpixeldungeon.levels.Level l, int from, int to){
+    boolean[] pass = com.watabou.utils.BArray.or(l.passable, l.avoid, null);
+    for (int i = 0; i < pass.length; i++){
+      int t = l.map[i];
+      //hidden doors can be searched for and other locked doors have keys, puzzle gates don't
+      if (t == com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.DOOR || t == com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.OPEN_DOOR
+          || t == com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.SECRET_DOOR || t == com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.BARRICADE
+          || t == com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.CRYSTAL_DOOR
+          || (t == com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.LOCKED_DOOR && !com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle.isGate(l, i))) pass[i] = true;
+    }
+    pass[to] = true;
+    com.watabou.utils.PathFinder.buildDistanceMap(to, pass);
+    return com.watabou.utils.PathFinder.distance[from] != Integer.MAX_VALUE;
+  }
+  static void checkPuzzles(com.shatteredpixel.shatteredpixeldungeon.levels.Level l, String ctx){
+    Dungeon.level = l;
+    com.watabou.utils.PathFinder.setMapSize(l.width(), l.height());
+    int start = l.entrance();
+    Dungeon.hero.pos = start;
+    for (com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle p : new ArrayList<>(l.puzzles)){
+      String t = p.type.name();
+      puzzleStats.merge(t, 1, Integer::sum);
+      switch (p.type){
+        case GATE: case TIMED: {
+          if (p.plates.length != 1) { problem("PUZZLE no plate " + t + " " + ctx); break; }
+          int plate = p.plates[0];
+          if (!(l.traps.get(plate) instanceof com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.PressurePlate)) problem("PUZZLE plate missing trap " + ctx);
+          if (!reachable(l, start, plate)) problem("PUZZLE plate unreachable " + t + " " + ctx);
+          if (reachable(l, start, p.reward)) problem("PUZZLE reward reachable while sealed " + t + " " + ctx);
+          l.traps.get(plate).trigger();
+          if (!p.open) problem("PUZZLE gate didn't open " + t + " " + ctx);
+          if (!reachable(l, start, p.reward)) problem("PUZZLE reward unreachable after opening " + t + " " + ctx);
+          if (p.type == com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle.Type.TIMED){
+            for (int i = 0; i < 400 && p.open; i++) p.onHeroTurn(Dungeon.hero);
+            if (p.open) problem("PUZZLE timed door never closed " + ctx);
+            l.traps.get(plate).trigger();
+            if (!p.open) problem("PUZZLE timed door didn't reopen " + ctx);
+          }
+          break; }
+        case SEQUENCE: {
+          com.shatteredpixel.shatteredpixeldungeon.items.PuzzleNote note = null;
+          for (com.shatteredpixel.shatteredpixeldungeon.items.Heap h : l.heaps.valueList()) for (Item i : h.items) if (i instanceof com.shatteredpixel.shatteredpixeldungeon.items.PuzzleNote) note = (com.shatteredpixel.shatteredpixeldungeon.items.PuzzleNote) i;
+          if (note == null) { problem("PUZZLE no note " + ctx); break; }
+          for (int plate : p.plates){
+            if (!reachable(l, start, plate)) problem("PUZZLE sequence plate unreachable " + ctx);
+            if (!(l.traps.get(plate) instanceof com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.PressurePlate)) problem("PUZZLE sequence plate missing " + ctx);
+          }
+          java.util.HashSet<Integer> distinct = new java.util.HashSet<>(); for (int c : p.plates) distinct.add(c);
+          if (distinct.size() != 4) problem("PUZZLE sequence plates overlap " + ctx);
+          //a wrong press resets
+          int wrong = p.plates[p.order[1]];
+          l.traps.get(wrong).trigger();
+          if (p.progress != 0) problem("PUZZLE wrong plate didn't reset " + ctx);
+
+          for (int idx : note.order) l.traps.get(p.plates[idx]).trigger();
+          if (!p.solved) problem("PUZZLE sequence not solved by note order " + ctx);
+          if (l.heaps.get(p.reward) == null) problem("PUZZLE sequence no reward " + ctx);
+          break; }
+        case OFFERING: {
+          if (p.pedestals.length != 3 || p.needs.length != 3) { problem("PUZZLE offering malformed " + ctx); break; }
+          for (int ped : p.pedestals) if (!reachable(l, start, ped)) {
+            StringBuilder edge = new StringBuilder();
+            for (int x = p.left; x <= p.right; x++) for (int y = p.top; y <= p.bottom; y++){
+              if (x == p.left || x == p.right || y == p.top || y == p.bottom){
+                int c = x + y*l.width(); int tt = l.map[c];
+                if (tt != com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.WALL && tt != com.shatteredpixel.shatteredpixeldungeon.levels.Terrain.WALL_DECO) edge.append(x).append(",").append(y).append("=").append(tt).append(" ");
+              }
+            }
+            problem("PUZZLE pedestal unreachable edge[" + edge + "] map=" + l.map[ped] + " " + ctx);
+            break;
+          }
+          java.util.Map<String,Item> samples = new java.util.HashMap<>();
+          samples.put("potion", new com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing());
+          samples.put("scroll", new com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify());
+          samples.put("seed", new com.shatteredpixel.shatteredpixeldungeon.plants.Sungrass.Seed());
+          samples.put("stone", new com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfBlink());
+          samples.put("food", new com.shatteredpixel.shatteredpixeldungeon.items.food.Food());
+          samples.put("thrown", new com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone());
+          //wrong items first: nothing should happen
+          for (int i = 0; i < 3; i++) l.drop(new com.shatteredpixel.shatteredpixeldungeon.items.Gold(5), p.pedestals[i]);
+          p.onHeroTurn(Dungeon.hero);
+          if (p.solved) problem("PUZZLE offering solved with gold " + ctx);
+          for (int i = 0; i < 3; i++){ com.shatteredpixel.shatteredpixeldungeon.items.Heap h = l.heaps.get(p.pedestals[i]); if (h != null) h.destroy(); }
+          for (int i = 0; i < 3; i++) l.drop(samples.get(p.needs[(i+1)%3]), p.pedestals[i]);
+          p.onHeroTurn(Dungeon.hero);
+          if (!p.solved) problem("PUZZLE offering not solved " + ctx);
+          if (l.heaps.get(p.reward) == null) problem("PUZZLE offering no reward " + ctx);
+          break; }
+      }
+    }
+  }
   static void problem(String s){ problems.merge(s,1,Integer::sum); }
   static void check(String where, Object o, String m){
     try {
@@ -223,6 +315,22 @@ public class Harness {
                 l = l2;
               }
               levelCounts.merge(d+":"+l.getClass().getSimpleName(),1,Integer::sum);
+              if (!SIM && com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.RegionTreasure.onThisFloor()){
+                String found = "none";
+                for (com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle pz : l.puzzles){
+                  com.shatteredpixel.shatteredpixeldungeon.items.Heap h = l.heaps.get(pz.reward);
+                  if (h != null) { found = ""; for (Item i : h.items) found += i.getClass().getSimpleName() + "+" + i.level()
+                      + (i instanceof com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor && ((com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor)i).glyph != null ? "[" + ((com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor)i).glyph.getClass().getSimpleName() + "]" : "")
+                      + (i instanceof com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon && ((com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon)i).enchantment != null ? "[" + ((com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon)i).enchantment.getClass().getSimpleName() + "]" : "") + " "; }
+                }
+                puzzleStats.merge("TREASURE d" + d + " caves=" + Dungeon.cavesPath + " city=" + Dungeon.cityPath + ": " + found.trim(), 1, Integer::sum);
+              }
+              if (!SIM && !l.puzzles.isEmpty()){
+                try { checkPuzzles(l, ctx); } catch (Throwable t){
+                  StringBuilder sb=new StringBuilder(); for (StackTraceElement x : t.getStackTrace()) { if (sb.length()>900) break; sb.append("\n    at ").append(x); }
+                  problem("PUZZLE CRASH " + t + sb);
+                }
+              }
               for (Mob m : l.mobs) checkAll("mob:"+m.getClass().getName(), m);
               for (com.shatteredpixel.shatteredpixeldungeon.items.Heap h : l.heaps.valueList()) for (Item i : h.items) checkAll("item:"+i.getClass().getName(), i);
               if (l.event != null) checkAll("event:"+l.event, l.event);
@@ -255,6 +363,7 @@ public class Harness {
       for (HeroClass hc : HeroClass.values()) checkAll("class:"+hc, new Object(){ public String title(){return hc.title();} public String desc(){return hc.desc();} public String shortDesc(){return hc.shortDesc();} });
     }
     System.out.println("USED: "+com.shatteredpixel.shatteredpixeldungeon.actors.Sim.used.size()+" distinct item actions"); com.shatteredpixel.shatteredpixeldungeon.actors.Sim.used.forEach((k,v)->System.out.println("USEDKEY "+v+" "+k));
+    puzzleStats.forEach((k,v)->System.out.println("PUZZLES " + v + "x " + k));
     System.out.println("=== PROBLEMS: "+problems.size());
     problems.forEach((k,v)->System.out.println(v+"x "+k));
     System.exit(0);
