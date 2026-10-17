@@ -83,6 +83,7 @@ public class Endings {
 
 	//ends the run with the given ending and shows its epilogue
 	public static void finish( Ending ending ){
+		Badges.validateEnding( ending );
 		Dungeon.win( Amulet.class );
 		Dungeon.deleteGame( GamesInProgress.curSlot, true );
 		Badges.saveGlobal();

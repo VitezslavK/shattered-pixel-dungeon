@@ -6,6 +6,15 @@ Pořadí fází je zvolené tak, aby každá fáze šla sestavit a hrát sama o 
 
 ---
 
+## Stav k 2026-10-17: všechny fáze implementovány
+
+Hotovo a commitnuto na větvi `mod-overhaul`: Nekromant, evoluce podtříd, alternativní bossové (patra 5–25),
+větvení (Ledové jeskyně, Spálené město), oblast Propast 26–30 s Hlasatelem prázdnoty, 5 konců + odznaky,
+Arkanista, Alchymista, reakce, runy a Kodex, nová monstra a elitní nepřátelé, nové zbraně/hůlka/prsten/očarování/glyf,
+události pater, svatyně, skřet s pokladem, modifikátory běhu, online duchové, žebříček denních běhů a sdílené kosti.
+
+Zbývá: ladění podle hraní (balanc), vlastní grafika místo přebarvených placeholderů, jazyky kromě EN/CS.
+
 ## Fáze 0 – Základy (krátké)
 
 - Sestavení desktop verze (JDK 21 přes Homebrew, `./gradlew desktop:debug`).

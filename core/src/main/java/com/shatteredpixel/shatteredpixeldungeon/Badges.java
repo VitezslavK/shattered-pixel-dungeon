@@ -221,6 +221,11 @@ public class Badges {
 		GAMES_PLAYED_4              ( 109, BadgeType.GLOBAL ),
 		HIGH_SCORE_4                ( 110 ),
 		CHAMPION_1                  ( 111 ),
+		ENDING_LIBERATOR            ( 99 ),
+		ENDING_DESTROYER            ( 104 ),
+		ENDING_DARK_LORD            ( 106 ),
+		ENDING_KEEPER               ( 100 ),
+		ALL_ENDINGS                 ( 103, BadgeType.GLOBAL ),
 
 		//diamond
 		PACIFIST_ASCENT             ( 120 ),
@@ -994,6 +999,26 @@ public class Badges {
 		}
 		
 		unlock(badge);
+	}
+
+	//badges for the alternative endings, see Endings
+	public static void validateEnding( Endings.Ending ending ){
+		Badge badge;
+		switch (ending){
+			case LIBERATOR: badge = Badge.ENDING_LIBERATOR; break;
+			case DESTROYER: badge = Badge.ENDING_DESTROYER; break;
+			case DARK_LORD: badge = Badge.ENDING_DARK_LORD; break;
+			case KEEPER:    badge = Badge.ENDING_KEEPER; break;
+			default:        badge = null; break;
+		}
+		if (badge != null && !isUnlocked(badge)){
+			displayBadge(badge);
+		}
+		if (!isUnlocked(Badge.ALL_ENDINGS) && isUnlocked(Badge.VICTORY)
+				&& isUnlocked(Badge.ENDING_LIBERATOR) && isUnlocked(Badge.ENDING_DESTROYER)
+				&& isUnlocked(Badge.ENDING_DARK_LORD) && isUnlocked(Badge.ENDING_KEEPER)){
+			displayBadge(Badge.ALL_ENDINGS);
+		}
 	}
 
 	public static void validateRatmogrify(){
