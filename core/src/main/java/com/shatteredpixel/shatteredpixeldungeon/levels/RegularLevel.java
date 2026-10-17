@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.online.OnlineExtras;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shrine;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TreasureGoblin;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -766,6 +767,18 @@ public abstract class RegularLevel extends Level {
 			if (event == FloorEvent.GOLD_RUSH){
 				for (int i = 0; i < 4; i++){
 					drop(new Gold().random(), randomDropCell());
+				}
+			}
+		Random.popGenerator();
+
+		//shared bones: items left behind by other players who died near this depth
+		Random.pushGenerator(Random.Long());
+			boolean bones = Random.Int(8) == 0;
+			if (bones && Dungeon.branch == 0){
+				OnlineExtras.BonesEntry entry = GhostPool.pickBones(Dungeon.depth);
+				Item remains = entry == null ? null : entry.create();
+				if (remains != null){
+					drop(remains, randomDropCell()).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();

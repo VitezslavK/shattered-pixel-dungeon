@@ -177,6 +177,56 @@ public class OnlineService {
 		});
 	}
 
+	public interface RawCallback {
+		void onResult( JsonValue result );
+	}
+
+	//generic insert used by the leaderboard and shared bones
+	public static void post( String table, String json ){
+		if (!enabled()) return;
+		Net.HttpRequest req = request(Net.HttpMethods.POST, table);
+		req.setHeader("Prefer", "return=minimal");
+		req.setContent(json);
+		Gdx.net.sendHttpRequest(req, new Net.HttpResponseListener() {
+			@Override public void handleHttpResponse(Net.HttpResponse r) { }
+			@Override public void failed(Throwable t) { }
+			@Override public void cancelled() { }
+		});
+	}
+
+	//generic query, the parsed JSON (or null on failure) is handed back on the game thread
+	public static void get( String path, RawCallback callback ){
+		if (!enabled()){
+			callback.onResult(null);
+			return;
+		}
+		Gdx.net.sendHttpRequest(request(Net.HttpMethods.GET, path), new Net.HttpResponseListener() {
+			@Override
+			public void handleHttpResponse(Net.HttpResponse r) {
+				JsonValue result = null;
+				try {
+					if (r.getStatus().getStatusCode() == 200) {
+						result = new JsonReader().parse(r.getResultAsString());
+					}
+				} catch (Exception e){
+					result = null;
+				}
+				deliverRaw(callback, result);
+			}
+			@Override public void failed(Throwable t) { deliverRaw(callback, null); }
+			@Override public void cancelled() { deliverRaw(callback, null); }
+		});
+	}
+
+	private static void deliverRaw( RawCallback callback, JsonValue result ){
+		Game.runOnRenderThread(new com.watabou.utils.Callback() {
+			@Override
+			public void call() {
+				callback.onResult(result);
+			}
+		});
+	}
+
 	//results are always handed back on the game thread
 	private static void deliver( Callback callback, ArrayList<GhostSnapshot> result ){
 		Game.runOnRenderThread(new com.watabou.utils.Callback() {

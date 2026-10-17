@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
+import com.shatteredpixel.shatteredpixeldungeon.online.OnlineExtras;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -49,6 +52,7 @@ public class SpiritBell extends Item {
 	public static final String AC_RING     = "RING";
 	public static final String AC_FRIEND   = "FRIEND";
 	public static final String AC_NAME     = "NAME";
+	public static final String AC_SCORES   = "SCORES";
 
 	{
 		image = ItemSpriteSheet.SPIRIT_BELL;
@@ -68,6 +72,7 @@ public class SpiritBell extends Item {
 		if (!used) actions.add(AC_RING);
 		actions.add(AC_FRIEND);
 		actions.add(AC_NAME);
+		if (OnlineService.enabled()) actions.add(AC_SCORES);
 		return actions;
 	}
 
@@ -91,6 +96,29 @@ public class SpiritBell extends Item {
 				@Override
 				public void onSelect(boolean positive, String text) {
 					if (positive) OnlineService.friendTarget(text);
+				}
+			});
+		} else if (action.equals(AC_SCORES)){
+			final String day = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT)
+					.format(new java.util.Date(com.watabou.noosa.Game.realTime));
+			GLog.i(Messages.get(this, "scores_loading"));
+			OnlineExtras.fetchDailyTop(day, new OnlineExtras.ScoreCallback() {
+				@Override
+				public void onResult(ArrayList<OnlineExtras.Score> scores) {
+					StringBuilder text = new StringBuilder();
+					if (scores.isEmpty()){
+						text.append(Messages.get(SpiritBell.class, "scores_empty"));
+					}
+					int rank = 1;
+					for (OnlineExtras.Score s : scores){
+						text.append(rank++).append(". _").append(s.playerName).append("_ (")
+								.append(Messages.titleCase(s.heroClass.title())).append(") ")
+								.append(s.score).append(" - ")
+								.append(s.won ? Messages.get(SpiritBell.class, "scores_won") : Messages.get(SpiritBell.class, "scores_depth", s.depth))
+								.append("\n");
+					}
+					GameScene.show(new WndTitledMessage(new ItemSprite(ItemSpriteSheet.SPIRIT_BELL),
+							Messages.get(SpiritBell.class, "scores_title", day), text.toString()));
 				}
 			});
 		} else if (action.equals(AC_NAME)){

@@ -42,9 +42,30 @@ public class GhostPool {
 	private static final ArrayList<GhostSnapshot> remote = new ArrayList<>();
 	private static boolean localLoaded = false;
 
+	private static final ArrayList<OnlineExtras.BonesEntry> remoteBones = new ArrayList<>();
+
+	//picks remote bones left near the given depth, or null
+	public static OnlineExtras.BonesEntry pickBones( int depth ){
+		ArrayList<OnlineExtras.BonesEntry> candidates = new ArrayList<>();
+		for (OnlineExtras.BonesEntry b : remoteBones){
+			if (Math.abs(b.depth - depth) <= 1) candidates.add(b);
+		}
+		if (candidates.isEmpty()) return null;
+		OnlineExtras.BonesEntry b = Random.element(candidates);
+		remoteBones.remove(b);
+		return b;
+	}
+
 	//called when a new run starts
 	public static void refresh(){
 		loadLocal();
+		OnlineExtras.fetchBones(new OnlineExtras.BonesCallback() {
+			@Override
+			public void onResult(ArrayList<OnlineExtras.BonesEntry> bones) {
+				remoteBones.clear();
+				remoteBones.addAll(bones);
+			}
+		});
 		OnlineService.fetchRecent(new OnlineService.Callback() {
 			@Override
 			public void onResult(ArrayList<GhostSnapshot> ghosts) {
@@ -66,6 +87,7 @@ public class GhostPool {
 		while (local.size() > MAX_LOCAL) local.remove(local.size()-1);
 		saveLocal();
 		OnlineService.uploadGhost(s);
+		if (!won) OnlineExtras.uploadBones(Dungeon.hero);
 	}
 
 	//picks a ghost that reached at least close to the given depth, preferring other players

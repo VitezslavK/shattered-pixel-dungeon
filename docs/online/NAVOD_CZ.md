@@ -11,7 +11,8 @@ Aby se objevovali duchové **ostatních hráčů** a fungovalo přivolání kama
 ## 2. Vytvoř tabulku
 1. V levém menu **SQL Editor** → **New query**.
 2. Vlož celý obsah souboru `docs/online/supabase_setup.sql` a klikni na **Run**.
-   - Vznikne tabulka `ghosts`. Hra do ní smí jen zapisovat nové duchy a číst je, upravovat ani mazat nic nemůže.
+   - Vzniknou tabulky `ghosts` (duchové), `daily_scores` (denní žebříček) a `bones` (sdílené kosti).
+     Hra do nich smí jen přidávat a číst, upravovat ani mazat nic nemůže.
 
 ## 3. Propoj hru se serverem
 1. V Supabase: **Project Settings → API**.
@@ -33,3 +34,8 @@ Aby se objevovali duchové **ostatních hráčů** a fungovalo přivolání kama
   - Akce **KAMARÁD**: zadej kód kamaráda (svůj kód vidíš v popisu zvonce).
   - Akce **JMÉNO**: tvé jméno, které uvidí ostatní.
   - Akce **ZAZVONIT**: jednou za hru přivolá ducha kamarádova posledního hrdiny jako spojence (bez kódu přijde náhodný duch).
+  - Akce **ŽEBŘÍČEK** (jen online): dnešní nejlepší výsledky denní výzvy.
+- **Denní výzva jako závod:** všichni hrají stejný dungeon, výsledek se po konci nahraje do žebříčku.
+- **Sdílené kosti:** když hrdina zemře, nechá po sobě jeden předmět. Ten se může objevit
+  jako kostra s kořistí ve hře jiného hráče na podobném patře (může být prokletý!).
+

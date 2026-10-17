@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.online.OnlineExtras;
 import com.shatteredpixel.shatteredpixeldungeon.online.GhostPool;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -122,6 +123,10 @@ public enum Rankings {
 		INSTANCE.saveGameData(rec);
 
 		rec.gameID = UUID.randomUUID().toString();
+
+		if (rec.daily && !Dungeon.dailyReplay){
+			OnlineExtras.uploadDailyScore(rec.date, rec.score, rec.depth, win, rec.heroClass);
+		}
 
 		if (rec.daily){
 			if (Dungeon.dailyReplay){
