@@ -41,5 +41,20 @@ cd "$ROOT"
 ./gradlew ios:createIPA -PiosBundleId="$BUNDLE" -Probovm.iosSignIdentity="$IDENTITY" \
   -Probovm.iosProvisioningProfile="iOS Team Provisioning Profile: $BUNDLE" -Probovm.archs=arm64 --console=plain -q
 IPA=$(ls "$HOME"/.spd-build/ios/robovm/*.ipa 2>/dev/null || ls ios/build/robovm/*.ipa)
-xcrun devicectl device install app --device "$DEVICE" "$IPA"
+
+# iOS 27 terminates apps built against its SDK unless they adopt the UIScene lifecycle, which the
+# libGDX RoboVM backend doesn't do yet. Stamping the binary with an older SDK version keeps the
+# legacy app lifecycle working, the app is then re-signed with the same identity and entitlements.
+WORK="${TMPDIR:-/tmp}/spd-ios-ipa"
+rm -rf "$WORK"; mkdir -p "$WORK"; (cd "$WORK" && unzip -q "$IPA")
+APP=$(ls -d "$WORK"/Payload/*.app)
+EXE=$(/usr/libexec/PlistBuddy -c "Print :CFBundleExecutable" "$APP/Info.plist")
+codesign -d --entitlements - --xml "$APP" > "$WORK/ent.plist" 2>/dev/null
+vtool -set-build-version ios 12.0 18.0 -replace -output "$APP/$EXE.new" "$APP/$EXE" 2>/dev/null
+mv "$APP/$EXE.new" "$APP/$EXE"; chmod +x "$APP/$EXE"
+/usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName SPD Mod" -c "Set :CFBundleName SPD Mod" "$APP/Info.plist"
+codesign -f -s "$IDENTITY" --entitlements "$WORK/ent.plist" --generate-entitlement-der "$APP"
+codesign --verify --deep --strict "$APP"
+(cd "$WORK" && zip -qr fixed.ipa Payload)
+xcrun devicectl device install app --device "$DEVICE" "$WORK/fixed.ipa"
 echo "Installed. First time only: iPhone Settings > General > VPN & Device Management > trust your Apple ID."
