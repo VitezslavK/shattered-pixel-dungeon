@@ -96,13 +96,14 @@ public class SkeletalServant extends DirectableAlly {
 	}
 
 	public void updateStats(){
-		int newHT = Math.round((8 + 4*heroLevel() + 3*lanternLevel()) * Evolution.servantHealthFactor() * (1f + 0.25f*rank));
+		//weaker than the hero on its own: it is a support, not a second hero
+		int newHT = Math.round((6 + 3*heroLevel() + 2*lanternLevel()) * Evolution.servantHealthFactor() * (1f + 0.15f*rank));
 		if (newHT > HT){
 			HP += newHT - HT;
 		}
 		HT = newHT;
 		HP = Math.min(HP, HT);
-		defenseSkill = heroLevel() + 4;
+		defenseSkill = heroLevel() + 2;
 	}
 
 	@Override
@@ -119,20 +120,20 @@ public class SkeletalServant extends DirectableAlly {
 
 	@Override
 	public int attackSkill(Char target) {
-		return Math.round((heroLevel() + 9) * Evolution.servantAccuracyFactor());
+		return Math.round((heroLevel() + 6) * Evolution.servantAccuracyFactor());
 	}
 
 	@Override
 	public int damageRoll() {
 		int lvl = heroLevel();
 		int lantern = lanternLevel();
-		int dmg = Random.NormalIntRange(1 + (lvl + lantern)/4, 3 + Math.round(lvl*0.8f) + lantern/2);
-		return Math.round(dmg * (1f + 0.2f*rank));
+		int dmg = Random.NormalIntRange(1 + lvl/5 + lantern/4, 2 + lvl/2 + lantern/3);
+		return Math.round(dmg * (1f + 0.1f*rank));
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 1 + heroLevel()/4 + rank) + Evolution.servantArmor();
+		return super.drRoll() + Random.NormalIntRange(0, heroLevel()/5 + rank) + Evolution.servantArmor();
 	}
 
 	@Override

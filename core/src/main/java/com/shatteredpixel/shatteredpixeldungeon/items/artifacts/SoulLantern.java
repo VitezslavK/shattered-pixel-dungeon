@@ -89,7 +89,7 @@ public class SoulLantern extends Artifact {
 	//costs of the soul arts
 	public static final int COST_CONSUME = 1;
 	public static final int COST_WARD    = 1;
-	public static final int COST_EMPOWER = 2;
+	public static final int COST_EMPOWER = 3;
 	public static final int COST_WAIL    = 2;
 	public static final int COST_THRALL  = 4;
 

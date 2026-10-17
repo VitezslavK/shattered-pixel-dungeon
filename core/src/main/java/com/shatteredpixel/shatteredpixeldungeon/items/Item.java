@@ -85,6 +85,8 @@ public class Item implements Bundlable {
 	private int level = 0;
 
 	public boolean levelKnown = false;
+	//set once the arcanist's essence sense has rewarded this item, so it can't be farmed by re-collecting it
+	public boolean essenceSensed = false;
 	
 	public boolean cursed;
 	public boolean cursedKnown;
@@ -579,6 +581,7 @@ public class Item implements Bundlable {
 	private static final String QUANTITY		= "quantity";
 	private static final String LEVEL			= "level";
 	private static final String LEVEL_KNOWN		= "levelKnown";
+	private static final String ESSENCE_SENSED	= "essence_sensed";
 	private static final String CURSED			= "cursed";
 	private static final String CURSED_KNOWN	= "cursedKnown";
 	private static final String QUICKSLOT		= "quickslotpos";
@@ -590,6 +593,7 @@ public class Item implements Bundlable {
 		bundle.put( QUANTITY, quantity );
 		bundle.put( LEVEL, level );
 		bundle.put( LEVEL_KNOWN, levelKnown );
+		if (essenceSensed) bundle.put( ESSENCE_SENSED, true );
 		bundle.put( CURSED, cursed );
 		bundle.put( CURSED_KNOWN, cursedKnown );
 		if (Dungeon.quickslot.contains(this)) {
@@ -603,6 +607,7 @@ public class Item implements Bundlable {
 	public void restoreFromBundle( Bundle bundle ) {
 		quantity	= bundle.getInt( QUANTITY );
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
+		essenceSensed = bundle.getBoolean( ESSENCE_SENSED );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
 		
 		int level = bundle.getInt( LEVEL );

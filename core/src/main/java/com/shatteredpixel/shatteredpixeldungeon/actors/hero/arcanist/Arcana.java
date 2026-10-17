@@ -163,9 +163,11 @@ public class Arcana {
 	public static void onItemCollected( Hero hero, Item item ){
 		if (hero.hasTalent(Talent.ESSENCE_SENSE)
 				&& (item instanceof Wand || item instanceof Ring || item instanceof Artifact)){
-			if (isArcanist(hero)) {
+			//only the first time an item is found, unequipping puts items back into the bag
+			if (isArcanist(hero) && !item.essenceSensed) {
 				ArcaneCodex.giveEssence(hero, hero.pointsInTalent(Talent.ESSENCE_SENSE));
 			}
+			item.essenceSensed = true;
 			item.cursedKnown = true;
 		}
 	}

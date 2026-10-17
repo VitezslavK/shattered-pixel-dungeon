@@ -71,6 +71,8 @@ public class ArcaneCodex extends Item {
 
 	public static final int INFUSE_COST = 2;
 	public static final int BASE_INSCRIBE_COST = 15;
+	//the codex can't push items past this level, beyond that they need scrolls of upgrade
+	public static final int MAX_EMPOWER_LEVEL = 5;
 
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
@@ -146,7 +148,7 @@ public class ArcaneCodex extends Item {
 	}
 
 	public static int empowerCost( Hero hero, Item item ){
-		float cost = 12 + 6*Math.max(0, item.level());
+		float cost = 15 + 9*Math.max(0, item.level());
 		cost *= 1f - 0.1f*hero.pointsInTalent(Talent.ARCANE_EMPOWERMENT);
 		return Math.max(1, Math.round(cost));
 	}
@@ -270,7 +272,7 @@ public class ArcaneCodex extends Item {
 		@Override
 		public boolean itemSelectable(Item item) {
 			return (item instanceof Wand || item instanceof Ring)
-					&& item.isIdentified() && !item.cursed && item.level() < 10;
+					&& item.isIdentified() && !item.cursed && item.level() < MAX_EMPOWER_LEVEL;
 		}
 
 		@Override
