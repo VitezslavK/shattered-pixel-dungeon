@@ -51,13 +51,20 @@ public class OnlineExtras {
 		void onResult( ArrayList<Score> scores );
 	}
 
+	//daily runs reset at midnight UTC, so their leaderboards are keyed by the UTC date
+	public static String utcDay( long millis ){
+		java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT);
+		f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+		return f.format(new java.util.Date(millis));
+	}
+
 	public static void uploadDailyScore( String day, int score, int depth, boolean won, HeroClass cls ){
 		if (!day.matches("\\d{4}-\\d{2}-\\d{2}")) return;
 		String json = "{\"day\":\"" + day + "\","
 				+ "\"player_name\":\"" + OnlineService.playerName().replace("\"", "") + "\","
 				+ "\"friend_code\":\"" + OnlineService.friendCode() + "\","
 				+ "\"hero_class\":\"" + cls.name() + "\","
-				+ "\"score\":" + Math.max(0, score) + ","
+				+ "\"score\":" + (int)GameMath.gate(0, score, 100_000_000) + ","
 				+ "\"depth\":" + (int)GameMath.gate(1, depth, 31) + ","
 				+ "\"won\":" + won + "}";
 		OnlineService.post("daily_scores", json);
@@ -131,6 +138,12 @@ public class OnlineExtras {
 		if (hero.belongings.armor() != null) candidates.add(hero.belongings.armor());
 		for (Item i : hero.belongings.backpack.items){
 			if ((i instanceof Wand || i instanceof Ring) && !i.unique) candidates.add(i);
+		}
+		//unupgraded starting gear isn't worth finding, only share things another player would want
+		for (Item i : new ArrayList<>(candidates)){
+			boolean tierOne = (i instanceof MeleeWeapon && ((MeleeWeapon) i).tier <= 1)
+					|| (i instanceof Armor && ((Armor) i).tier <= 1);
+			if (i.unique || (tierOne && i.level() <= 0)) candidates.remove(i);
 		}
 		if (candidates.isEmpty()) return;
 		Item it = Random.element(candidates);

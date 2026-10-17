@@ -34,10 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Game;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 //Everything about playing with other people in one place: your name and code, your friend's code,
 // the daily leaderboard, who played recently and a short explanation of how it all works.
@@ -59,8 +56,14 @@ public class WndOnline extends Window {
 		pos = title.bottom() + 4;
 
 		String friend = OnlineService.friendTarget();
-		String info = Messages.get(this, OnlineService.enabled() ? "online" : "offline")
+		String status = "";
+		if (OnlineService.enabled()){
+			if (OnlineService.lastError != null) status = "\n" + Messages.get(this, "status_error", OnlineService.lastError);
+			else if (OnlineService.lastSuccess > 0) status = "\n" + Messages.get(this, "status_ok");
+		}
+		String info = Messages.get(this, OnlineService.enabled() ? "online" : "offline") + status
 				+ "\n\n" + Messages.get(this, "your_name", OnlineService.playerName())
+				+ (OnlineService.playerName().equals("Hero") ? " " + Messages.get(this, "name_default") : "")
 				+ "\n" + Messages.get(this, "your_code", OnlineService.friendCode())
 				+ "\n" + (friend.isEmpty() ? Messages.get(this, "no_friend") : Messages.get(this, "friend", friend));
 		RenderedTextBlock text = PixelScene.renderTextBlock(info, 6);
@@ -146,7 +149,7 @@ public class WndOnline extends Window {
 	}
 
 	private static void showScores(){
-		final String day = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(new Date(Game.realTime));
+		final String day = OnlineExtras.utcDay(Game.realTime);
 		OnlineExtras.fetchDailyTop(day, new OnlineExtras.ScoreCallback() {
 			@Override
 			public void onResult(ArrayList<OnlineExtras.Score> scores) {

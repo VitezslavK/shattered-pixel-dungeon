@@ -125,7 +125,8 @@ public enum Rankings {
 		rec.gameID = UUID.randomUUID().toString();
 
 		if (rec.daily && !Dungeon.dailyReplay){
-			OnlineExtras.uploadDailyScore(rec.date, rec.score, rec.depth, win, rec.heroClass);
+			//the daily's own day, not the day it ended, which may be later
+			OnlineExtras.uploadDailyScore(OnlineExtras.utcDay(SPDSettings.lastDaily()), rec.score, rec.depth, win, rec.heroClass);
 		}
 
 		if (rec.daily){

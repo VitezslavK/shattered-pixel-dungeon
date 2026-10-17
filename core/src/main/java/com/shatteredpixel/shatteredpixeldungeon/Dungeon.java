@@ -774,6 +774,9 @@ public class Dungeon {
 		
 		Bundle bundle = FileUtils.bundleFromFile( GamesInProgress.gameFile( save ) );
 
+		//continuing a run also needs other players' ghosts and bones
+		if (fullLoad) GhostPool.refresh();
+
 		initialVersion = bundle.getInt( INIT_VER );
 		version = bundle.getInt( VERSION );
 

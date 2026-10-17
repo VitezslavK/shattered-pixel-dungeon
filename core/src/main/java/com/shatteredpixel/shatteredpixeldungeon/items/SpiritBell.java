@@ -99,8 +99,7 @@ public class SpiritBell extends Item {
 				}
 			});
 		} else if (action.equals(AC_SCORES)){
-			final String day = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT)
-					.format(new java.util.Date(com.watabou.noosa.Game.realTime));
+			final String day = OnlineExtras.utcDay(com.watabou.noosa.Game.realTime);
 			GLog.i(Messages.get(this, "scores_loading"));
 			OnlineExtras.fetchDailyTop(day, new OnlineExtras.ScoreCallback() {
 				@Override

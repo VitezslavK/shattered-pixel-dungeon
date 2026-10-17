@@ -58,16 +58,17 @@ public class GhostSnapshot implements Bundlable {
 		s.heroClass = hero.heroClass;
 		s.subClass = hero.subClass;
 		s.evolved = hero.evolved;
-		s.lvl = hero.lvl;
+		s.lvl = (int)GameMath.gate(1, hero.lvl, 36);
 		s.depth = (int)GameMath.gate(1, Dungeon.depth, Dungeon.LAST_DEPTH);
 		s.won = won;
 		if (hero.belongings.weapon() instanceof MeleeWeapon){
 			s.weapon = hero.belongings.weapon().getClass().getSimpleName();
-			s.weaponLvl = Math.max(0, hero.belongings.weapon().buffedLvl());
+			//the server only accepts levels 0-15
+			s.weaponLvl = (int)GameMath.gate(0, hero.belongings.weapon().buffedLvl(), 15);
 		}
 		if (hero.belongings.armor() != null){
 			s.armor = hero.belongings.armor().getClass().getSimpleName();
-			s.armorLvl = Math.max(0, hero.belongings.armor().buffedLvl());
+			s.armorLvl = (int)GameMath.gate(0, hero.belongings.armor().buffedLvl(), 15);
 		}
 		return s;
 	}

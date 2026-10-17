@@ -42,6 +42,23 @@ public class OnlineService {
 	private static String key = null;
 	private static boolean configLoaded = false;
 
+	//result of the latest request, shown in the online window to help find connection problems
+	public static volatile String lastError = null;
+	public static volatile long lastSuccess = 0;
+
+	private static void record( int status ){
+		if (status >= 200 && status < 300){
+			lastError = null;
+			lastSuccess = System.currentTimeMillis();
+		} else {
+			lastError = "HTTP " + status;
+		}
+	}
+
+	private static void recordFailure( Throwable t ){
+		lastError = t == null ? "?" : t.getClass().getSimpleName();
+	}
+
 	public interface Callback {
 		void onResult( ArrayList<GhostSnapshot> ghosts );
 	}
@@ -128,8 +145,8 @@ public class OnlineService {
 		req.setHeader("Prefer", "return=minimal");
 		req.setContent(snapshot.toJson());
 		Gdx.net.sendHttpRequest(req, new Net.HttpResponseListener() {
-			@Override public void handleHttpResponse(Net.HttpResponse r) { }
-			@Override public void failed(Throwable t) { }
+			@Override public void handleHttpResponse(Net.HttpResponse r) { record(r.getStatus().getStatusCode()); }
+			@Override public void failed(Throwable t) { recordFailure(t); }
 			@Override public void cancelled() { }
 		});
 	}
@@ -155,6 +172,7 @@ public class OnlineService {
 			@Override
 			public void handleHttpResponse(Net.HttpResponse r) {
 				ArrayList<GhostSnapshot> result = new ArrayList<>();
+				record(r.getStatus().getStatusCode());
 				try {
 					if (r.getStatus().getStatusCode() == 200) {
 						JsonValue arr = new JsonReader().parse(r.getResultAsString());
@@ -171,6 +189,7 @@ public class OnlineService {
 
 			@Override
 			public void failed(Throwable t) {
+				recordFailure(t);
 				deliver(callback, new ArrayList<>());
 			}
 
@@ -192,8 +211,8 @@ public class OnlineService {
 		req.setHeader("Prefer", "return=minimal");
 		req.setContent(json);
 		Gdx.net.sendHttpRequest(req, new Net.HttpResponseListener() {
-			@Override public void handleHttpResponse(Net.HttpResponse r) { }
-			@Override public void failed(Throwable t) { }
+			@Override public void handleHttpResponse(Net.HttpResponse r) { record(r.getStatus().getStatusCode()); }
+			@Override public void failed(Throwable t) { recordFailure(t); }
 			@Override public void cancelled() { }
 		});
 	}
@@ -208,6 +227,7 @@ public class OnlineService {
 			@Override
 			public void handleHttpResponse(Net.HttpResponse r) {
 				JsonValue result = null;
+				record(r.getStatus().getStatusCode());
 				try {
 					if (r.getStatus().getStatusCode() == 200) {
 						result = new JsonReader().parse(r.getResultAsString());
@@ -217,7 +237,7 @@ public class OnlineService {
 				}
 				deliverRaw(callback, result);
 			}
-			@Override public void failed(Throwable t) { deliverRaw(callback, null); }
+			@Override public void failed(Throwable t) { recordFailure(t); deliverRaw(callback, null); }
 			@Override public void cancelled() { deliverRaw(callback, null); }
 		});
 	}
