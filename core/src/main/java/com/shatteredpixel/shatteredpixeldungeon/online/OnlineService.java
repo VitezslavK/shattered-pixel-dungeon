@@ -57,7 +57,9 @@ public class OnlineService {
 			props.load(reader);
 			reader.close();
 			String u = props.getProperty("supabase_url", "").trim();
-			String k = props.getProperty("supabase_anon_key", "").trim();
+			//newer projects have a "publishable" key, older ones the legacy "anon" key, either works
+			String k = props.getProperty("supabase_publishable_key", "").trim();
+			if (k.isEmpty()) k = props.getProperty("supabase_anon_key", "").trim();
 			if (u.startsWith("https://") && !k.isEmpty()){
 				url = u.endsWith("/") ? u.substring(0, u.length()-1) : u;
 				key = k;
@@ -112,7 +114,9 @@ public class OnlineService {
 		Net.HttpRequest req = new Net.HttpRequest(method);
 		req.setUrl(url + "/rest/v1/" + path);
 		req.setHeader("apikey", key);
-		req.setHeader("Authorization", "Bearer " + key);
+		//legacy anon keys are JWTs and also go in the Authorization header,
+		// the newer sb_publishable_ keys are not JWTs and are rejected there
+		if (key.startsWith("eyJ")) req.setHeader("Authorization", "Bearer " + key);
 		req.setHeader("Content-Type", "application/json");
 		req.setTimeOut(8000);
 		return req;

@@ -1,7 +1,8 @@
 # Copy this file to online.properties (same folder) and fill in your Supabase project.
-# Supabase dashboard -> Project Settings -> API
-#   supabase_url      = "Project URL"
-#   supabase_anon_key = "anon public" key  (NOT the service_role key!)
+# Supabase dashboard -> Project Settings -> API Keys
+#   supabase_url             = Project URL (https://<project id>.supabase.co)
+#   supabase_publishable_key = "Publishable key" (sb_publishable_...), NEVER the secret key
+#   (older projects: put the legacy "anon public" key in supabase_anon_key instead)
 # online.properties is ignored by git so the key never ends up in the repository.
 supabase_url=https://YOUR-PROJECT.supabase.co
-supabase_anon_key=YOUR-ANON-KEY
+supabase_publishable_key=sb_publishable_YOUR-KEY

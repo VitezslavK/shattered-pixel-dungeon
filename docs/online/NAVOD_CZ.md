@@ -15,15 +15,19 @@ Aby se objevovali duchové **ostatních hráčů** a fungovalo přivolání kama
      Hra do nich smí jen přidávat a číst, upravovat ani mazat nic nemůže.
 
 ## 3. Propoj hru se serverem
-1. V Supabase: **Project Settings → API**.
-2. Zkopíruj **Project URL** a klíč **anon public**. Pozor: nikdy ne `service_role`!
+1. V Supabase klikni vlevo dole na **Project Settings** (ozubené kolečko) → **Data API** a zkopíruj **Project URL**
+   (tvar `https://xxxx.supabase.co`).
+2. Pak **Project Settings → API Keys** a zkopíruj **Publishable key** (začíná `sb_publishable_`).
+   Pozor: nikdy ne **Secret key** (`sb_secret_`) ani starý `service_role`!
+   (Starší projekty mají místo toho klíč **anon public** v záložce *Legacy API Keys*, ten funguje taky.)
 3. Ve složce `core/src/main/assets/` zkopíruj `online.properties.example` jako `online.properties` a vyplň:
    ```
    supabase_url=https://tvuj-projekt.supabase.co
-   supabase_anon_key=tvuj-anon-klic
+   supabase_publishable_key=sb_publishable_...
    ```
+   (Se starým klíčem použij řádek `supabase_anon_key=eyJ...`.)
 4. Soubor `online.properties` je v `.gitignore`, takže se klíč nedostane do repozitáře.
-   Do sestavené hry (APK) se ale přibalí. Klíč `anon` je k tomu určený, bezpečnost hlídají pravidla v SQL.
+   Do sestavené hry (APK) se ale přibalí. Publishable klíč je k tomu určený, bezpečnost hlídají pravidla v SQL.
 5. Hru znovu sestav (nebo mi napiš a sestavím APK).
 
 ## Jak to funguje ve hře

@@ -59,7 +59,7 @@ public class GhostSnapshot implements Bundlable {
 		s.subClass = hero.subClass;
 		s.evolved = hero.evolved;
 		s.lvl = hero.lvl;
-		s.depth = Dungeon.depth;
+		s.depth = (int)GameMath.gate(1, Dungeon.depth, Dungeon.LAST_DEPTH);
 		s.won = won;
 		if (hero.belongings.weapon() instanceof MeleeWeapon){
 			s.weapon = hero.belongings.weapon().getClass().getSimpleName();
@@ -152,7 +152,7 @@ public class GhostSnapshot implements Bundlable {
 			s.subClass = HeroSubClass.valueOf(v.getString("sub_class", "NONE"));
 			s.evolved = v.getBoolean("evolved", false);
 			s.lvl = (int)GameMath.gate(1, v.getInt("lvl", 1), 36);
-			s.depth = (int)GameMath.gate(1, v.getInt("depth", 1), 30);
+			s.depth = (int)GameMath.gate(1, v.getInt("depth", 1), Dungeon.LAST_DEPTH);
 			s.won = v.getBoolean("won", false);
 			s.weapon = sanitize(v.getString("weapon", ""), 40);
 			s.weaponLvl = (int)GameMath.gate(0, v.getInt("weapon_lvl", 0), 15);

@@ -10,7 +10,7 @@ create table if not exists public.ghosts (
 	sub_class   text    not null check (char_length(sub_class) <= 20),
 	evolved     boolean not null default false,
 	lvl         int     not null check (lvl between 1 and 36),
-	depth       int     not null check (depth between 1 and 30),
+	depth       int     not null check (depth between 1 and 31),
 	won         boolean not null default false,
 	weapon      text    not null default '' check (char_length(weapon) <= 40),
 	weapon_lvl  int     not null default 0 check (weapon_lvl between 0 and 15),
