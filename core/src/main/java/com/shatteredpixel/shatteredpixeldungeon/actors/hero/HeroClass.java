@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.SpiritBell;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -184,6 +185,9 @@ public enum HeroClass {
 				initAlchemist( hero );
 				break;
 		}
+
+		//every hero can call on a friend's ghost once per run
+		new SpiritBell().collect();
 
 		//rune of wisdom, one random potion type is known
 		if (Runes.Rune.ANSUZ.active()){

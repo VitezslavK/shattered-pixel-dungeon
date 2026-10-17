@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.online.GhostPool;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -80,6 +81,9 @@ public enum Rankings {
 	public LinkedHashMap<Long, Integer> dailyScoreHistory = new LinkedHashMap<>();
 
 	public void submit( boolean win, Object cause ) {
+
+		//the hero leaves a ghost behind for other runs (and other players)
+		GhostPool.onRunEnd( win );
 
 		load();
 		

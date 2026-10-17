@@ -19,3 +19,6 @@ local.properties
 *.iml
 *.idea
 dist/
+
+# online backend config (see docs/online)
+core/src/main/assets/online.properties

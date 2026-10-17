@@ -164,6 +164,7 @@ public class ItemSpriteSheet {
 	public static final int FIELD_CAULDRON  = MISC_CONSUMABLE +27;
 	public static final int BROKEN_FLASK    = MISC_CONSUMABLE +28;
 	public static final int RUNE_TABLET     = MISC_CONSUMABLE +29;
+	public static final int SPIRIT_BELL     = MISC_CONSUMABLE +30;
 
 	static{
 		assignItemRect(ANKH,            10, 16);
@@ -200,6 +201,7 @@ public class ItemSpriteSheet {
 		assignItemRect(FIELD_CAULDRON,  14, 13);
 		assignItemRect(BROKEN_FLASK,    12, 12);
 		assignItemRect(RUNE_TABLET,     11, 13);
+		assignItemRect(SPIRIT_BELL,     11, 13);
 	}
 	
 	private static final int BOMBS          =                               xy(1, 6);   //16 slots

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.online.GhostPool;
 import com.shatteredpixel.shatteredpixeldungeon.levels.IceCavesLevel;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -273,6 +274,8 @@ public class Dungeon {
 		depth = 1;
 		branch = 0;
 		cavesPath = -1;
+
+		GhostPool.refresh();
 		generatedLevels.clear();
 
 		gold = 0;

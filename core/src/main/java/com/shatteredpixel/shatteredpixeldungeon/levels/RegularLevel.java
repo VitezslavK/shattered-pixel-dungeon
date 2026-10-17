@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GhostInvader;
+import com.shatteredpixel.shatteredpixeldungeon.online.GhostSnapshot;
+import com.shatteredpixel.shatteredpixeldungeon.online.GhostPool;
 import com.shatteredpixel.shatteredpixeldungeon.items.RuneTablet;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
@@ -218,6 +221,28 @@ public abstract class RegularLevel extends Level {
 		return mobs;
 	}
 	
+	//the ghost of another hero sometimes invades a floor, see GhostPool
+	private void spawnGhostInvader( boolean[] farFromEntrance ){
+		Random.pushGenerator(Random.Long());
+			boolean invade = Random.Float() < 0.15f;
+			if (invade && Dungeon.depth >= 3 && Dungeon.branch == 0 && !Dungeon.bossLevel()){
+				GhostSnapshot ghost = GhostPool.pick(Dungeon.depth);
+				if (ghost != null){
+					GhostInvader invader = GhostInvader.create(ghost, Dungeon.depth);
+					for (int tries = 0; tries < 50; tries++){
+						int cell = randomDropCell();
+						if (cell != -1 && passable[cell] && !solid[cell] && farFromEntrance[cell]
+								&& findMob(cell) == null && cell != exit()){
+							invader.pos = cell;
+							mobs.add(invader);
+							break;
+						}
+					}
+				}
+			}
+		Random.popGenerator();
+	}
+
 	@Override
 	protected void createMobs() {
 		//on floor 1, 8 pre-set mobs are created so the player can get level 2.
@@ -252,6 +277,10 @@ public abstract class RegularLevel extends Level {
 		}
 
 		PathFinder.buildDistanceMap(entrance(), entranceWalkable, 8);
+		boolean[] farFromEntrance = new boolean[length()];
+		for (int i = 0; i < length(); i++){
+			farFromEntrance[i] = !entranceFOV[i] && PathFinder.distance[i] == Integer.MAX_VALUE;
+		}
 
 		Mob mob = null;
 		while (mobsToSpawn > 0) {
@@ -315,6 +344,8 @@ public abstract class RegularLevel extends Level {
 
 		}
 
+
+		spawnGhostInvader(farFromEntrance);
 	}
 
 	@Override
