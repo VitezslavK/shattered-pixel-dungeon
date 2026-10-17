@@ -84,6 +84,8 @@ public class HeroSelectScene extends PixelScene {
 	//fading UI elements
 	private RenderedTextBlock title;
 	private ArrayList<StyledButton> heroBtns = new ArrayList<>();
+	//height of the hero button area in portrait mode, can be more than one row
+	private int portraitBarHeight = HeroBtn.HEIGHT;
 	private RenderedTextBlock heroName; //only on landscape
 	private RenderedTextBlock heroDesc; //only on landscape
 	private StyledButton startBtn;
@@ -325,18 +327,25 @@ public class HeroSelectScene extends PixelScene {
 		} else {
 			background.visible = false;
 
-			int btnWidth = HeroBtn.MIN_WIDTH;
+			//on narrow screens the hero buttons are split into two rows
+			int n = heroBtns.size();
+			int rows = HeroBtn.MIN_WIDTH * n > w ? 2 : 1;
+			int perRow = (int)Math.ceil(n / (float)rows);
+			portraitBarHeight = HeroBtn.HEIGHT * rows;
 
-			float curX = insets.left + (w - btnWidth * heroBtns.size()) / 2f;
-			if (curX > 0) {
-				btnWidth += Math.min(curX / (heroBtns.size() / 2f), 15);
-				curX = insets.left + (w - btnWidth * heroBtns.size()) / 2f;
+			float btnWidth = HeroBtn.MIN_WIDTH;
+			float spare = w - btnWidth * perRow;
+			if (spare > 0) {
+				btnWidth += Math.min(spare / perRow, 15);
 			}
-			float curY = insets.top + h - HeroBtn.HEIGHT + 3;
 
-			for (StyledButton button : heroBtns) {
-				button.setRect(curX, curY, btnWidth, HeroBtn.HEIGHT + insets.bottom);
-				curX += btnWidth;
+			for (int i = 0; i < n; i++) {
+				int row = i / perRow;
+				int inRow = row == rows-1 ? n - perRow*(rows-1) : perRow;
+				float rowX = insets.left + (w - btnWidth * inRow) / 2f;
+				float curY = insets.top + h - HeroBtn.HEIGHT*(rows-row) + 3;
+				float btnHeight = HeroBtn.HEIGHT + (row == rows-1 ? insets.bottom : 0);
+				heroBtns.get(i).setRect(rowX + btnWidth*(i % perRow), curY, btnWidth, btnHeight);
 			}
 
 			//add a darkening bar along bottom
@@ -349,9 +358,9 @@ public class HeroSelectScene extends PixelScene {
 				add(blocker);
 			}
 
-			title.setPos(insets.left + (w - title.width()) / 2f, insets.top + (h - HeroBtn.HEIGHT - title.height() - 4));
+			title.setPos(insets.left + (w - title.width()) / 2f, insets.top + (h - portraitBarHeight - title.height() - 4));
 
-			btnOptions.setRect(heroBtns.get(0).left() + 16, Camera.main.height-HeroBtn.HEIGHT-16, 20, 21);
+			btnOptions.setRect(heroBtns.get(0).left() + 16, Camera.main.height-portraitBarHeight-16, 20, 21);
 			optionsPane.setPos(heroBtns.get(0).left(), 0);
 		}
 
@@ -463,7 +472,7 @@ public class HeroSelectScene extends PixelScene {
 			startBtn.text(Messages.titleCase(cl.title()));
 			startBtn.setSize(startBtn.reqWidth() + 8, 21);
 
-			startBtn.setPos((Camera.main.width - startBtn.width())/2f, (Camera.main.height - insets.bottom - HeroBtn.HEIGHT + 2 - startBtn.height()));
+			startBtn.setPos((Camera.main.width - startBtn.width())/2f, (Camera.main.height - insets.bottom - portraitBarHeight + 2 - startBtn.height()));
 			PixelScene.align(startBtn);
 
 			infoButton.visible = infoButton.active = true;

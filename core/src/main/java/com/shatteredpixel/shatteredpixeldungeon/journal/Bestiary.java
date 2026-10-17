@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GolemArchmage;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalQueen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Jailer;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RatMatriarch;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
@@ -216,7 +219,7 @@ public enum Bestiary {
 				Ghoul.class, Elemental.FireElemental.class, Elemental.FrostElemental.class, Elemental.ShockElemental.class, Warlock.class, Monk.class, Golem.class,
 				RipperDemon.class, DemonSpawner.class, Succubus.class, Eye.class, Scorpio.class);
 
-		BOSSES.addEntities(Goo.class, RatMatriarch.class,
+		BOSSES.addEntities(Goo.class, RatMatriarch.class, Jailer.class, CrystalQueen.class, GolemArchmage.class,
 				Tengu.class,
 				Pylon.class, DM300.class,
 				DwarfKing.class,
@@ -266,6 +269,9 @@ public enum Bestiary {
 
 		classConversions.put(Necromancer.NecroSkeleton.class,  Skeleton.class);
 		classConversions.put(RatMatriarch.BroodRat.class,       Rat.class);
+		classConversions.put(Jailer.JailGuard.class,            Guard.class);
+		classConversions.put(CrystalQueen.QueenShard.class,     CrystalWisp.class);
+		classConversions.put(GolemArchmage.ConjuredGolem.class, Golem.class);
 
 		classConversions.put(TenguDartTrap.class,              PoisonDartTrap.class);
 		classConversions.put(GnollRockfallTrap.class,          RockfallTrap.class);

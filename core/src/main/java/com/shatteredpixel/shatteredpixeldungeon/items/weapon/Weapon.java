@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -542,6 +543,7 @@ abstract public class Weapon extends KindOfWeapon {
 
 		public static float genericProcChanceMultiplier( Char attacker ){
 			float multi = RingOfArcana.enchantPowerMultiplier(attacker);
+			multi *= Arcana.enchantFactor(attacker);
 			Berserk rage = attacker.buff(Berserk.class);
 			if (rage != null) {
 				multi = rage.enchantFactor(multi);

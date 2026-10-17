@@ -51,7 +51,10 @@ public enum HeroSubClass {
 	PALADIN(HeroIcon.PALADIN),
 
 	BONELORD(HeroIcon.BONELORD),
-	SOUL_REAPER(HeroIcon.SOUL_REAPER);
+	SOUL_REAPER(HeroIcon.SOUL_REAPER),
+
+	RUNESMITH(HeroIcon.RUNESMITH),
+	RELIC_KEEPER(HeroIcon.RELIC_KEEPER);
 
 	int icon;
 
@@ -99,7 +102,10 @@ public enum HeroSubClass {
 
 	public int evolutionIcon(){
 		//evolution icons are stored in order starting at HeroIcon.EVOLUTIONS
-		return this == NONE ? HeroIcon.NONE : HeroIcon.EVOLUTIONS + ordinal() - 1;
+		if (this == NONE) return HeroIcon.NONE;
+		//the first 14 evolutions are in the original icon sheet, later ones in the extension rows
+		int idx = ordinal() - 1;
+		return idx < 14 ? HeroIcon.EVOLUTIONS + idx : HeroIcon.EVOLUTIONS_EXT + idx - 14;
 	}
 
 }

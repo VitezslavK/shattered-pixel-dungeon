@@ -472,6 +472,8 @@ public enum Icons {
 				return new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME);
 			case NECROMANCER:
 				return new ItemSprite(ItemSpriteSheet.ARTIFACT_LANTERN);
+			case ARCANIST:
+				return new ItemSprite(ItemSpriteSheet.ARCANE_CODEX);
 			default:
 				return null;
 		}

@@ -29,6 +29,13 @@ allprojects {
     }
     version = appVersionName
 
+    //iCloud evicts and duplicates files in synced folders (Documents/Desktop), which makes
+    // gradle hang. When the project lives there, build outputs are kept outside of iCloud.
+    def home = System.getProperty('user.home')
+    if (rootDir.absolutePath.startsWith(home + '/Documents') || rootDir.absolutePath.startsWith(home + '/Desktop')) {
+        layout.buildDirectory = new File(home, '.spd-build/' + (project.path == ':' ? 'root' : project.path.substring(1).replace(':', '_')))
+    }
+
     repositories {
         google()
         mavenCentral()

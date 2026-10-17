@@ -159,6 +159,8 @@ public class ItemSpriteSheet {
 	public static final int TRINKET_CATA    = MISC_CONSUMABLE +22;
 	public static final int CRACKED_LANTERN = MISC_CONSUMABLE +23;
 	public static final int ESSENCE         = MISC_CONSUMABLE +24;
+	public static final int ARCANE_CODEX    = MISC_CONSUMABLE +25;
+	public static final int RUNE_FRAGMENT   = MISC_CONSUMABLE +26;
 
 	static{
 		assignItemRect(ANKH,            10, 16);
@@ -190,6 +192,8 @@ public class ItemSpriteSheet {
 		assignItemRect(TRINKET_CATA,    12, 11);
 		assignItemRect(CRACKED_LANTERN, 10, 13);
 		assignItemRect(ESSENCE,         12, 12);
+		assignItemRect(ARCANE_CODEX,    13, 16);
+		assignItemRect(RUNE_FRAGMENT,   11, 13);
 	}
 	
 	private static final int BOMBS          =                               xy(1, 6);   //16 slots
@@ -388,6 +392,7 @@ public class ItemSpriteSheet {
 	public static final int ARMOR_DUELIST   = ARMOR+9;
 	public static final int ARMOR_CLERIC    = ARMOR+10;
 	public static final int ARMOR_NECROMANCER = ARMOR+11;
+	public static final int ARMOR_ARCANIST  = ARMOR+12;
 	static{
 		assignItemRect(ARMOR_CLOTH,     15, 12);
 		assignItemRect(ARMOR_LEATHER,   14, 13);
@@ -401,6 +406,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_DUELIST,   12, 13);
 		assignItemRect(ARMOR_CLERIC,    13, 14);
 		assignItemRect(ARMOR_NECROMANCER, 15, 15);
+		assignItemRect(ARMOR_ARCANIST,  15, 15);
 	}
 
 	                                                                                    //16 free slots
@@ -658,7 +664,16 @@ public class ItemSpriteSheet {
 	public static final int BREW_AQUA       = BREWS+4;
 	public static final int BREW_UNSTABLE   = BREWS+5;
 	public static final int BREW_PLAGUE     = BREWS+6;
+	public static final int BREW_BINDING    = BREWS+7;
 	
+	//modded elixirs live in free slots of the bags row
+	public static final int ELIXIR_CRYSTAL  = xy(9, 31);
+	public static final int ELIXIR_ARCANUM  = xy(10, 31);
+	static{
+		assignItemRect(ELIXIR_CRYSTAL, 12, 14);
+		assignItemRect(ELIXIR_ARCANUM, 12, 14);
+	}
+
 	private static final int ELIXIRS        =                               xy(9, 26);  //8 slots
 	public static final int ELIXIR_HONEY    = ELIXIRS+0;
 	public static final int ELIXIR_AQUA     = ELIXIRS+1;
@@ -771,6 +786,9 @@ public class ItemSpriteSheet {
 	public static final int SHARD   = QUEST+8;
 	public static final int ESCAPE  = QUEST+9;
 	public static final int PLAGUE_GLAND = QUEST+10;
+	public static final int CHAIN_LINK   = QUEST+11;
+	public static final int CRYSTAL_HEART= QUEST+12;
+	public static final int ARCANE_CORE  = QUEST+13;
 	static{
 		assignItemRect(DUST,    12, 11);
 		assignItemRect(CANDLE,  12, 12);
@@ -782,6 +800,9 @@ public class ItemSpriteSheet {
 		assignItemRect(SHARD,    8, 10);
 		assignItemRect(ESCAPE,   8, 16);
 		assignItemRect(PLAGUE_GLAND, 11, 10);
+		assignItemRect(CHAIN_LINK,   12, 12);
+		assignItemRect(CRYSTAL_HEART,12, 12);
+		assignItemRect(ARCANE_CORE,  12, 12);
 	}
 
 	private static final int BAGS       =                                   xy(1, 31);  //16 slots

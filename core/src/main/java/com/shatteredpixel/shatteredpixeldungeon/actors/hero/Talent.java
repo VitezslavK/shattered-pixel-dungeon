@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -244,6 +245,28 @@ public enum Talent {
 	BONE_PHALANX(292, 3), MARROW_FEAST(293, 3), ROYAL_DECREE(294, 3),
 	//Harbinger T5 (evolution)
 	GRIM_HARVEST(295, 3), REAPERS_TOLL(296, 3), SHROUD_OF_DEATH(297, 3),
+
+	//Runemaster T5 (evolution)
+	RUNE_FUSION(298, 3), RUNE_ECHO(299, 3), RUNE_SHIELD(300, 3),
+	//Archivist T5 (evolution)
+	TIMELESS_RELICS(301, 3), RELIC_BOND(302, 3), CURATORS_EYE(303, 3),
+
+	//Arcanist T1
+	ARCANE_MEAL(320), ESSENCE_SENSE(321), ARCANE_STRIKE(322), WARDING_SIGIL(323),
+	//Arcanist T2
+	MANA_MEAL(324), LIQUID_ARCANA(325), SCROLL_SIPHON(326), EFFICIENT_INFUSION(327), RESONANCE(328),
+	//Arcanist T3
+	DEEP_DISENCHANT(329, 3), ARCANE_EMPOWERMENT(330, 3),
+	//Runesmith T3
+	RUNIC_POWER(331, 3), RUNIC_WARD(332, 3), RUNIC_DISCOUNT(333, 3),
+	//Relic Keeper T3
+	RELIC_ATTUNEMENT(334, 3), RELIC_SHIELD(335, 3), RELIC_SURGE(336, 3),
+	//Arcane Discharge T4
+	OVERLOAD_RADIUS(337, 4), DISCHARGE_POWER(338, 4), STATIC_FIELD(339, 4),
+	//Artifact Overload T4
+	OVERFLOW(340, 4), LINGERING_POWER(341, 4), ARCANE_HASTE(342, 4),
+	//Mirror Barrier T4
+	MIRROR_SHELL(343, 4), REFLECTION(344, 4), ARCANE_RECOIL(345, 4),
 
 	//universal T4
 	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
@@ -513,6 +536,8 @@ public enum Talent {
 					return 186;
 				case NECROMANCER:
 					return 250;
+				case ARCANIST:
+					return 346;
 			}
 		} else {
 			return icon;
@@ -708,6 +733,7 @@ public enum Talent {
 		}
 
 		Necromancy.onFoodEaten(hero);
+		Arcana.onFoodEaten(hero);
 
 		//we process these at the end as they can stack together from some talents
 		if (wandChargeTurns > 0){
@@ -801,6 +827,7 @@ public enum Talent {
 			Dungeon.observe();
 		}
 		Necromancy.onPotionUsed(hero, factor);
+		Arcana.onPotionUsed(hero, factor);
 		if (hero.hasTalent(LIQUID_AGILITY)){
 			Buff.prolong(hero, LiquidAgilEVATracker.class, hero.cooldown() + Math.max(0, factor-1));
 			if (factor >= 0.5f){
@@ -820,6 +847,7 @@ public enum Talent {
 			Sample.INSTANCE.play( Assets.Sounds.MELD );
 		}
 		Necromancy.onScrollUsed(hero, factor);
+		Arcana.onScrollUsed(hero, factor);
 		if (hero.hasTalent(RECALL_INSCRIPTION) && Scroll.class.isAssignableFrom(cls) && cls != ScrollOfUpgrade.class){
 			if (hero.heroClass == HeroClass.CLERIC){
 				Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
@@ -853,6 +881,7 @@ public enum Talent {
 	}
 
 	public static void onArtifactUsed( Hero hero ){
+		Arcana.onArtifactUsed(hero);
 		if (hero.hasTalent(ENHANCED_RINGS)){
 			Buff.prolong(hero, EnhancedRings.class, 3f*hero.pointsInTalent(ENHANCED_RINGS));
 		}
@@ -911,6 +940,7 @@ public enum Talent {
 	}
 
 	public static void onItemCollected( Hero hero, Item item ){
+		Arcana.onItemCollected(hero, item);
 		if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
 			if (item instanceof Ring) ((Ring) item).setKnown();
 		}
@@ -975,6 +1005,7 @@ public enum Talent {
 
 		dmg = Necromancy.onHeroAttack(hero, enemy, dmg);
 		dmg = Evolution.onHeroAttack(hero, enemy, dmg);
+		dmg = Arcana.onHeroAttack(hero, enemy, dmg);
 
 		return dmg;
 	}
@@ -1051,6 +1082,9 @@ public enum Talent {
 			case NECROMANCER:
 				Collections.addAll(tierTalents, GRAVE_MEAL, NECROTIC_STRIKE, BONE_ARMOR, SOUL_COLLECTOR);
 				break;
+			case ARCANIST:
+				Collections.addAll(tierTalents, ARCANE_MEAL, ESSENCE_SENSE, ARCANE_STRIKE, WARDING_SIGIL);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1083,6 +1117,9 @@ public enum Talent {
 			case NECROMANCER:
 				Collections.addAll(tierTalents, HAUNTING_MEAL, LIQUID_DEATH, INSCRIBED_SOULS, BONE_SHARDS, EMPOWERED_UNDEATH);
 				break;
+			case ARCANIST:
+				Collections.addAll(tierTalents, MANA_MEAL, LIQUID_ARCANA, SCROLL_SIPHON, EFFICIENT_INFUSION, RESONANCE);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1114,6 +1151,9 @@ public enum Talent {
 				break;
 			case NECROMANCER:
 				Collections.addAll(tierTalents, SOUL_LINK, DEATHLESS_SERVANT);
+				break;
+			case ARCANIST:
+				Collections.addAll(tierTalents, DEEP_DISENCHANT, ARCANE_EMPOWERMENT);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -1185,6 +1225,12 @@ public enum Talent {
 			case SOUL_REAPER:
 				Collections.addAll(tierTalents, REAPING_STRIKE, SOUL_FEAST, DEATHS_EMBRACE);
 				break;
+			case RUNESMITH:
+				Collections.addAll(tierTalents, RUNIC_POWER, RUNIC_WARD, RUNIC_DISCOUNT);
+				break;
+			case RELIC_KEEPER:
+				Collections.addAll(tierTalents, RELIC_ATTUNEMENT, RELIC_SHIELD, RELIC_SURGE);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			talents.get(2).put(talent, 0);
@@ -1249,6 +1295,12 @@ public enum Talent {
 				break;
 			case SOUL_REAPER:
 				Collections.addAll(tierTalents, GRIM_HARVEST, REAPERS_TOLL, SHROUD_OF_DEATH);
+				break;
+			case RUNESMITH:
+				Collections.addAll(tierTalents, RUNE_FUSION, RUNE_ECHO, RUNE_SHIELD);
+				break;
+			case RELIC_KEEPER:
+				Collections.addAll(tierTalents, TIMELESS_RELICS, RELIC_BOND, CURATORS_EYE);
 				break;
 			default:
 				break;

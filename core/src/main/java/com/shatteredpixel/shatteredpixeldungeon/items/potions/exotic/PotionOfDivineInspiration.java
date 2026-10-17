@@ -63,14 +63,17 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 			identifiedByUse = false;
 		}
 
-		boolean[] enabled = new boolean[5];
-		enabled[1] = enabled[2] = enabled[3] = enabled[4] = true;
+		boolean[] enabled = new boolean[Talent.MAX_TALENT_TIERS+1];
+		for (int i = 1; i <= Talent.MAX_TALENT_TIERS; i++) enabled[i] = true;
+		//tier 5 talents are only available to evolved heroes
+		enabled[5] = hero.evolved;
 
 		DivineInspirationTracker tracker = hero.buff(DivineInspirationTracker.class);
 
 		if (tracker != null){
 			boolean allBoosted = true;
-			for (int i = 1; i <= 4; i++){
+			for (int i = 1; i <= Talent.MAX_TALENT_TIERS; i++){
+				if (!enabled[i]) continue;
 				if (tracker.isBoosted(i)){
 					enabled[i] = false;
 				} else {
@@ -91,7 +94,8 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 				Messages.titleCase(Messages.get(TalentsPane.class, "tier", 1)),
 				Messages.titleCase(Messages.get(TalentsPane.class, "tier", 2)),
 				Messages.titleCase(Messages.get(TalentsPane.class, "tier", 3)),
-				Messages.titleCase(Messages.get(TalentsPane.class, "tier", 4))
+				Messages.titleCase(Messages.get(TalentsPane.class, "tier", 4)),
+				Messages.titleCase(Messages.get(TalentsPane.class, "tier", 5))
 		){
 			@Override
 			protected boolean enabled(int index) {
@@ -163,7 +167,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 			revivePersists = true;
 		}
 
-		private boolean[] boostedTiers = new boolean[5];
+		private boolean[] boostedTiers = new boolean[Talent.MAX_TALENT_TIERS+1];
 
 		private static final String BOOSTED_TIERS = "boosted_tiers";
 
@@ -176,7 +180,9 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			boostedTiers = bundle.getBooleanArray(BOOSTED_TIERS);
+			boolean[] stored = bundle.getBooleanArray(BOOSTED_TIERS);
+			boostedTiers = new boolean[Talent.MAX_TALENT_TIERS+1];
+			System.arraycopy(stored, 0, boostedTiers, 0, Math.min(stored.length, boostedTiers.length));
 		}
 
 		public void setBoosted( int tier ){
@@ -184,7 +190,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 		}
 
 		public boolean isBoosted( int tier ){
-			return boostedTiers[tier];
+			return tier >= 0 && tier < boostedTiers.length && boostedTiers[tier];
 		}
 
 	}

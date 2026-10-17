@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.MirrorBarrier;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CrystalSkin;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.Necromancy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -562,6 +565,7 @@ public class Hero extends Char {
 		}
 		
 		accuracy *= Evolution.accuracyFactor(this, wep);
+		accuracy *= Arcana.statFactor(this);
 
 		if (!RingOfForce.fightingUnarmed(this)) {
 			return Math.max(1, Math.round(attackSkill * accuracy * wep.accuracyFactor( this, target )));
@@ -588,6 +592,7 @@ public class Hero extends Char {
 		
 		evasion *= RingOfEvasion.evasionMultiplier( this );
 		evasion *= Evolution.evasionFactor( this, enemy );
+		evasion *= Arcana.statFactor( this );
 
 		if (buff(Talent.LiquidAgilEVATracker.class) != null){
 			if (pointsInTalent(Talent.LIQUID_AGILITY) == 1){
@@ -671,6 +676,7 @@ public class Hero extends Char {
 
 		dr += Necromancy.bonusArmor(this);
 		dr += Evolution.bonusArmor(this);
+		dr += Arcana.bonusArmor(this);
 		
 		return dr;
 	}
@@ -1553,6 +1559,16 @@ public class Hero extends Char {
 	
 	@Override
 	public int defenseProc( Char enemy, int damage ) {
+
+		MirrorBarrier.MirrorTracker mirror = buff(MirrorBarrier.MirrorTracker.class);
+		if (mirror != null){
+			damage = mirror.onHit(this, enemy, damage);
+		}
+
+		CrystalSkin crystalSkin = buff(CrystalSkin.class);
+		if (crystalSkin != null){
+			damage = crystalSkin.onHit(enemy, damage);
+		}
 		
 		if (damage > 0 && subClass == HeroSubClass.BERSERKER){
 			Berserk berserk = Buff.affect(this, Berserk.class);
@@ -2070,7 +2086,8 @@ public class Hero extends Char {
 				GLog.p( Messages.get(this, "new_level") );
 				sprite.showStatus( CharSprite.POSITIVE, Messages.get(Hero.class, "level_up") );
 				Sample.INSTANCE.play( Assets.Sounds.LEVELUP );
-				if (lvl < Talent.tierLevelThresholds[Talent.MAX_TALENT_TIERS+1]){
+				//tier 5 talents only exist for evolved heroes
+				if (lvl < Talent.tierLevelThresholds[Talent.MAX_TALENT_TIERS] || (evolved && lvl < Talent.tierLevelThresholds[Talent.MAX_TALENT_TIERS+1])){
 					GLog.newLine();
 					GLog.p( Messages.get(this, "new_talent") );
 					StatusPane.talentBlink = 10f;

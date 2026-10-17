@@ -306,6 +306,8 @@ public class SoulLantern extends Artifact {
 	@Override
 	public String desc() {
 		String desc = super.desc();
+		//the description can be viewed from the journal outside of a run
+		if (Dungeon.hero == null) return desc;
 		if (isEquipped(Dungeon.hero) && !cursed){
 			desc += "\n\n" + Messages.get(this, "desc_stats",
 					summonCost(Dungeon.hero),

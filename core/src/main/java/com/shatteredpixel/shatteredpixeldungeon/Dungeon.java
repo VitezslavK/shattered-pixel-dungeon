@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.CityArenaLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.CavesArenaLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonArenaLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ArenaLevels;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -318,7 +322,7 @@ public class Dungeon {
 					level = new PrisonLevel();
 					break;
 				case 10:
-					level = new PrisonBossLevel();
+					level = ArenaLevels.bossVariant(10) == 0 ? new PrisonBossLevel() : new PrisonArenaLevel();
 					break;
 				case 11:
 				case 12:
@@ -327,7 +331,7 @@ public class Dungeon {
 					level = new CavesLevel();
 					break;
 				case 15:
-					level = new CavesBossLevel();
+					level = ArenaLevels.bossVariant(15) == 0 ? new CavesBossLevel() : new CavesArenaLevel();
 					break;
 				case 16:
 				case 17:
@@ -336,7 +340,7 @@ public class Dungeon {
 					level = new CityLevel();
 					break;
 				case 20:
-					level = new CityBossLevel();
+					level = ArenaLevels.bossVariant(20) == 0 ? new CityBossLevel() : new CityArenaLevel();
 					break;
 				case 21:
 				case 22:

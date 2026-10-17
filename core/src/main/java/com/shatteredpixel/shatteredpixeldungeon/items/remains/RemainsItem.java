@@ -94,6 +94,8 @@ public abstract class RemainsItem extends Item {
 				return new TornPage();
 			case NECROMANCER:
 				return new CrackedLantern();
+			case ARCANIST:
+				return new RuneFragment();
 		}
 	}
 

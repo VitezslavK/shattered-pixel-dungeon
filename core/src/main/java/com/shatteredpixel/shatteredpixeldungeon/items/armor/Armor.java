@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -820,6 +821,7 @@ public class Armor extends EquipableItem {
 
 		public static float genericProcChanceMultiplier( Char defender ){
 			float multi = RingOfArcana.enchantPowerMultiplier(defender);
+			multi *= Arcana.glyphFactor(defender);
 
 			if (Dungeon.hero.alignment == defender.alignment
 					&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null

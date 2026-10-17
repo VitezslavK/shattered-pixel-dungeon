@@ -21,6 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.MirrorBarrier;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.ArtifactOverload;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.ArcaneDischarge;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHaste;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneCodex;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.EssenceOfAscension;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
@@ -100,7 +108,8 @@ public enum HeroClass {
 	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
 	DUELIST( HeroSubClass.CHAMPION, HeroSubClass.MONK ),
 	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN ),
-	NECROMANCER( HeroSubClass.BONELORD, HeroSubClass.SOUL_REAPER );
+	NECROMANCER( HeroSubClass.BONELORD, HeroSubClass.SOUL_REAPER ),
+	ARCANIST( HeroSubClass.RUNESMITH, HeroSubClass.RELIC_KEEPER );
 
 	private HeroSubClass[] subClasses;
 
@@ -155,6 +164,10 @@ public enum HeroClass {
 			case NECROMANCER:
 				initNecromancer( hero );
 				break;
+
+			case ARCANIST:
+				initArcanist( hero );
+				break;
 		}
 
 		//debug builds only: a testing kit for subclasses and evolutions
@@ -191,6 +204,8 @@ public enum HeroClass {
 				return Badges.Badge.MASTERY_CLERIC;
 			case NECROMANCER:
 				return Badges.Badge.MASTERY_NECROMANCER;
+			case ARCANIST:
+				return Badges.Badge.MASTERY_ARCANIST;
 		}
 		return null;
 	}
@@ -299,6 +314,28 @@ public enum HeroClass {
 		new ScrollOfTerror().identify();
 	}
 
+	private static void initArcanist( Hero hero ) {
+
+		(hero.belongings.weapon = new WornShortsword()).identify();
+
+		ArcaneCodex codex = new ArcaneCodex();
+		codex.identify().collect();
+		Dungeon.quickslot.setSlot(0, codex);
+
+		//starts with a random +0 wand, the arcanist's first magical tool
+		Wand wand;
+		do {
+			wand = (Wand) Generator.randomUsingDefaults(Generator.Category.WAND);
+		} while (wand instanceof WandOfMagicMissile);
+		wand.level(0);
+		wand.cursed = false;
+		wand.identify().collect();
+		Dungeon.quickslot.setSlot(1, wand);
+
+		new ScrollOfRecharging().identify();
+		new PotionOfHaste().identify();
+	}
+
 	public String title() {
 		return Messages.get(HeroClass.class, name());
 	}
@@ -331,6 +368,8 @@ public enum HeroClass {
 				return new ArmorAbility[]{new AscendedForm(), new Trinity(), new PowerOfMany()};
 			case NECROMANCER:
 				return new ArmorAbility[]{new ArmyOfTheDead(), new CorpseExplosion(), new SoulSwap()};
+			case ARCANIST:
+				return new ArmorAbility[]{new ArcaneDischarge(), new ArtifactOverload(), new MirrorBarrier()};
 		}
 	}
 
@@ -350,6 +389,8 @@ public enum HeroClass {
 				return Assets.Sprites.CLERIC;
 			case NECROMANCER:
 				return Assets.Sprites.NECROMANCER;
+			case ARCANIST:
+				return Assets.Sprites.ARCANIST;
 		}
 	}
 
@@ -369,6 +410,8 @@ public enum HeroClass {
 				return Assets.Splashes.CLERIC;
 			case NECROMANCER:
 				return Assets.Splashes.NECROMANCER;
+			case ARCANIST:
+				return Assets.Splashes.ARCANIST;
 		}
 	}
 	
@@ -390,6 +433,7 @@ public enum HeroClass {
 			case CLERIC:
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
 			case NECROMANCER:
+			case ARCANIST:
 				return true;
 		}
 	}

@@ -112,12 +112,18 @@ Navíc hex má jen 6 sousedů, kdežto SPD už teď umí 8 směrů (včetně dia
 **Doporučení:** hexy nedělat. Pokud jde o lepší pocit z pohybu, lze místo toho přidat např. úskok,
 plynulejší animace nebo pohyb myší po cestě.
 
-## Fáze 4 – Nový ending
+## Fáze 4 – Více endingů (rozšířeno 2026-10-17)
 
-- Po získání amuletu volba: **Utéct s amuletem** (klasický výstup nahoru, upravená Výzva vzestupu přes všech 30 pater) nebo **Zničit amulet** (nový finální souboj v jádru propasti).
-- Dva různé epilogy + nové odznaky za každé zakončení a za každou postavu.
+Konec nebude vždy stejný. Ending určí rozhodnutí a činy během hry:
+| Ending | Podmínka | Výsledek |
+|---|---|---|
+| **Útěk s amuletem** (klasický) | vynést amulet na povrch | současný konec |
+| **Zničení amuletu** | rozbít amulet v jádru propasti, souboj s jeho strážcem | dungeon se zhroutí, útěk na čas |
+| **Nový vládce** | nasadit si amulet (temná volba, hlavně Lich / Posel smrti) | hrdina se stane novým Yogem, temný epilog |
+| **Osvoboditel** | splnit všechny úkoly NPC a ušetřit Krysího krále | NPC pomohou při útěku, „dobrý“ epilog |
+| **Tajný ending** | získat všech 5 bossích surovin jednoho běhu a vyrobit z nich Klíč hlubin | otevře skrytou oblast a finálního tajného bosse |
 
----
+Každý ending má vlastní obrazovku, text, odznak a záznam v žebříčku.
 
 ## Fáze 5 – Variabilita (aby se hry neopakovaly)
 
@@ -129,6 +135,34 @@ plynulejší animace nebo pohyb myší po cestě.
 - **Modifikátory běhu** při startu (volitelné, obdoba Výzev, ale pozitivní i negativní).
 
 ---
+
+## Fáze 5b – Nové třídy (schváleno 2026-10-17)
+
+### Arkanista – mistr magických předmětů
+- Start: **Arkanická rukavice** (třídní předmět) + 2 sloty na artefakty místo 1.
+- Mechanika: rozkládá předměty na **arkanovou esenci**, kterou nabíjí a vylepšuje artefakty, prsteny a hůlky.
+- Podtřídy: **Runář** (vpisuje runy do zbraní a zbrojí, kombinuje očarování) / **Strážce relikvií** (artefakty se nabíjejí rychleji a lze je přebít nad maximum).
+- Schopnosti zbroje: Arkánový výboj, Přetížení artefaktu, Zrcadlová bariéra.
+
+### Alchymista – mistr lektvarů a craftingu
+- Start: **Polní kotlík** (vaří lektvary kdekoliv, bez alchymistického stolu) + 2 bomby.
+- Mechanika: hozené lektvary mají větší dosah a silnější efekt; z bossích surovin vyrobí víc.
+- Podtřídy: **Bombardér** (výbušniny, řetězové reakce) / **Transmutátor** (mění předměty a terén, kámen na zlato).
+- Schopnosti zbroje: Kyselý déšť, Elixír berserka, Transmutace.
+
+## Fáze 5c – Postupně objevované mechaniky (nové)
+- **Elementární reakce**: kombinace stavů vytváří reakce (mokrý + elektřina = šok na celou kaluž, hořící + olej = exploze, zmrzlý + drtivý úder = roztříštění, mor + oheň = spálení nákazy). Hra je nevysvětluje předem. Když reakci poprvé způsobíš, zapíše se do **Kodexu objevů**.
+- **Runové nápisy**: na zdech jsou staré runy. Každá rozluštěná runa se trvale (napříč hrami) zapíše do Kodexu a odemkne nové recepty, tajné místnosti a skryté vlastnosti předmětů.
+- **Kodex objevů**: nová záložka deníku. Ukazuje počet objevených mechanik a nápovědy k neobjeveným (např. „??? + oheň“).
+- **Svatyně a oltáře**: požehnání výměnou za oběť (HP, předmět, zlato), každá svatyně má jinou cenu.
+
+## Fáze 5d – Asynchronní online multiplayer (schváleno 2026-10-17)
+Hra zůstane tahová a pro jednoho hráče, ostatní hráči do ní vstupují asynchronně přes malý server:
+- **PvP – Invaze duchů**: po vítězství nebo smrti se tvůj hrdina (třída, výbava, talenty) nahraje jako „duch“. Ostatním hráčům se může objevit jako nepřátelský miniboss řízený AI. Kdo ho porazí, získá trofej a část jeho výbavy.
+- **Co-op – Přivolání spojence**: jednou za běh lze přivolat ducha hrdiny kamaráda (podle kódu přítele) jako spojence řízeného AI.
+- **Závody na seedu**: týdenní seed, všichni hrají stejný dungeon, společný žebříček (čas, skóre, hloubka).
+- **Sdílené kosti**: ostatky ostatních hráčů se mohou objevit ve tvém běhu.
+- Technika: malý backend (např. Supabase zdarma, REST + JSON snapshot hrdiny). Účet založí vlastník projektu, klíč se nebude ukládat do repozitáře.
 
 ## Fáze 6 – Balanc a ladění
 

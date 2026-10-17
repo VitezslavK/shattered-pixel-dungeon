@@ -121,6 +121,9 @@ abstract public class ClassArmor extends Armor {
 			case NECROMANCER:
 				classArmor = new NecromancerArmor();
 				break;
+			case ARCANIST:
+				classArmor = new ArcanistArmor();
+				break;
 		}
 		
 		classArmor.level(armor.trueLevel());

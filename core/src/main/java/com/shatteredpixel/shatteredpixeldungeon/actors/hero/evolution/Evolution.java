@@ -422,6 +422,7 @@ public class Evolution {
 
 	//called whenever the hero zaps a wand
 	public static void onWandUsed( Hero hero ){
+		com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana.onWandUsed(hero);
 		if (is(hero, HeroSubClass.BATTLEMAGE) && hero.hasTalent(Talent.MANA_SHIELD)){
 			int shield = hero.pointsInTalent(Talent.MANA_SHIELD);
 			Buff.affect(hero, Barrier.class).incShield(shield);

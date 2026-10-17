@@ -21,6 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneCodex;
+import com.shatteredpixel.shatteredpixeldungeon.items.remains.RuneFragment;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.ArcaneCore;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.CrystalHeart;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.ChainLink;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfArcanum;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfCrystalSkin;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.BindingBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.PlagueGland;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.PlagueBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.EssenceOfAscension;
@@ -249,7 +257,7 @@ public enum Catalog {
 		TIPPED_DARTS.addItems(TippedDart.types.values().toArray(new Class[0]));
 
 		BREWS_ELIXIRS.addItems( UnstableBrew.class, InfernalBrew.class, BlizzardBrew.class,
-				ShockingBrew.class, CausticBrew.class, PlagueBrew.class, AquaBrew.class, ElixirOfHoneyedHealing.class,
+				ShockingBrew.class, CausticBrew.class, PlagueBrew.class, BindingBrew.class, ElixirOfCrystalSkin.class, ElixirOfArcanum.class, AquaBrew.class, ElixirOfHoneyedHealing.class,
 				ElixirOfAquaticRejuvenation.class, ElixirOfArcaneArmor.class, ElixirOfDragonsBlood.class,
 				ElixirOfIcyTouch.class, ElixirOfToxicEssence.class, ElixirOfMight.class, ElixirOfFeatherFall.class);
 
@@ -261,9 +269,9 @@ public enum Catalog {
 				IronKey.class, GoldenKey.class, CrystalKey.class, WornKey.class,
 				TrinketCatalyst.class, Stylus.class, Torch.class, Honeypot.class, Ankh.class,
 				CorpseDust.class, Embers.class, CeremonialCandle.class, DarkGold.class, DwarfToken.class,
-				GooBlob.class, PlagueGland.class, TengusMask.class, MetalShard.class, KingsCrown.class, EssenceOfAscension.class,
+				ArcaneCodex.class, GooBlob.class, PlagueGland.class, ChainLink.class, CrystalHeart.class, ArcaneCore.class, TengusMask.class, MetalShard.class, KingsCrown.class, EssenceOfAscension.class,
 				LiquidMetal.class, ArcaneResin.class,
-				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, CrackedLantern.class);
+				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, CrackedLantern.class, RuneFragment.class);
 
 	}
 

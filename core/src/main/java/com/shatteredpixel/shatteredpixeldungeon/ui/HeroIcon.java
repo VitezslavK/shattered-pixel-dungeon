@@ -121,6 +121,15 @@ public class HeroIcon extends Image {
 	//subclass evolutions, 14 slots in subclass order
 	public static final int EVOLUTIONS      = 112;
 
+	//extension rows (icon sheet is 128x384)
+	public static final int RUNESMITH       = 128;
+	public static final int RELIC_KEEPER    = 129;
+	public static final int ARCANE_DISCHARGE= 130;
+	public static final int ARTIFACT_OVERLOAD=131;
+	public static final int MIRROR_BARRIER  = 132;
+	//evolutions for subclasses past the first 14
+	public static final int EVOLUTIONS_EXT  = 144;
+
 	public HeroIcon(HeroSubClass subCls){
 		super( Assets.Interfaces.HERO_ICONS );
 		if (film == null){
