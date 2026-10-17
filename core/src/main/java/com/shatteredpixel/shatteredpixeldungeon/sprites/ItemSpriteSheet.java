@@ -799,6 +799,7 @@ public class ItemSpriteSheet {
 	public static final int CHAIN_LINK   = QUEST+11;
 	public static final int CRYSTAL_HEART= QUEST+12;
 	public static final int ARCANE_CORE  = QUEST+13;
+	public static final int VOID_SHARD   = QUEST+14;
 	static{
 		assignItemRect(DUST,    12, 11);
 		assignItemRect(CANDLE,  12, 12);
@@ -813,6 +814,7 @@ public class ItemSpriteSheet {
 		assignItemRect(CHAIN_LINK,   12, 12);
 		assignItemRect(CRYSTAL_HEART,12, 12);
 		assignItemRect(ARCANE_CORE,  12, 12);
+		assignItemRect(VOID_SHARD,   10, 13);
 	}
 
 	private static final int BAGS       =                                   xy(1, 31);  //16 slots

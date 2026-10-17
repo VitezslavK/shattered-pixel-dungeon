@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.AbyssArenaLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.AbyssLevel;
 import com.shatteredpixel.shatteredpixeldungeon.online.GhostPool;
 import com.shatteredpixel.shatteredpixeldungeon.levels.IceCavesLevel;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -201,6 +203,8 @@ public class Dungeon {
 	// 0 is the default path
 	// 1 is for quest sub-floors
 	public static int branch;
+	//the amulet's floor, below the abyss
+	public static final int LAST_DEPTH = 31;
 	//the path chosen when leaving floor 10: -1 not chosen yet, 0 classic caves, 1 ice caves
 	public static int cavesPath = -1;
 
@@ -362,6 +366,15 @@ public class Dungeon {
 					level = new HallsBossLevel();
 					break;
 				case 26:
+				case 27:
+				case 28:
+				case 29:
+					level = new AbyssLevel();
+					break;
+				case 30:
+					level = new AbyssArenaLevel();
+					break;
+				case LAST_DEPTH:
 					level = new LastLevel();
 					break;
 				default:
@@ -458,14 +471,14 @@ public class Dungeon {
 	}
 	
 	public static boolean bossLevel( int depth ) {
-		return depth == 5 || depth == 10 || depth == 15 || depth == 20 || depth == 25;
+		return depth == 5 || depth == 10 || depth == 15 || depth == 20 || depth == 25 || depth == 30;
 	}
 
 	//value used for scaling of damage values and other effects.
-	//is usually the dungeon depth, but can be set to 26 when ascending
+	//is usually the dungeon depth, but can be set to 30 when ascending
 	public static int scalingDepth(){
 		if (Dungeon.hero != null && Dungeon.hero.buff(AscensionChallenge.class) != null){
-			return 26;
+			return 30;
 		} else {
 			return depth;
 		}

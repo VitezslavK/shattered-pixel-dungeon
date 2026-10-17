@@ -21,6 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FallenAngel;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MirrorBeast;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.LightEater;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.VoidWalker;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.VoidHerald;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GolemArchmage;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalQueen;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Jailer;
@@ -217,9 +222,10 @@ public enum Bestiary {
 				Skeleton.class, Thief.class, DM100.class, Guard.class, Necromancer.class,
 				Bat.class, Brute.class, Shaman.RedShaman.class, Shaman.BlueShaman.class, Shaman.PurpleShaman.class, Spinner.class, DM200.class,
 				Ghoul.class, Elemental.FireElemental.class, Elemental.FrostElemental.class, Elemental.ShockElemental.class, Warlock.class, Monk.class, Golem.class,
-				RipperDemon.class, DemonSpawner.class, Succubus.class, Eye.class, Scorpio.class);
+				RipperDemon.class, DemonSpawner.class, Succubus.class, Eye.class, Scorpio.class,
+				VoidWalker.class, LightEater.class, MirrorBeast.class, FallenAngel.class);
 
-		BOSSES.addEntities(Goo.class, RatMatriarch.class, Jailer.class, CrystalQueen.class, GolemArchmage.class,
+		BOSSES.addEntities(Goo.class, RatMatriarch.class, Jailer.class, CrystalQueen.class, GolemArchmage.class, VoidHerald.class,
 				Tengu.class,
 				Pylon.class, DM300.class,
 				DwarfKing.class,
@@ -272,6 +278,7 @@ public enum Bestiary {
 		classConversions.put(Jailer.JailGuard.class,            Guard.class);
 		classConversions.put(CrystalQueen.QueenShard.class,     CrystalWisp.class);
 		classConversions.put(GolemArchmage.ConjuredGolem.class, Golem.class);
+		classConversions.put(VoidHerald.HeraldWalker.class,     VoidWalker.class);
 
 		classConversions.put(TenguDartTrap.class,              PoisonDartTrap.class);
 		classConversions.put(GnollRockfallTrap.class,          RockfallTrap.class);

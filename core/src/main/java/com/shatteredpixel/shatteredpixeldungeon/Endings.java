@@ -77,6 +77,7 @@ public class Endings {
 		if (hero.belongings.getItem(ChainLink.class) != null) materials++;
 		if (hero.belongings.getItem(CrystalHeart.class) != null) materials++;
 		if (hero.belongings.getItem(ArcaneCore.class) != null) materials++;
+		if (hero.belongings.getItem(com.shatteredpixel.shatteredpixeldungeon.items.quest.VoidShard.class) != null) materials++;
 		return materials >= 3;
 	}
 

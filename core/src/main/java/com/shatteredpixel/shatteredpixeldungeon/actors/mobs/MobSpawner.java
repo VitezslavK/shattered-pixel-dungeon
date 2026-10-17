@@ -201,12 +201,40 @@ public class MobSpawner extends Actor {
 						Succubus.class,
 						Eye.class, Eye.class,
 						Scorpio.class));
-			case 24: case 25: case 26:
+			case 24: case 25:
 				//1x succubus, 2x evil eye, 3x scorpio
 				return new ArrayList<>(Arrays.asList(
 						Succubus.class,
 						Eye.class, Eye.class,
 						Scorpio.class, Scorpio.class, Scorpio.class));
+
+			// Abyss
+			case 26:
+				//2x void walker, 1x light eater, 1x scorpio
+				return new ArrayList<>(Arrays.asList(
+						VoidWalker.class, VoidWalker.class,
+						LightEater.class,
+						Scorpio.class));
+			case 27:
+				//2x void walker, 1x light eater, 1x mirror beast
+				return new ArrayList<>(Arrays.asList(
+						VoidWalker.class, VoidWalker.class,
+						LightEater.class,
+						MirrorBeast.class));
+			case 28:
+				//1x void walker, 2x light eater, 1x mirror beast, 1x fallen angel
+				return new ArrayList<>(Arrays.asList(
+						VoidWalker.class,
+						LightEater.class, LightEater.class,
+						MirrorBeast.class,
+						FallenAngel.class));
+			case 29: case 30: case 31:
+				//1x void walker, 1x light eater, 2x mirror beast, 2x fallen angel
+				return new ArrayList<>(Arrays.asList(
+						VoidWalker.class,
+						LightEater.class,
+						MirrorBeast.class, MirrorBeast.class,
+						FallenAngel.class, FallenAngel.class));
 		}
 
 	}
