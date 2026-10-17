@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.watabou.utils.DeviceCompat;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.effects.ShadowBox;
@@ -64,6 +67,13 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 
 	public Window( int width, int height, NinePatch chrome ) {
 		super();
+
+		//creating windows on the actor thread crashes Android, use Game.runOnRenderThread
+		if (GameScene.onActorThread()){
+			IllegalStateException e = new IllegalStateException("window created on the actor thread: " + getClass().getName());
+			if (DeviceCompat.isDebug() || System.getProperty("spd.autotour") != null) throw e;
+			ShatteredPixelDungeon.reportException(e);
+		}
 		
 		blocker = new PointerArea( 0, 0, PixelScene.uiCamera.width, PixelScene.uiCamera.height ) {
 			@Override

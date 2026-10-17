@@ -29,6 +29,25 @@ tasks.register('debug', JavaExec) {
     }
 }
 
+//automated playthrough of the real game, see core/.../scenes/AutoTour.java
+//  ./gradlew desktop:autotour -Phero=NECROMANCER
+tasks.register('autotour', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    ignoreExitValue = true
+
+    mainClass = appMainClass
+    systemProperty 'Specification-Title', appName
+    systemProperty 'Implementation-Title', appPackageName
+    //release version string, so boss variants and other debug shortcuts behave like the real game
+    systemProperty 'Specification-Version', appVersionName
+    systemProperty 'Implementation-Version', appVersionCode
+    systemProperty 'spd.autotour', project.findProperty('hero') ?: 'RANDOM'
+
+    if (osName.contains('mac')) {
+        jvmArgs '-XstartOnFirstThread'
+    }
+}
+
 tasks.register('release', Jar) {
     //FIXME this is now needed as of gradle 7.0, due to our weird sourceSets setup. Should see if there's a better way to do this
     setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)

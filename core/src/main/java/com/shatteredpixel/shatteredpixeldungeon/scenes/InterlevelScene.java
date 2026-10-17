@@ -529,6 +529,11 @@ public class InterlevelScene extends PixelScene {
 			
 		case STATIC:
 
+			//the automated playthrough presses continue on story screens
+			if (AutoTour.enabled() && btnContinue != null && !textFadingIn && btnContinue.isActive()){
+				AutoTour.press(btnContinue);
+			}
+
 			if (btnContinue != null && textFadingIn) {
 				btnContinue.alpha(Math.min(1, btnContinue.alpha() + Game.elapsed));
 				storyMessage.alpha(btnContinue.alpha());

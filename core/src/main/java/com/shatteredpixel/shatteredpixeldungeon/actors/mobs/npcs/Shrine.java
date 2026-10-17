@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.watabou.utils.Callback;
+import com.watabou.noosa.Game;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -106,12 +108,18 @@ public class Shrine extends NPC {
 	public boolean interact(Char c) {
 		if (c != Dungeon.hero) return true;
 		final Hero hero = (Hero) c;
-		GameScene.show(new WndOptions(sprite(), Messages.titleCase(name()),
-				Messages.get(this, "offer_" + type, goldCost()),
-				Messages.get(this, "accept"), Messages.get(this, "refuse")){
+		//interactions happen on the actor thread, windows must be created on the render thread
+		Game.runOnRenderThread(new Callback() {
 			@Override
-			protected void onSelect(int index) {
-				if (index == 0) accept(hero);
+			public void call() {
+				GameScene.show(new WndOptions(sprite(), Messages.titleCase(name()),
+						Messages.get(Shrine.this, "offer_" + type, goldCost()),
+						Messages.get(Shrine.this, "accept"), Messages.get(Shrine.this, "refuse")){
+					@Override
+					protected void onSelect(int index) {
+						if (index == 0) accept(hero);
+					}
+				});
 			}
 		});
 		return true;
