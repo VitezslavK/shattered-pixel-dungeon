@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.MirrorBarrier;
@@ -265,6 +266,7 @@ public class Hero extends Char {
 		
 		HT = 20 + 5*(lvl-1) + HTBoost;
 		if (Runes.Rune.URUZ.active()) HT += 5;
+		HT = Math.max(1, Math.round(HT * RunModifier.hpFactor()));
 		float multiplier = RingOfMight.HTMultiplier(this);
 		HT = Math.round(multiplier * HT);
 		
@@ -681,6 +683,7 @@ public class Hero extends Char {
 		dr += Evolution.bonusArmor(this);
 		dr += Arcana.bonusArmor(this);
 		dr += Alchemy.bonusArmor(this);
+		if (RunModifier.active(RunModifier.IRONCLAD)) dr += Random.NormalIntRange(1, 3);
 		
 		return dr;
 	}
@@ -737,6 +740,7 @@ public class Hero extends Char {
 
 		speed *= RingOfHaste.speedMultiplier(this);
 		speed *= Evolution.speedFactor(this);
+		speed *= RunModifier.speedFactor();
 		
 		if (belongings.armor() != null) {
 			speed = belongings.armor().speedFactor(this, speed);
@@ -2007,8 +2011,8 @@ public class Hero extends Char {
 	
 	public void earnExp( int exp, Class source ) {
 
-		if (Runes.Rune.BERKANO.active() && source != AscensionChallenge.class && exp > 0){
-			float boosted = exp * 1.1f;
+		if ((Runes.Rune.BERKANO.active() || RunModifier.expFactor() != 1f) && source != AscensionChallenge.class && exp > 0){
+			float boosted = exp * (Runes.Rune.BERKANO.active() ? 1.1f : 1f) * RunModifier.expFactor();
 			exp = (int)boosted + (Random.Float() < boosted - (int)boosted ? 1 : 0);
 		}
 

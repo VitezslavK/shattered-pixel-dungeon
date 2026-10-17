@@ -211,6 +211,9 @@ public class Dungeon {
 	public static int cavesPath = -1;
 	//the path chosen when leaving floor 15: -1 not chosen yet, 0 classic city, 1 burned city
 	public static int cityPath = -1;
+	//the run modifier picked at the start of the run, -1 for none, see RunModifier
+	public static int runModifier = -1;
+	public static boolean modifierOffered = false;
 
 	//keeps track of what levels the game should try to load instead of creating fresh
 	public static ArrayList<Integer> generatedLevels = new ArrayList<>();
@@ -283,6 +286,8 @@ public class Dungeon {
 		branch = 0;
 		cavesPath = -1;
 		cityPath = -1;
+		runModifier = -1;
+		modifierOffered = false;
 
 		GhostPool.refresh();
 		generatedLevels.clear();
@@ -649,6 +654,8 @@ public class Dungeon {
 	private static final String BRANCH		= "branch";
 	private static final String CAVES_PATH	= "caves_path";
 	private static final String CITY_PATH	= "city_path";
+	private static final String RUN_MODIFIER	= "run_modifier";
+	private static final String MODIFIER_OFFERED	= "modifier_offered";
 	private static final String GENERATED_LEVELS    = "generated_levels";
 	private static final String GOLD		= "gold";
 	private static final String ENERGY		= "energy";
@@ -678,6 +685,8 @@ public class Dungeon {
 			bundle.put( BRANCH, branch );
 			bundle.put( CAVES_PATH, cavesPath );
 			bundle.put( CITY_PATH, cityPath );
+			bundle.put( RUN_MODIFIER, runModifier );
+			bundle.put( MODIFIER_OFFERED, modifierOffered );
 
 			bundle.put( GOLD, gold );
 			bundle.put( ENERGY, energy );
@@ -857,6 +866,8 @@ public class Dungeon {
 		branch = bundle.getInt( BRANCH );
 		cavesPath = bundle.contains( CAVES_PATH ) ? bundle.getInt( CAVES_PATH ) : -1;
 		cityPath = bundle.contains( CITY_PATH ) ? bundle.getInt( CITY_PATH ) : -1;
+		runModifier = bundle.contains( RUN_MODIFIER ) ? bundle.getInt( RUN_MODIFIER ) : -1;
+		modifierOffered = bundle.getBoolean( MODIFIER_OFFERED );
 
 		gold = bundle.getInt( GOLD );
 		energy = bundle.getInt( ENERGY );

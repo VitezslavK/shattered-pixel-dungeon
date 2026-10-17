@@ -21,6 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shrine;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TreasureGoblin;
+import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.FloorEvent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GhostInvader;
 import com.shatteredpixel.shatteredpixeldungeon.online.GhostSnapshot;
 import com.shatteredpixel.shatteredpixeldungeon.online.GhostPool;
@@ -218,9 +223,35 @@ public abstract class RegularLevel extends Level {
 		if (feeling == Feeling.LARGE){
 			mobs = (int)Math.ceil(mobs * 1.33f);
 		}
+		if (event == FloorEvent.QUIET){
+			mobs = Math.max(1, mobs/2);
+		}
 		return mobs;
 	}
 	
+	//treasure goblins from floor events, and shrines that offer the hero a deal
+	private void spawnSpecialMobs( boolean[] farFromEntrance ){
+		Random.pushGenerator(Random.Long());
+			boolean shrine = Random.Float() < 0.15f;
+			ArrayList<Mob> toPlace = new ArrayList<>();
+			if (Dungeon.branch == 0 && !Dungeon.bossLevel()){
+				if (event == FloorEvent.TREASURE_GOBLIN) toPlace.add(new TreasureGoblin());
+				if (shrine && Dungeon.depth >= 2) toPlace.add(Shrine.random());
+			}
+			for (Mob m : toPlace){
+				for (int tries = 0; tries < 50; tries++){
+					int cell = randomDropCell();
+					if (cell != -1 && passable[cell] && !solid[cell] && farFromEntrance[cell]
+							&& findMob(cell) == null && cell != exit() && heaps.get(cell) == null){
+						m.pos = cell;
+						mobs.add(m);
+						break;
+					}
+				}
+			}
+		Random.popGenerator();
+	}
+
 	//the ghost of another hero sometimes invades a floor, see GhostPool
 	private void spawnGhostInvader( boolean[] farFromEntrance ){
 		Random.pushGenerator(Random.Long());
@@ -346,6 +377,7 @@ public abstract class RegularLevel extends Level {
 
 
 		spawnGhostInvader(farFromEntrance);
+		spawnSpecialMobs(farFromEntrance);
 	}
 
 	@Override
@@ -719,6 +751,22 @@ public abstract class RegularLevel extends Level {
 					losBlocking[cell] = false;
 				}
 				drop( Generator.randomUsingDefaults(), cell).hidden = true;
+			}
+		Random.popGenerator();
+
+		//floor events and run modifiers that add loot
+		Random.pushGenerator(Random.Long());
+			int extraItems = 0;
+			if (event == FloorEvent.BLOOD_MOON) extraItems++;
+			if (RunModifier.active(RunModifier.HOARDER)) extraItems++;
+			for (int i = 0; i < extraItems; i++){
+				Item extra = Generator.random();
+				if (extra != null) drop(extra, randomDropCell());
+			}
+			if (event == FloorEvent.GOLD_RUSH){
+				for (int i = 0; i < 4; i++){
+					drop(new Gold().random(), randomDropCell());
+				}
 			}
 		Random.popGenerator();
 

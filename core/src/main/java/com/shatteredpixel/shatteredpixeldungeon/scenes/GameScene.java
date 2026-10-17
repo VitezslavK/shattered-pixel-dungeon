@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.FloorEvent;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -691,10 +693,20 @@ public class GameScene extends PixelScene {
 					break;
 			}
 
+			if (Dungeon.level.event != FloorEvent.NONE){
+				GLog.w(Dungeon.level.event.desc());
+			}
+
 			for (Mob mob : Dungeon.level.mobs) {
 				if (!mob.buffs(ChampionEnemy.class).isEmpty()) {
 					GLog.w(Messages.get(ChampionEnemy.class, "warn"));
 				}
+			}
+
+			//offer a run modifier when a new run starts
+			if (Dungeon.depth == 1 && !Dungeon.modifierOffered && !Dungeon.daily){
+				Dungeon.modifierOffered = true;
+				offerRunModifier();
 			}
 
 			if (Dungeon.hero.buff(AscensionChallenge.class) != null){
@@ -765,6 +777,29 @@ public class GameScene extends PixelScene {
 
 	}
 	
+	private void offerRunModifier(){
+		java.util.ArrayList<RunModifier> options = new java.util.ArrayList<>(java.util.Arrays.asList(RunModifier.values()));
+		java.util.Collections.shuffle(options);
+		final RunModifier[] picks = {options.get(0), options.get(1), options.get(2)};
+		StringBuilder text = new StringBuilder(Messages.get(RunModifier.class, "offer"));
+		for (RunModifier m : picks){
+			text.append("\n\n_").append(Messages.titleCase(m.title())).append(":_ ").append(m.desc());
+		}
+		show(new WndOptions(Messages.titleCase(Messages.get(RunModifier.class, "title")), text.toString(),
+				Messages.titleCase(picks[0].title()), Messages.titleCase(picks[1].title()),
+				Messages.titleCase(picks[2].title()), Messages.get(RunModifier.class, "none")){
+			@Override
+			protected void onSelect(int index) {
+				if (index >= 0 && index < 3){
+					Dungeon.runModifier = picks[index].ordinal();
+					Dungeon.hero.updateHT(false);
+					Dungeon.hero.HP = Math.min(Dungeon.hero.HP, Dungeon.hero.HT);
+					GLog.p(Messages.get(RunModifier.class, "chosen", Messages.titleCase(picks[index].title())));
+				}
+			}
+		});
+	}
+
 	public void destroy() {
 		
 		//tell the actor thread to finish, then wait for it to complete any actions it may be doing.

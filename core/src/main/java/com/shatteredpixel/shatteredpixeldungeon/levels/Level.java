@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.FloorEvent;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -213,6 +215,9 @@ public abstract class Level implements Bundlable {
 	private static final String MOBS		= "mobs";
 	private static final String BLOBS		= "blobs";
 	private static final String FEELING		= "feeling";
+	private static final String EVENT		= "event";
+
+	public FloorEvent event = FloorEvent.NONE;
 
 	public void create() {
 
@@ -290,6 +295,14 @@ public abstract class Level implements Bundlable {
 						} else {
 							feeling = Feeling.NONE;
 						}
+				}
+
+				//random floor events, rolled from their own seeded generator
+				Random.pushGenerator(Random.Long());
+					event = FloorEvent.roll();
+				Random.popGenerator();
+				if (event == FloorEvent.MIST){
+					viewDistance = Math.max(2, viewDistance - 3);
 				}
 			}
 		}
@@ -441,6 +454,10 @@ public abstract class Level implements Bundlable {
 		if (feeling == Feeling.DARK) {
 			viewDistance = Math.round(5 * viewDistance / 8f);
 		}
+		event = bundle.contains( EVENT ) ? bundle.getEnum( EVENT, FloorEvent.class ) : FloorEvent.NONE;
+		if (event == FloorEvent.MIST) {
+			viewDistance = Math.max(2, viewDistance - 3);
+		}
 
 		if (bundle.contains( "mobs_to_spawn" )) {
 			for (Class<? extends Mob> mob : bundle.getClassArray("mobs_to_spawn")) {
@@ -475,6 +492,7 @@ public abstract class Level implements Bundlable {
 		bundle.put( MOBS, mobs );
 		bundle.put( BLOBS, blobs.values() );
 		bundle.put( FEELING, feeling );
+		bundle.put( EVENT, event );
 		bundle.put( "mobs_to_spawn", mobsToSpawn.toArray(new Class[0]));
 		bundle.put( "respawner", respawner );
 	}
@@ -514,6 +532,16 @@ public abstract class Level implements Bundlable {
 
 		Mob m = Reflection.newInstance(mobsToSpawn.remove(0));
 		ChampionEnemy.rollForChampion(m);
+
+		//blood moon and the scholar modifier toughen up monsters
+		float hpFactor = RunModifier.mobHPFactor();
+		if (event == FloorEvent.BLOOD_MOON){
+			hpFactor *= 1.3f;
+			m.EXP = Math.round(m.EXP * 1.5f);
+		}
+		if (hpFactor != 1f){
+			m.HT = m.HP = Math.round(m.HT * hpFactor);
+		}
 		return m;
 	}
 

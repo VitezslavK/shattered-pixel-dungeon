@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfBloodlust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
@@ -1033,6 +1034,7 @@ public enum Talent {
 			}
 		}
 
+		dmg = Math.round(dmg * RunModifier.damageFactor());
 		dmg = Necromancy.onHeroAttack(hero, enemy, dmg);
 		dmg = Evolution.onHeroAttack(hero, enemy, dmg);
 		dmg = Arcana.onHeroAttack(hero, enemy, dmg);
