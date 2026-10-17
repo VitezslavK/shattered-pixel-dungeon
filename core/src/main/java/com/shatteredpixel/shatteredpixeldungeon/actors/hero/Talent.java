@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfBloodlust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
@@ -1036,6 +1037,19 @@ public enum Talent {
 		dmg = Evolution.onHeroAttack(hero, enemy, dmg);
 		dmg = Arcana.onHeroAttack(hero, enemy, dmg);
 		dmg = Alchemy.onHeroAttack(hero, enemy, dmg);
+
+		if (!(hero.belongings.attackingWeapon() instanceof MissileWeapon)){
+			int steal = RingOfBloodlust.lifestealFor(hero, dmg);
+			if (steal > 0){
+				int heal = Math.min(steal, hero.HT - hero.HP);
+				if (heal > 0){
+					hero.HP += heal;
+					hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
+				}
+			} else if (steal < 0){
+				hero.damage(-steal, RingOfBloodlust.class);
+			}
+		}
 
 		return dmg;
 	}

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Frostward;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -797,7 +798,7 @@ public class Armor extends EquipableItem {
 
 		public static final Class<?>[] uncommon = new Class<?>[]{
 				Brimstone.class, Stone.class, Entanglement.class,
-				Repulsion.class, Camouflage.class, Flow.class };
+				Repulsion.class, Camouflage.class, Flow.class, Frostward.class };
 
 		public static final Class<?>[] rare = new Class<?>[]{
 				Affection.class, AntiMagic.class, Thorns.class };

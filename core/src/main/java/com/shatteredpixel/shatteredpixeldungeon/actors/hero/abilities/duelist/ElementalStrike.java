@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Corroding;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -117,6 +119,7 @@ public class ElementalStrike extends ArmorAbility {
 		effectTypes.put(Corrupting.class,   MagicMissile.SHADOW_CONE);
 		effectTypes.put(Grim.class,         MagicMissile.SHADOW_CONE);
 		effectTypes.put(Vampiric.class,     MagicMissile.BLOOD_CONE);
+		effectTypes.put(Corroding.class,    MagicMissile.CORROSION_CONE);
 
 		effectTypes.put(Annoying.class,     MagicMissile.SHADOW_CONE);
 		effectTypes.put(Displacing.class,   MagicMissile.SHADOW_CONE);
@@ -446,6 +449,14 @@ public class ElementalStrike extends ArmorAbility {
 					if (ch != primaryTarget) {
 						ench.proc((Weapon) w, hero, ch, w.damageRoll(hero));
 					}
+				}
+			}
+
+		//*** Corroding ***
+		} else if (ench instanceof Corroding){
+			for (Char ch : affected){
+				if (ch != primaryTarget && ch.isAlive()){
+					Buff.affect(ch, Corrosion.class).set(3f, Math.round(3*powerMulti));
 				}
 			}
 

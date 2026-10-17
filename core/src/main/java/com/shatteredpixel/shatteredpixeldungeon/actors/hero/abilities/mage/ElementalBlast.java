@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -104,6 +106,7 @@ public class ElementalBlast extends ArmorAbility {
 		effectTypes.put(WandOfTransfusion.class,    MagicMissile.BLOOD_CONE);
 		effectTypes.put(WandOfCorruption.class,     MagicMissile.SHADOW_CONE);
 		effectTypes.put(WandOfRegrowth.class,       MagicMissile.FOLIAGE_CONE);
+		effectTypes.put(WandOfPlague.class,         MagicMissile.CORROSION_CONE);
 	}
 
 	private static final HashMap<Class<?extends Wand>, Float> damageFactors = new HashMap<>();
@@ -121,6 +124,7 @@ public class ElementalBlast extends ArmorAbility {
 		damageFactors.put(WandOfTransfusion.class,      0f);
 		damageFactors.put(WandOfCorruption.class,       0f);
 		damageFactors.put(WandOfRegrowth.class,         0f);
+		damageFactors.put(WandOfPlague.class,           0f);
 	}
 
 	{
@@ -289,6 +293,13 @@ public class ElementalBlast extends ArmorAbility {
 								} else if (finalWandCls == WandOfFireblast.class){
 									if (mob.isAlive() && mob.alignment != Char.Alignment.ALLY) {
 										Buff.affect( mob, Burning.class ).reignite( mob );
+									}
+
+								//*** Wand of Plague ***
+								} else if (finalWandCls == WandOfPlague.class){
+									if (mob.isAlive() && mob.alignment != Char.Alignment.ALLY) {
+										Buff.affect( mob, Plague.class ).set(Math.round(8*effectMulti));
+										charsHit++;
 									}
 
 								//*** Wand of Corrosion ***

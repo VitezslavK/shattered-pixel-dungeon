@@ -21,6 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfBloodlust;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.VoidBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MorningStar;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Scythe;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.AlchemistArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ArcanistArmor;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -412,8 +417,9 @@ public class Generator {
 					WandOfWarding.class,
 					WandOfTransfusion.class,
 					WandOfCorruption.class,
-					WandOfRegrowth.class };
-			WAND.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+					WandOfRegrowth.class,
+					WandOfPlague.class };
+			WAND.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 			WAND.probs = WAND.defaultProbs.clone();
 			
 			//see generator.randomWeapon
@@ -450,10 +456,11 @@ public class Generator {
 					Scimitar.class,
 					RoundShield.class,
 					Sai.class,
-					Whip.class
+					Whip.class,
+					Scythe.class
 			};
-			WEP_T3.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2 };
-			WEP_T3.probs = WEP_T1.defaultProbs.clone();
+			WEP_T3.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2 };
+			WEP_T3.probs = WEP_T3.defaultProbs.clone();
 			
 			WEP_T4.classes = new Class<?>[]{
 					Longsword.class,
@@ -462,9 +469,10 @@ public class Generator {
 					RunicBlade.class,
 					AssassinsBlade.class,
 					Crossbow.class,
-					Katana.class
+					Katana.class,
+					MorningStar.class
 			};
-			WEP_T4.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2 };
+			WEP_T4.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2, 2 };
 			WEP_T4.probs = WEP_T4.defaultProbs.clone();
 			
 			WEP_T5.classes = new Class<?>[]{
@@ -474,9 +482,10 @@ public class Generator {
 					Greataxe.class,
 					Greatshield.class,
 					Gauntlet.class,
-					WarScythe.class
+					WarScythe.class,
+					VoidBlade.class
 			};
-			WEP_T5.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2 };
+			WEP_T5.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2, 1 };
 			WEP_T5.probs = WEP_T5.defaultProbs.clone();
 			
 			//see Generator.randomArmor
@@ -562,8 +571,9 @@ public class Generator {
 					RingOfMight.class,
 					RingOfSharpshooting.class,
 					RingOfTenacity.class,
-					RingOfWealth.class};
-			RING.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+					RingOfWealth.class,
+					RingOfBloodlust.class};
+			RING.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 			RING.probs = RING.defaultProbs.clone();
 			
 			ARTIFACT.classes = new Class<?>[]{

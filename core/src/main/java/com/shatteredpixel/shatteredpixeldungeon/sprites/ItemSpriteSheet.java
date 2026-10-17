@@ -274,12 +274,14 @@ public class ItemSpriteSheet {
 	public static final int ROUND_SHIELD    = WEP_TIER3+3;
 	public static final int SAI             = WEP_TIER3+4;
 	public static final int WHIP            = WEP_TIER3+5;
+	public static final int SCYTHE          = WEP_TIER3+6;
 	static{
 		assignItemRect(SWORD,           14, 14);
 		assignItemRect(MACE,            15, 15);
 		assignItemRect(SCIMITAR,        13, 16);
 		assignItemRect(ROUND_SHIELD,    16, 16);
 		assignItemRect(SAI,             16, 16);
+		assignItemRect(SCYTHE,          15, 15);
 		assignItemRect(WHIP,            14, 14);
 	}
 
@@ -291,6 +293,7 @@ public class ItemSpriteSheet {
 	public static final int ASSASSINS_BLADE = WEP_TIER4+4;
 	public static final int CROSSBOW        = WEP_TIER4+5;
 	public static final int KATANA          = WEP_TIER4+6;
+	public static final int MORNING_STAR    = WEP_TIER4+7;
 	static{
 		assignItemRect(LONGSWORD,       15, 15);
 		assignItemRect(BATTLE_AXE,      16, 16);
@@ -298,6 +301,7 @@ public class ItemSpriteSheet {
 		assignItemRect(RUNIC_BLADE,     14, 14);
 		assignItemRect(ASSASSINS_BLADE, 14, 15);
 		assignItemRect(CROSSBOW,        15, 15);
+		assignItemRect(MORNING_STAR,    14, 14);
 		assignItemRect(KATANA,          15, 16);
 	}
 
@@ -309,6 +313,7 @@ public class ItemSpriteSheet {
 	public static final int GREATSHIELD     = WEP_TIER5+4;
 	public static final int GAUNTLETS       = WEP_TIER5+5;
 	public static final int WAR_SCYTHE      = WEP_TIER5+6;
+	public static final int VOID_BLADE      = WEP_TIER5+7;
 	static{
 		assignItemRect(GREATSWORD,  16, 16);
 		assignItemRect(WAR_HAMMER,  16, 16);
@@ -316,6 +321,7 @@ public class ItemSpriteSheet {
 		assignItemRect(GREATAXE,    12, 16);
 		assignItemRect(GREATSHIELD, 12, 16);
 		assignItemRect(GAUNTLETS,   13, 15);
+		assignItemRect(VOID_BLADE,      14, 15);
 		assignItemRect(WAR_SCYTHE,  14, 15);
 	}
 
@@ -435,6 +441,7 @@ public class ItemSpriteSheet {
 	public static final int WAND_WARDING        = WANDS+10;
 	public static final int WAND_REGROWTH       = WANDS+11;
 	public static final int WAND_TRANSFUSION    = WANDS+12;
+	public static final int WAND_PLAGUE         = WANDS+13;
 	static {
 		for (int i = WANDS; i < WANDS+16; i++)
 			assignItemRect(i, 14, 14);
@@ -453,6 +460,7 @@ public class ItemSpriteSheet {
 	public static final int RING_QUARTZ     = RINGS+9;
 	public static final int RING_AGATE      = RINGS+10;
 	public static final int RING_DIAMOND    = RINGS+11;
+	public static final int RING_JADE       = RINGS+12;
 	static {
 		for (int i = RINGS; i < RINGS+16; i++)
 			assignItemRect(i, 8, 10);
