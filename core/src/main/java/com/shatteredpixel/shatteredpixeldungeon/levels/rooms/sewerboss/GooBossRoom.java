@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.sewerboss;
 
+import com.watabou.utils.DeviceCompat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RatMatriarch;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Goo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
@@ -56,6 +60,18 @@ public abstract class GooBossRoom extends StandardRoom {
 		}
 	}
 	
+	//the sewer boss is chosen randomly, level generation is seeded so this is consistent per seed
+	public static Mob randomBoss(){
+		//debug builds always use the newest boss, to make testing easier
+		if (DeviceCompat.isDebug()) return new RatMatriarch();
+		switch (Random.Int(2)){
+			case 0: default:
+				return new Goo();
+			case 1:
+				return new RatMatriarch();
+		}
+	}
+
 	protected void setupGooNest( Level level ){
 		GooNest nest = new GooNest();
 		nest.setRect(left + width()/2 - 2, top + height()/2 - 2, 4 + width()%2, 4 + height()%2);

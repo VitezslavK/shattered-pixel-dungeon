@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.Necromancy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -1084,6 +1085,8 @@ public abstract class Char extends Actor {
 	}
 	
 	public void die( Object src ) {
+		Plague plague = buff(Plague.class);
+		if (plague != null) plague.spread();
 		destroy();
 		if (src != Chasm.class) {
 			sprite.die();

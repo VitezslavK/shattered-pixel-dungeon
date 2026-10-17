@@ -69,20 +69,48 @@ Každá podtřída se v pozdní hře vyvine do vyšší formy s **unikátní pas
 
 ---
 
-## Fáze 3 – Delší dungeon (nová oblast 26–30)
+## Fáze 3 – Nový obsah dungeonu (rozšířeno 2026-10-17)
 
-Dnes: 5 oblastí × 5 pater, Yendorův amulet na 26. patře.
+Stav: Fáze 1 (Nekromant) a 2 (evoluce podtříd) jsou hotové a commitnuté.
 
-Nově: po Yog-Dzewě (25) **schod dolů místo amuletu** → nová 6. oblast **Rozervaná propast** (patra 26–29) + **nový boss na 30. patře**, amulet na 31.
+### 3a – Náhodní bossové v každé oblasti
+Každá oblast dostane 2–3 bossy, ze kterých se podle seedu vybere jeden. Hráč tak dopředu neví, na koho narazí.
+| Oblast | Původní | Nově navíc (návrhy) |
+|---|---|---|
+| Kanály (5) | Goo | **Matka krys**: přivolává krysy, noří se do vody, otravuje kousnutím |
+| Vězení (10) | Tengu | Vrchní žalářník (řetězy, cely, stráže) |
+| Jeskyně (15) | DM-300 | Krystalová královna (krystalové stěny, odrazy) |
+| Město (20) | Král trpaslíků | Arcimág golemů |
+| Hrob (25) | Yog-Dzewa | (později) |
 
-- 4–5 nových monster (např. prázdnotní chodec, požírač světla, zrcadlová stvůra, rozpadlý anděl) + 1 vzácná varianta.
-- Nové pastě, nový typ terénu (trhliny do prázdna – pád = poškození a přesun o patro níž).
-- Obchod na 26. patře, škálování předmětů: nová 6. úroveň zbraní a zbrojí (2–3 zbraně, 1 zbroj).
-- Úprava všech míst, kde je natvrdo „25/26“ (generátor pater, spawny, obchody, odznaky, Výzva vzestupu).
+Každý nový boss má **vlastní drop do alchymie** (např. Morová žláza → Morový lektvar).
 
-**Boss 30. patra – „Strážce Amuletu“** (návrh): vícefázový souboj, který mění arénu (propadající se podlaha, fáze zrcadlení hrdinova vybavení).
+### 3b – Nové stavy, lektvary a crafting
+- Nové stavy (buffy/debuffy): **Mor** (šíří se na sousedy po smrti hostitele), Krvácení duše, Omrzliny, Posvěcení…
+- Nové lektvary, brewy a elixíry z bossích dropů a nových surovin.
+- Nové recepty v alchymii pro každý bossí drop.
 
----
+### 3c – Volba cesty (větvení dungeonu)
+Po 2. bossovi (a znovu po 4.) si hráč na schodech vybere ze 2 cest, například:
+- **Ledová jeskyně** (zpomalující led, omrzliny, ledová monstra) vs. klasické Jeskyně
+- **Spálené město** (oheň, láva) vs. klasické Město
+Každá větev má vlastní tileset (zatím přebarvený), monstra, pasti a bossy.
+
+### 3d – Nová monstra a předměty
+- 2–4 nová monstra na oblast + elitní varianty.
+- Nové běžné zbraně, zbroje, prsteny, hůlky a speciální předměty.
+
+### 3e – Nová oblast 26–30 + nový finální boss (původní Fáze 3)
+Bez změny oproti původnímu plánu, navazuje na ending (Fáze 4).
+
+### Hexagony – posouzení
+Celá hra je postavená na čtvercové mřížce: pohyb (8 směrů), hledání cest, výpočet viditelnosti (FOV),
+dráhy střel, generátor místností (obdélníky), vykreslování dlaždic, automatické napojování zdí a veškerá
+grafika prostředí. Přechod na hexy by znamenal přepsat jádro enginu a překreslit všechny tilesety.
+Je to v podstatě nová hra a rozbilo by to všechen dosavadní obsah.
+Navíc hex má jen 6 sousedů, kdežto SPD už teď umí 8 směrů (včetně diagonál).
+**Doporučení:** hexy nedělat. Pokud jde o lepší pocit z pohybu, lze místo toho přidat např. úskok,
+plynulejší animace nebo pohyb myší po cestě.
 
 ## Fáze 4 – Nový ending
 

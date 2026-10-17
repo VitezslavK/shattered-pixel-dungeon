@@ -657,6 +657,7 @@ public class ItemSpriteSheet {
 	public static final int BREW_CAUSTIC    = BREWS+3;
 	public static final int BREW_AQUA       = BREWS+4;
 	public static final int BREW_UNSTABLE   = BREWS+5;
+	public static final int BREW_PLAGUE     = BREWS+6;
 	
 	private static final int ELIXIRS        =                               xy(9, 26);  //8 slots
 	public static final int ELIXIR_HONEY    = ELIXIRS+0;
@@ -769,6 +770,7 @@ public class ItemSpriteSheet {
 	public static final int BLOB    = QUEST+7;
 	public static final int SHARD   = QUEST+8;
 	public static final int ESCAPE  = QUEST+9;
+	public static final int PLAGUE_GLAND = QUEST+10;
 	static{
 		assignItemRect(DUST,    12, 11);
 		assignItemRect(CANDLE,  12, 12);
@@ -779,6 +781,7 @@ public class ItemSpriteSheet {
 		assignItemRect(BLOB,    10,  9);
 		assignItemRect(SHARD,    8, 10);
 		assignItemRect(ESCAPE,   8, 16);
+		assignItemRect(PLAGUE_GLAND, 11, 10);
 	}
 
 	private static final int BAGS       =                                   xy(1, 31);  //16 slots

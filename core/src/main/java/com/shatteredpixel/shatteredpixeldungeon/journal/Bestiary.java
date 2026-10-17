@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RatMatriarch;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.SkeletalServant;
@@ -215,7 +216,7 @@ public enum Bestiary {
 				Ghoul.class, Elemental.FireElemental.class, Elemental.FrostElemental.class, Elemental.ShockElemental.class, Warlock.class, Monk.class, Golem.class,
 				RipperDemon.class, DemonSpawner.class, Succubus.class, Eye.class, Scorpio.class);
 
-		BOSSES.addEntities(Goo.class,
+		BOSSES.addEntities(Goo.class, RatMatriarch.class,
 				Tengu.class,
 				Pylon.class, DM300.class,
 				DwarfKing.class,
@@ -264,6 +265,7 @@ public enum Bestiary {
 		classConversions.put(CorpseDust.DustWraith.class,      Wraith.class);
 
 		classConversions.put(Necromancer.NecroSkeleton.class,  Skeleton.class);
+		classConversions.put(RatMatriarch.BroodRat.class,       Rat.class);
 
 		classConversions.put(TenguDartTrap.class,              PoisonDartTrap.class);
 		classConversions.put(GnollRockfallTrap.class,          RockfallTrap.class);

@@ -67,7 +67,7 @@ public class SewerBossLevel extends SewerLevel {
 
 		boolean gooAlive = false;
 		for (Mob m : mobs){
-			if (m instanceof Goo) {
+			if (Char.hasProp(m, Char.Property.BOSS)) {
 				gooAlive = true;
 				break;
 			}

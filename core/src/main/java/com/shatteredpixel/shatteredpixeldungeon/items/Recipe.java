@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.PlagueBrew;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
@@ -202,6 +203,7 @@ public abstract class Recipe {
 		new Bomb.EnhanceBomb(),
 		new UnstableBrew.Recipe(),
 		new CausticBrew.Recipe(),
+		new PlagueBrew.Recipe(),
 		new ElixirOfArcaneArmor.Recipe(),
 		new ElixirOfAquaticRejuvenation.Recipe(),
 		new ElixirOfHoneyedHealing.Recipe(),
