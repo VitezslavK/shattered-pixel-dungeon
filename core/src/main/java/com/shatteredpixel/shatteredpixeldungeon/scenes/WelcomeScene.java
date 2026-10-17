@@ -81,6 +81,12 @@ public class WelcomeScene extends PixelScene {
 			return;
 		}
 
+		//the mod skips the original first-run tutorial mode: it hides the main menu, the exit and
+		// options buttons and most of the game interface until the first run is underway
+		if (SPDSettings.intro()){
+			SPDSettings.intro(false);
+		}
+
 		if (ShatteredPixelDungeon.versionCode == previousVersion && !SPDSettings.intro()) {
 			ShatteredPixelDungeon.switchNoFade(TitleScene.class);
 			return;
@@ -156,12 +162,8 @@ public class WelcomeScene extends PixelScene {
 					SPDSettings.version(ShatteredPixelDungeon.versionCode);
 					GamesInProgress.selectedClass = null;
 					GamesInProgress.curSlot = GamesInProgress.firstEmpty();
-					if (GamesInProgress.curSlot == -1 || Rankings.INSTANCE.totalNumber > 0){
-						SPDSettings.intro(false);
-						ShatteredPixelDungeon.switchScene(TitleScene.class);
-					} else {
-						ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
-					}
+					SPDSettings.intro(false);
+					ShatteredPixelDungeon.switchScene(TitleScene.class);
 				} else {
 					updateVersion(previousVersion);
 					ShatteredPixelDungeon.switchScene(TitleScene.class);

@@ -238,7 +238,6 @@ public class HeroSelectScene extends PixelScene {
 		if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
 			Dungeon.challenges = 0;
 			SPDSettings.challenges(0);
-			SPDSettings.customSeed("");
 		}
 
 		if (landscape()){
@@ -648,14 +647,7 @@ public class HeroSelectScene extends PixelScene {
 			StyledButton seedButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "custom_seed"), 6){
 				@Override
 				protected void onClick() {
-					if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
-						ShatteredPixelDungeon.scene().addToFront( new WndTitledMessage(
-								Icons.get(Icons.SEED),
-								Messages.get(HeroSelectScene.class, "custom_seed"),
-								Messages.get(HeroSelectScene.class, "custom_seed_nowin"))
-						);
-						return;
-					}
+					//custom seeds are open from the start so friends can race on the same dungeon
 
 					String existingSeedtext = SPDSettings.customSeed();
 					ShatteredPixelDungeon.scene().addToFront( new WndTextInput(Messages.get(HeroSelectScene.class, "custom_seed_title"),
@@ -709,14 +701,7 @@ public class HeroSelectScene extends PixelScene {
 				protected void onClick() {
 					super.onClick();
 
-					if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
-						ShatteredPixelDungeon.scene().addToFront( new WndTitledMessage(
-								Icons.get(Icons.CALENDAR),
-								Messages.get(HeroSelectScene.class, "daily"),
-								Messages.get(HeroSelectScene.class, "daily_nowin"))
-						);
-						return;
-					}
+					//the mod's daily race against friends is open from the start, no win required
 
 					long diff = (SPDSettings.lastDaily() + DAY) - Game.realTime;
 					if (diff > 24*HOUR){

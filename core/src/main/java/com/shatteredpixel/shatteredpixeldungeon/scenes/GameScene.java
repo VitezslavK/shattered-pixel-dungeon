@@ -796,6 +796,12 @@ public class GameScene extends PixelScene {
 					Dungeon.hero.HP = Math.min(Dungeon.hero.HP, Dungeon.hero.HT);
 					GLog.p(Messages.get(RunModifier.class, "chosen", Messages.titleCase(picks[index].title())));
 				}
+				//save right away, otherwise closing the app re-offers the choice
+				try {
+					Dungeon.saveAll();
+				} catch (java.io.IOException e) {
+					ShatteredPixelDungeon.reportException(e);
+				}
 			}
 		});
 	}
