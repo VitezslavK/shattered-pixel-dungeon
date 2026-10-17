@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -474,6 +475,10 @@ public abstract class Wand extends Item {
 			if (ShardOfOblivion.passiveIDDisabled()){
 				Buff.prolong(curUser, ShardOfOblivion.WandUseTracker.class, 50f);
 			}
+		}
+
+		if (curUser == Dungeon.hero){
+			Evolution.onWandUsed(Dungeon.hero);
 		}
 
 		//inside staff

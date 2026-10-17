@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.EssenceOfAscension;
+import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -152,6 +155,13 @@ public enum HeroClass {
 			case NECROMANCER:
 				initNecromancer( hero );
 				break;
+		}
+
+		//debug builds only: a testing kit for subclasses and evolutions
+		if (DeviceCompat.isDebug()){
+			new TengusMask().collect();
+			new EssenceOfAscension().collect();
+			new PotionOfExperience().quantity(30).identify().collect();
 		}
 
 		if (SPDSettings.quickslotWaterskin()) {

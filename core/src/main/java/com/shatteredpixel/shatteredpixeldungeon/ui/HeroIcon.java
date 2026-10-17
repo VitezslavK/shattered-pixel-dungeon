@@ -118,12 +118,23 @@ public class HeroIcon extends Image {
 	public static final int WEAPON_SWAP     = 109;
 	public static final int MONK_ABILITIES  = 110;
 
+	//subclass evolutions, 14 slots in subclass order
+	public static final int EVOLUTIONS      = 112;
+
 	public HeroIcon(HeroSubClass subCls){
 		super( Assets.Interfaces.HERO_ICONS );
 		if (film == null){
 			film = new TextureFilm(texture, SIZE, SIZE);
 		}
 		frame(film.get(subCls.icon()));
+	}
+
+	public HeroIcon(int icon){
+		super( Assets.Interfaces.HERO_ICONS );
+		if (film == null){
+			film = new TextureFilm(texture, SIZE, SIZE);
+		}
+		frame(film.get(icon));
 	}
 
 	public HeroIcon(ArmorAbility abil){

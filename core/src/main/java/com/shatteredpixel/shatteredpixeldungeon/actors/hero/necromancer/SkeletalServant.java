@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -80,7 +81,7 @@ public class SkeletalServant extends DirectableAlly {
 	}
 
 	public void updateStats(){
-		int newHT = 8 + 4*heroLevel() + 3*lanternLevel();
+		int newHT = Math.round((8 + 4*heroLevel() + 3*lanternLevel()) * Evolution.servantHealthFactor());
 		if (newHT > HT){
 			HP += newHT - HT;
 		}
@@ -103,7 +104,7 @@ public class SkeletalServant extends DirectableAlly {
 
 	@Override
 	public int attackSkill(Char target) {
-		return heroLevel() + 9;
+		return Math.round((heroLevel() + 9) * Evolution.servantAccuracyFactor());
 	}
 
 	@Override
@@ -115,7 +116,7 @@ public class SkeletalServant extends DirectableAlly {
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 1 + heroLevel()/4);
+		return super.drRoll() + Random.NormalIntRange(0, 1 + heroLevel()/4) + Evolution.servantArmor();
 	}
 
 	@Override

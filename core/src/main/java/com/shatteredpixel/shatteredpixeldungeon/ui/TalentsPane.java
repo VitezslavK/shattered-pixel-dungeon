@@ -80,6 +80,8 @@ public class TalentsPane extends ScrollPane {
 				tiersAvailable = 2;
 			} else if (tiersAvailable > 3 && Dungeon.hero.armorAbility == null){
 				tiersAvailable = 3;
+			} else if (tiersAvailable > 4 && !Dungeon.hero.evolved){
+				tiersAvailable = 4;
 			}
 		}
 
@@ -111,6 +113,9 @@ public class TalentsPane extends ScrollPane {
 			content.add(blockText);
 		} else if (tiersAvailable == 3) {
 			blockText = PixelScene.renderTextBlock(Messages.get(this, "unlock_tier4"), 6);
+			content.add(blockText);
+		} else if (tiersAvailable == 4 && mode != TalentButton.Mode.INFO) {
+			blockText = PixelScene.renderTextBlock(Messages.get(this, "unlock_tier5"), 6);
 			content.add(blockText);
 		} else {
 			blockText = null;

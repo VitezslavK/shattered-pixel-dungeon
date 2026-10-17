@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -44,7 +45,7 @@ public class SoulHarvest extends Buff {
 
 	public static void gain( Hero hero, int amount ){
 		SoulHarvest buff = Buff.affect(hero, SoulHarvest.class);
-		buff.stacks = Math.min(MAX_STACKS, buff.stacks + amount);
+		buff.stacks = Math.min(MAX_STACKS + Evolution.bonusSoulHarvestStacks(hero), buff.stacks + amount);
 		buff.decay = DECAY_DELAY;
 		BuffIndicator.refreshHero();
 	}

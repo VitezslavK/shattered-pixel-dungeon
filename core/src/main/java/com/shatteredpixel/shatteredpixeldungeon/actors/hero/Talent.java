@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
@@ -214,6 +215,35 @@ public enum Talent {
 	VOLATILE_REMAINS(244, 4), CORPSE_HARVEST(245, 4), NECROTIC_PLAGUE(246, 4),
 	//Soul Swap T4
 	SOUL_THEFT(247, 4), SWAP_SHOCK(248, 4), PHANTOM_STEP(249, 4),
+
+	//Warlord T5 (evolution)
+	BLOODTHIRST(256, 3), UNSTOPPABLE(257, 3), WAR_CRY(258, 3),
+	//Blademaster T5 (evolution)
+	FLURRY(259, 3), PRECISE_CUTS(260, 3), DUELISTS_GUARD(261, 3),
+	//Spellblade T5 (evolution)
+	ARCANE_EDGE(262, 3), MANA_SHIELD(263, 3), SPELL_SURGE(264, 3),
+	//Lich T5 (evolution)
+	SOUL_REND(265, 3), UNDYING_HUNGER(266, 3), DEATHLY_AURA(267, 3),
+	//Phantom T5 (evolution)
+	SHADOW_STRIKE(268, 3), GHOSTLY_FORM(269, 3), SILENT_KILLER(270, 3),
+	//Windwalker T5 (evolution)
+	WIND_STEP(271, 3), GALE_STRIKE(272, 3), TAILWIND(273, 3),
+	//Deadeye T5 (evolution)
+	HEADHUNTER(274, 3), STEADY_AIM(275, 3), RICOCHET(276, 3),
+	//Archdruid T5 (evolution)
+	THORNWALL(277, 3), NATURES_WARD(278, 3), WILD_GROWTH(279, 3),
+	//Warmaster T5 (evolution)
+	BATTLE_RHYTHM(280, 3), IRON_GUARD(281, 3), CRUSHING_BLOWS(282, 3),
+	//Grandmaster T5 (evolution)
+	INNER_PEACE(283, 3), CHI_STRIKE(284, 3), DEFLECTION(285, 3),
+	//Hierophant T5 (evolution)
+	DIVINE_FAVOR(286, 3), SACRED_FLAME(287, 3), BLESSED_AURA(288, 3),
+	//Templar T5 (evolution)
+	HOLY_BULWARK(289, 3), RIGHTEOUS_FURY(290, 3), CONSECRATION(291, 3),
+	//Bone King T5 (evolution)
+	BONE_PHALANX(292, 3), MARROW_FEAST(293, 3), ROYAL_DECREE(294, 3),
+	//Harbinger T5 (evolution)
+	GRIM_HARVEST(295, 3), REAPERS_TOLL(296, 3), SHROUD_OF_DEATH(297, 3),
 
 	//universal T4
 	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
@@ -450,8 +480,8 @@ public enum Talent {
 	int icon;
 	int maxPoints;
 
-	// tiers 1/2/3/4 start at levels 2/7/13/21
-	public static int[] tierLevelThresholds = new int[]{0, 2, 7, 13, 21, 31};
+	// tiers 1/2/3/4/5 start at levels 2/7/13/21/31
+	public static int[] tierLevelThresholds = new int[]{0, 2, 7, 13, 21, 31, 37};
 
 	Talent( int icon ){
 		this(icon, 2);
@@ -944,6 +974,7 @@ public enum Talent {
 		}
 
 		dmg = Necromancy.onHeroAttack(hero, enemy, dmg);
+		dmg = Evolution.onHeroAttack(hero, enemy, dmg);
 
 		return dmg;
 	}
@@ -980,7 +1011,7 @@ public enum Talent {
 		}
 	};
 
-	public static final int MAX_TALENT_TIERS = 4;
+	public static final int MAX_TALENT_TIERS = 5;
 
 	public static void initClassTalents( Hero hero ){
 		initClassTalents( hero.heroClass, hero.talents, hero.metamorphedTalents );
@@ -1162,6 +1193,72 @@ public enum Talent {
 
 	}
 
+	public static void initEvolutionTalents( Hero hero ){
+		if (hero.evolved) initEvolutionTalents( hero.subClass, hero.talents );
+	}
+
+	public static void initEvolutionTalents( HeroSubClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents ){
+		if (cls == null || cls == HeroSubClass.NONE) return;
+
+		while (talents.size() < MAX_TALENT_TIERS){
+			talents.add(new LinkedHashMap<>());
+		}
+
+		ArrayList<Talent> tierTalents = new ArrayList<>();
+
+		//tier 5
+		switch (cls){
+			case BERSERKER:
+				Collections.addAll(tierTalents, BLOODTHIRST, UNSTOPPABLE, WAR_CRY);
+				break;
+			case GLADIATOR:
+				Collections.addAll(tierTalents, FLURRY, PRECISE_CUTS, DUELISTS_GUARD);
+				break;
+			case BATTLEMAGE:
+				Collections.addAll(tierTalents, ARCANE_EDGE, MANA_SHIELD, SPELL_SURGE);
+				break;
+			case WARLOCK:
+				Collections.addAll(tierTalents, SOUL_REND, UNDYING_HUNGER, DEATHLY_AURA);
+				break;
+			case ASSASSIN:
+				Collections.addAll(tierTalents, SHADOW_STRIKE, GHOSTLY_FORM, SILENT_KILLER);
+				break;
+			case FREERUNNER:
+				Collections.addAll(tierTalents, WIND_STEP, GALE_STRIKE, TAILWIND);
+				break;
+			case SNIPER:
+				Collections.addAll(tierTalents, HEADHUNTER, STEADY_AIM, RICOCHET);
+				break;
+			case WARDEN:
+				Collections.addAll(tierTalents, THORNWALL, NATURES_WARD, WILD_GROWTH);
+				break;
+			case CHAMPION:
+				Collections.addAll(tierTalents, BATTLE_RHYTHM, IRON_GUARD, CRUSHING_BLOWS);
+				break;
+			case MONK:
+				Collections.addAll(tierTalents, INNER_PEACE, CHI_STRIKE, DEFLECTION);
+				break;
+			case PRIEST:
+				Collections.addAll(tierTalents, DIVINE_FAVOR, SACRED_FLAME, BLESSED_AURA);
+				break;
+			case PALADIN:
+				Collections.addAll(tierTalents, HOLY_BULWARK, RIGHTEOUS_FURY, CONSECRATION);
+				break;
+			case BONELORD:
+				Collections.addAll(tierTalents, BONE_PHALANX, MARROW_FEAST, ROYAL_DECREE);
+				break;
+			case SOUL_REAPER:
+				Collections.addAll(tierTalents, GRIM_HARVEST, REAPERS_TOLL, SHROUD_OF_DEATH);
+				break;
+			default:
+				break;
+		}
+		for (Talent talent : tierTalents){
+			talents.get(4).put(talent, 0);
+		}
+		tierTalents.clear();
+	}
+
 	public static void initArmorTalents( Hero hero ){
 		initArmorTalents( hero.armorAbility, hero.talents);
 	}
@@ -1233,6 +1330,7 @@ public enum Talent {
 		if (hero.heroClass != null)     initClassTalents(hero);
 		if (hero.subClass != null)      initSubclassTalents(hero);
 		if (hero.armorAbility != null)  initArmorTalents(hero);
+		if (hero.evolved)               initEvolutionTalents(hero);
 
 		for (int i = 0; i < MAX_TALENT_TIERS; i++){
 			LinkedHashMap<Talent, Integer> tier = hero.talents.get(i);

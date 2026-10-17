@@ -88,4 +88,18 @@ public enum HeroSubClass {
 		return icon;
 	}
 
+	//each subclass can evolve once in the late game, see Evolution and EssenceOfAscension
+	public String evolutionTitle() {
+		return Messages.get(this, name()+"_evo");
+	}
+
+	public String evolutionDesc() {
+		return Messages.get(this, name()+"_evo_desc");
+	}
+
+	public int evolutionIcon(){
+		//evolution icons are stored in order starting at HeroIcon.EVOLUTIONS
+		return this == NONE ? HeroIcon.NONE : HeroIcon.EVOLUTIONS + ordinal() - 1;
+	}
+
 }

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.EssenceOfAscension;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -542,6 +543,8 @@ public class YogDzewa extends Mob {
 
 		Dungeon.level.unseal();
 		super.die( cause );
+
+		Dungeon.level.drop(new EssenceOfAscension(), pos).sprite.drop();
 
 		yell( Messages.get(this, "defeated") );
 	}

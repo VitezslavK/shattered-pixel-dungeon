@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.Necromancy;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -197,7 +198,7 @@ public class Hero extends Char {
 		alignment = Alignment.ALLY;
 	}
 	
-	public static final int MAX_LEVEL = 30;
+	public static final int MAX_LEVEL = 36;
 
 	public static final int STARTING_STR = 10;
 	
@@ -207,6 +208,8 @@ public class Hero extends Char {
 	
 	public HeroClass heroClass = HeroClass.ROGUE;
 	public HeroSubClass subClass = HeroSubClass.NONE;
+	//whether the hero's subclass has evolved, see Evolution
+	public boolean evolved = false;
 	public ArmorAbility armorAbility = null;
 	public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	public LinkedHashMap<Talent, Talent> metamorphedTalents = new LinkedHashMap<>();
@@ -289,6 +292,7 @@ public class Hero extends Char {
 	private static final String CLASS       = "class";
 	private static final String SUBCLASS    = "subClass";
 	private static final String ABILITY     = "armorAbility";
+	private static final String EVOLVED     = "evolved";
 
 	private static final String ATTACK		= "attackSkill";
 	private static final String DEFENSE		= "defenseSkill";
@@ -304,6 +308,7 @@ public class Hero extends Char {
 
 		bundle.put( CLASS, heroClass );
 		bundle.put( SUBCLASS, subClass );
+		bundle.put( EVOLVED, evolved );
 		bundle.put( ABILITY, armorAbility );
 		Talent.storeTalentsInBundle( bundle, this );
 		
@@ -332,6 +337,7 @@ public class Hero extends Char {
 
 		heroClass = bundle.getEnum( CLASS, HeroClass.class );
 		subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
+		evolved = bundle.getBoolean( EVOLVED );
 		armorAbility = (ArmorAbility)bundle.get( ABILITY );
 		Talent.restoreTalentsFromBundle( bundle, this );
 		
@@ -388,7 +394,8 @@ public class Hero extends Char {
 	public int talentPointsAvailable(int tier){
 		if (lvl < (Talent.tierLevelThresholds[tier] - 1)
 			|| (tier == 3 && subClass == HeroSubClass.NONE)
-			|| (tier == 4 && armorAbility == null)) {
+			|| (tier == 4 && armorAbility == null)
+			|| (tier == 5 && !evolved)) {
 			return 0;
 		} else if (lvl >= Talent.tierLevelThresholds[tier+1]){
 			return Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier) + bonusTalentPoints(tier);
@@ -400,7 +407,8 @@ public class Hero extends Char {
 	public int bonusTalentPoints(int tier){
 		if (lvl < (Talent.tierLevelThresholds[tier]-1)
 				|| (tier == 3 && subClass == HeroSubClass.NONE)
-				|| (tier == 4 && armorAbility == null)) {
+				|| (tier == 4 && armorAbility == null)
+				|| (tier == 5 && !evolved)) {
 			return 0;
 		} else if (buff(PotionOfDivineInspiration.DivineInspirationTracker.class) != null
 					&& buff(PotionOfDivineInspiration.DivineInspirationTracker.class).isBoosted(tier)) {
@@ -411,7 +419,8 @@ public class Hero extends Char {
 	}
 	
 	public String className() {
-		return subClass == null || subClass == HeroSubClass.NONE ? heroClass.title() : subClass.title();
+		if (subClass == null || subClass == HeroSubClass.NONE) return heroClass.title();
+		return evolved ? subClass.evolutionTitle() : subClass.title();
 	}
 
 	@Override
@@ -552,6 +561,8 @@ public class Hero extends Char {
 			accuracy *= 1.50f;
 		}
 		
+		accuracy *= Evolution.accuracyFactor(this, wep);
+
 		if (!RingOfForce.fightingUnarmed(this)) {
 			return Math.max(1, Math.round(attackSkill * accuracy * wep.accuracyFactor( this, target )));
 		} else {
@@ -576,6 +587,7 @@ public class Hero extends Char {
 		float evasion = defenseSkill;
 		
 		evasion *= RingOfEvasion.evasionMultiplier( this );
+		evasion *= Evolution.evasionFactor( this, enemy );
 
 		if (buff(Talent.LiquidAgilEVATracker.class) != null){
 			if (pointsInTalent(Talent.LIQUID_AGILITY) == 1){
@@ -658,6 +670,7 @@ public class Hero extends Char {
 		}
 
 		dr += Necromancy.bonusArmor(this);
+		dr += Evolution.bonusArmor(this);
 		
 		return dr;
 	}
@@ -713,6 +726,7 @@ public class Hero extends Char {
 		float speed = super.speed();
 
 		speed *= RingOfHaste.speedMultiplier(this);
+		speed *= Evolution.speedFactor(this);
 		
 		if (belongings.armor() != null) {
 			speed = belongings.armor().speedFactor(this, speed);
@@ -1635,6 +1649,7 @@ public class Hero extends Char {
 		dmg = Math.round(damage);
 
 		dmg = Necromancy.soulLink(this, dmg, src);
+		dmg = Evolution.modifyDamageTaken(this, dmg, src);
 
 		//we ceil this one to avoid letting the player easily take 0 dmg from tenacity early
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
