@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -565,6 +567,26 @@ public abstract class Level implements Bundlable {
 	//returns true if we immediately transition, false otherwise
 	public boolean activateTransition(Hero hero, LevelTransition transition){
 		if (locked){
+			return false;
+		}
+
+		//the first time the hero leaves floor 10, they choose which path the caves take
+		if (transition.type == LevelTransition.Type.REGULAR_EXIT
+				&& Dungeon.branch == 0 && Dungeon.depth == 10 && Dungeon.cavesPath == -1){
+			GameScene.show(new WndOptions(
+					Icons.get(Icons.STAIRS),
+					Messages.titleCase(Messages.get(Level.class, "path_title")),
+					Messages.get(Level.class, "path_desc"),
+					Messages.get(Level.class, "path_classic"),
+					Messages.get(Level.class, "path_ice")){
+				@Override
+				protected void onSelect(int index) {
+					if (index == 0 || index == 1){
+						Dungeon.cavesPath = index;
+						activateTransition(hero, transition);
+					}
+				}
+			});
 			return false;
 		}
 

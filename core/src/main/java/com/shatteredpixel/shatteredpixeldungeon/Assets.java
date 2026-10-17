@@ -49,6 +49,8 @@ public class Assets {
 		public static final String WATER_SEWERS = "environment/water0.png";
 		public static final String WATER_PRISON = "environment/water1.png";
 		public static final String WATER_CAVES  = "environment/water2.png";
+		public static final String TILES_ICE    = "environment/tiles_ice.png";
+		public static final String WATER_ICE    = "environment/water_ice.png";
 		public static final String WATER_CITY   = "environment/water3.png";
 		public static final String WATER_HALLS  = "environment/water4.png";
 

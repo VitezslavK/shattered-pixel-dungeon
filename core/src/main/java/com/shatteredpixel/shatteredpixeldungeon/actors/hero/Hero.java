@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.arcanist.MirrorBarrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.arcanist.Arcana;
@@ -263,6 +264,7 @@ public class Hero extends Char {
 		int curHT = HT;
 		
 		HT = 20 + 5*(lvl-1) + HTBoost;
+		if (Runes.Rune.URUZ.active()) HT += 5;
 		float multiplier = RingOfMight.HTMultiplier(this);
 		HT = Math.round(multiplier * HT);
 		
@@ -2004,6 +2006,11 @@ public class Hero extends Char {
 	}
 	
 	public void earnExp( int exp, Class source ) {
+
+		if (Runes.Rune.BERKANO.active() && source != AscensionChallenge.class && exp > 0){
+			float boosted = exp * 1.1f;
+			exp = (int)boosted + (Random.Float() < boosted - (int)boosted ? 1 : 0);
+		}
 
 		//xp granted by ascension challenge is only for on-exp gain effects
 		if (source != AscensionChallenge.class) {

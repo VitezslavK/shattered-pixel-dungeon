@@ -56,6 +56,27 @@ public class Discoveries {
 		}
 	}
 
+	public static boolean isDeciphered( com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes.Rune r ){
+		return discovered.contains("RUNE_" + r.name());
+	}
+
+	public static int runeCount(){
+		int count = 0;
+		for (com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes.Rune r : com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes.Rune.values()){
+			if (isDeciphered(r)) count++;
+		}
+		return count;
+	}
+
+	public static void decipher( com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes.Rune r ){
+		if (discovered.add("RUNE_" + r.name())){
+			GLog.h(Messages.get(Discoveries.class, "new_rune", r.title()));
+			Sample.INSTANCE.play(Assets.Sounds.SECRET);
+			Journal.saveNeeded = true;
+			Journal.saveGlobal();
+		}
+	}
+
 	private static final String DISCOVERIES = "discoveries";
 
 	public static void store( Bundle bundle ){

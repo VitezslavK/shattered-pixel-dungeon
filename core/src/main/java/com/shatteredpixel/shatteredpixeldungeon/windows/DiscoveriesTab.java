@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.journal.Discoveries;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Reactions;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -52,13 +53,16 @@ public class DiscoveriesTab extends Component {
 	}
 
 	public void updateList(){
-		title.text(Messages.get(this, "title", Discoveries.count(), Reactions.Reaction.values().length));
+		title.text(Messages.get(this, "title",
+				Discoveries.count() + Discoveries.runeCount(),
+				Reactions.Reaction.values().length + Runes.Rune.values().length));
 
 		Component content = list.content();
 		content.clear();
 		entries.clear();
 		separators.clear();
 
+		addHeader(Messages.get(this, "reactions"));
 		for (Reactions.Reaction r : Reactions.Reaction.values()){
 			RenderedTextBlock entry;
 			if (Discoveries.isDiscovered(r)){
@@ -74,7 +78,34 @@ public class DiscoveriesTab extends Component {
 			content.add(sep);
 			separators.add(sep);
 		}
+
+		addHeader(Messages.get(this, "runes"));
+		for (Runes.Rune r : Runes.Rune.values()){
+			RenderedTextBlock entry;
+			if (r.active()){
+				entry = PixelScene.renderTextBlock("_" + Messages.titleCase(r.title()) + "_\n" + r.desc(), 6);
+			} else {
+				entry = PixelScene.renderTextBlock("_???_\n" + Messages.get(this, "rune_hint"), 6);
+				entry.alpha(0.6f);
+			}
+			content.add(entry);
+			entries.add(entry);
+
+			ColorBlock sep = new ColorBlock(1, 1, 0xFF222222);
+			content.add(sep);
+			separators.add(sep);
+		}
 		layout();
+	}
+
+	private void addHeader( String text ){
+		RenderedTextBlock header = PixelScene.renderTextBlock(text, 8);
+		header.hardlight(Window.TITLE_COLOR);
+		list.content().add(header);
+		entries.add(header);
+		ColorBlock sep = new ColorBlock(1, 1, 0xFF222222);
+		list.content().add(sep);
+		separators.add(sep);
 	}
 
 	@Override

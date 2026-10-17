@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frostbound;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Reactions;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.Necromancy;
@@ -732,6 +733,10 @@ public abstract class Char extends Actor {
 	public int attackProc( Char enemy, int damage ) {
 		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
 			buff.onAttackProc( enemy );
+		}
+		Frostbound frostbound = buff(Frostbound.class);
+		if (frostbound != null){
+			frostbound.onAttackProc( enemy );
 		}
 		return damage;
 	}

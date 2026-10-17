@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.watabou.utils.Random;
+import com.watabou.utils.Reflection;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.alchemist.Polymorph;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.alchemist.ElixirOfFury;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.alchemist.AcidRain;
@@ -179,6 +183,14 @@ public enum HeroClass {
 			case ALCHEMIST:
 				initAlchemist( hero );
 				break;
+		}
+
+		//rune of wisdom, one random potion type is known
+		if (Runes.Rune.ANSUZ.active()){
+			java.util.HashSet<Class<? extends Potion>> unknown = Potion.getUnknown();
+			if (!unknown.isEmpty()){
+				Reflection.newInstance(Random.element(unknown)).identify();
+			}
 		}
 
 		//debug builds only: a testing kit for subclasses and evolutions

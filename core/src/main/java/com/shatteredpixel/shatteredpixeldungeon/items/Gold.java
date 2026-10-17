@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -62,6 +63,7 @@ public class Gold extends Item {
 		Catalog.setSeen(getClass());
 		Statistics.itemTypesDiscovered.add(getClass());
 
+		if (Runes.Rune.FEHU.active()) quantity = Math.round(quantity * 1.1f);
 		Dungeon.gold += quantity;
 		Statistics.goldCollected += quantity;
 		Badges.validateGoldCollected();

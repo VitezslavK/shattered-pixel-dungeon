@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.levels.IceCavesLevel;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityArenaLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CavesArenaLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonArenaLevel;
@@ -196,6 +200,8 @@ public class Dungeon {
 	// 0 is the default path
 	// 1 is for quest sub-floors
 	public static int branch;
+	//the path chosen when leaving floor 10: -1 not chosen yet, 0 classic caves, 1 ice caves
+	public static int cavesPath = -1;
 
 	//keeps track of what levels the game should try to load instead of creating fresh
 	public static ArrayList<Integer> generatedLevels = new ArrayList<>();
@@ -266,6 +272,7 @@ public class Dungeon {
 		
 		depth = 1;
 		branch = 0;
+		cavesPath = -1;
 		generatedLevels.clear();
 
 		gold = 0;
@@ -328,7 +335,7 @@ public class Dungeon {
 				case 12:
 				case 13:
 				case 14:
-					level = new CavesLevel();
+					level = cavesPath == 1 ? new IceCavesLevel() : new CavesLevel();
 					break;
 				case 15:
 					level = ArenaLevels.bossVariant(15) == 0 ? new CavesBossLevel() : new CavesArenaLevel();
@@ -388,6 +395,11 @@ public class Dungeon {
 
 			if (depth > Statistics.deepestFloor && branch == 0) {
 				Statistics.deepestFloor = depth;
+
+				//rune of protection, shielding when reaching a new floor
+				if (Runes.Rune.ALGIZ.active() && hero != null){
+					Buff.affect(hero, Barrier.class).setShield(3 + depth/3);
+				}
 
 				if (Statistics.qualifiedForNoKilling) {
 					Statistics.completedWithNoKilling = true;
@@ -614,6 +626,7 @@ public class Dungeon {
 	private static final String HERO		= "hero";
 	private static final String DEPTH		= "depth";
 	private static final String BRANCH		= "branch";
+	private static final String CAVES_PATH	= "caves_path";
 	private static final String GENERATED_LEVELS    = "generated_levels";
 	private static final String GOLD		= "gold";
 	private static final String ENERGY		= "energy";
@@ -641,6 +654,7 @@ public class Dungeon {
 			bundle.put( HERO, hero );
 			bundle.put( DEPTH, depth );
 			bundle.put( BRANCH, branch );
+			bundle.put( CAVES_PATH, cavesPath );
 
 			bundle.put( GOLD, gold );
 			bundle.put( ENERGY, energy );
@@ -818,6 +832,7 @@ public class Dungeon {
 		
 		depth = bundle.getInt( DEPTH );
 		branch = bundle.getInt( BRANCH );
+		cavesPath = bundle.contains( CAVES_PATH ) ? bundle.getInt( CAVES_PATH ) : -1;
 
 		gold = bundle.getInt( GOLD );
 		energy = bundle.getInt( ENERGY );
@@ -900,6 +915,7 @@ public class Dungeon {
 	//default to recomputing based on max hero vision, in case vision just shrank/grew
 	public static void observe(){
 		int dist = Math.max(Dungeon.hero.viewDistance, 8);
+		if (Runes.Rune.KENAZ.active()) dist++;
 		dist *= 1f + 0.25f*Dungeon.hero.pointsInTalent(Talent.FARSIGHT);
 
 		if (Dungeon.hero.buff(MagicalSight.class) != null){

@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.RuneTablet;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Runes;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -686,6 +688,14 @@ public abstract class RegularLevel extends Level {
 					losBlocking[cell] = false;
 				}
 				drop( Generator.randomUsingDefaults(), cell).hidden = true;
+			}
+		Random.popGenerator();
+
+		//rune tablets, 25% chance per floor while there are undeciphered runes
+		Random.pushGenerator(Random.Long());
+			boolean tablet = Random.Int(4) == 0;
+			if (tablet && Dungeon.branch == 0 && !Runes.allDeciphered()){
+				drop( new RuneTablet(), randomDropCell() );
 			}
 		Random.popGenerator();
 
