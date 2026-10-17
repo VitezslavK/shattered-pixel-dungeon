@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ScrollEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer.Necromancy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.DivineSense;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.RecallInscription;
@@ -196,6 +197,23 @@ public enum Talent {
 	BODY_FORM(180, 4), MIND_FORM(181, 4), SPIRIT_FORM(182, 4),
 	//Power of Many T4
 	BEAMING_RAY(183, 4), LIFE_LINK(184, 4), STASIS(185, 4),
+
+	//Necromancer T1
+	GRAVE_MEAL(224), NECROTIC_STRIKE(225), BONE_ARMOR(226), SOUL_COLLECTOR(227),
+	//Necromancer T2
+	HAUNTING_MEAL(228), LIQUID_DEATH(229), INSCRIBED_SOULS(230), BONE_SHARDS(231), EMPOWERED_UNDEATH(232),
+	//Necromancer T3
+	SOUL_LINK(233, 3), DEATHLESS_SERVANT(234, 3),
+	//Bonelord T3
+	BONE_EXPLOSION(235, 3), LEGION(236, 3), COMMANDING_PRESENCE(237, 3),
+	//Soul Reaper T3
+	REAPING_STRIKE(238, 3), SOUL_FEAST(239, 3), DEATHS_EMBRACE(240, 3),
+	//Army of the Dead T4
+	ENDLESS_LEGION(241, 4), RISEN_FURY(242, 4), GRAVE_CHILL(243, 4),
+	//Corpse Explosion T4
+	VOLATILE_REMAINS(244, 4), CORPSE_HARVEST(245, 4), NECROTIC_PLAGUE(246, 4),
+	//Soul Swap T4
+	SOUL_THEFT(247, 4), SWAP_SHOCK(248, 4), PHANTOM_STEP(249, 4),
 
 	//universal T4
 	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
@@ -463,6 +481,8 @@ public enum Talent {
 					return 154;
 				case CLERIC:
 					return 186;
+				case NECROMANCER:
+					return 250;
 			}
 		} else {
 			return icon;
@@ -657,6 +677,8 @@ public enum Talent {
 			}
 		}
 
+		Necromancy.onFoodEaten(hero);
+
 		//we process these at the end as they can stack together from some talents
 		if (wandChargeTurns > 0){
 			Buff.prolong( hero, Recharging.class, wandChargeTurns );
@@ -748,6 +770,7 @@ public enum Talent {
 			}
 			Dungeon.observe();
 		}
+		Necromancy.onPotionUsed(hero, factor);
 		if (hero.hasTalent(LIQUID_AGILITY)){
 			Buff.prolong(hero, LiquidAgilEVATracker.class, hero.cooldown() + Math.max(0, factor-1));
 			if (factor >= 0.5f){
@@ -766,6 +789,7 @@ public enum Talent {
 			Buff.affect(hero, Invisibility.class, factor * (1 + 2*hero.pointsInTalent(INSCRIBED_STEALTH)));
 			Sample.INSTANCE.play( Assets.Sounds.MELD );
 		}
+		Necromancy.onScrollUsed(hero, factor);
 		if (hero.hasTalent(RECALL_INSCRIPTION) && Scroll.class.isAssignableFrom(cls) && cls != ScrollOfUpgrade.class){
 			if (hero.heroClass == HeroClass.CLERIC){
 				Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
@@ -919,6 +943,8 @@ public enum Talent {
 			}
 		}
 
+		dmg = Necromancy.onHeroAttack(hero, enemy, dmg);
+
 		return dmg;
 	}
 
@@ -991,6 +1017,9 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
 				break;
+			case NECROMANCER:
+				Collections.addAll(tierTalents, GRAVE_MEAL, NECROTIC_STRIKE, BONE_ARMOR, SOUL_COLLECTOR);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1020,6 +1049,9 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
 				break;
+			case NECROMANCER:
+				Collections.addAll(tierTalents, HAUNTING_MEAL, LIQUID_DEATH, INSCRIBED_SOULS, BONE_SHARDS, EMPOWERED_UNDEATH);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1048,6 +1080,9 @@ public enum Talent {
 				break;
 			case CLERIC:
 				Collections.addAll(tierTalents, CLEANSE, LIGHT_READING);
+				break;
+			case NECROMANCER:
+				Collections.addAll(tierTalents, SOUL_LINK, DEATHLESS_SERVANT);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -1112,6 +1147,12 @@ public enum Talent {
 				break;
 			case PALADIN:
 				Collections.addAll(tierTalents, LAY_ON_HANDS, AURA_OF_PROTECTION, WALL_OF_LIGHT);
+				break;
+			case BONELORD:
+				Collections.addAll(tierTalents, BONE_EXPLOSION, LEGION, COMMANDING_PRESENCE);
+				break;
+			case SOUL_REAPER:
+				Collections.addAll(tierTalents, REAPING_STRIKE, SOUL_FEAST, DEATHS_EMBRACE);
 				break;
 		}
 		for (Talent talent : tierTalents){
