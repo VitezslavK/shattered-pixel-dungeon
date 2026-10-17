@@ -105,6 +105,16 @@ public class WndOnline extends Window {
 		});
 
 		if (OnlineService.enabled()) {
+			RedButton live = new RedButton(Messages.get(this, "live")) {
+				@Override
+				protected void onClick() {
+					hide();
+					WndLiveLink.open();
+				}
+			};
+			live.textColor(Window.TITLE_COLOR);
+			addButton(live);
+
 			addButton(new RedButton(Messages.get(this, "scores")) {
 				@Override
 				protected void onClick() {

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.shatteredpixel.shatteredpixeldungeon.online.LiveLink;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.FloorEvent;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -905,6 +906,7 @@ public class GameScene extends PixelScene {
 		super.update();
 
 		AutoTour.update(this);
+		LiveLink.update(Game.elapsed);
 
 		if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 

@@ -67,3 +67,26 @@ drop policy if exists "bones are readable" on public.bones;
 create policy "bones are readable" on public.bones for select to anon using (true);
 drop policy if exists "bones can be added" on public.bones;
 create policy "bones can be added" on public.bones for insert to anon with check (true);
+
+-- Live link: players in the same room see each other's progress and can send gifts
+create table if not exists public.live_events (
+	id          bigint generated always as identity primary key,
+	created_at  timestamptz not null default now(),
+	room        text    not null check (room ~ '^LIVE-[A-Z0-9]{6}$'),
+	friend_code text    not null check (friend_code ~ '^[A-Z0-9]{6}$'),
+	player_name text    not null check (char_length(player_name) between 1 and 16),
+	hero_class  text    not null check (char_length(hero_class) <= 20),
+	kind        text    not null check (kind in ('join','status','boss','death','win','gift')),
+	depth       int     not null default 1 check (depth between 0 and 31),
+	lvl         int     not null default 1 check (lvl between 1 and 36),
+	hp          int     not null default 0 check (hp between 0 and 100000),
+	ht          int     not null default 0 check (ht between 0 and 100000),
+	target      text    not null default '' check (target = '' or target ~ '^[A-Z0-9]{6}$'),
+	gift        text    not null default '' check (gift in ('', 'help', 'mischief'))
+);
+create index if not exists live_events_room_idx on public.live_events (room, created_at);
+alter table public.live_events enable row level security;
+drop policy if exists "live events are readable" on public.live_events;
+create policy "live events are readable" on public.live_events for select to anon using (true);
+drop policy if exists "live events can be added" on public.live_events;
+create policy "live events can be added" on public.live_events for insert to anon with check (true);

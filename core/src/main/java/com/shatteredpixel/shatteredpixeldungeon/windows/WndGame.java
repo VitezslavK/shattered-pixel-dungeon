@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.online.LiveLink;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -97,6 +98,19 @@ public class WndGame extends Window {
 				}
 			} );
 			curBtn.icon(Icons.get(Icons.RANKINGS));
+		}
+
+		//live link with friends, when in a room
+		if (LiveLink.inRoom()) {
+			addButton(curBtn = new RedButton(Messages.get(WndOnline.class, "live")) {
+				@Override
+				protected void onClick() {
+					hide();
+					WndLiveLink.open();
+				}
+			});
+			curBtn.icon(Icons.get(Icons.TALENT));
+			curBtn.textColor(Window.TITLE_COLOR);
 		}
 
 		//playing with friends

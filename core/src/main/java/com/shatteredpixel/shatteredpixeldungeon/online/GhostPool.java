@@ -81,6 +81,7 @@ public class GhostPool {
 	//called when a run ends, records the hero locally and uploads it if online
 	public static void onRunEnd( boolean won ){
 		if (Dungeon.hero == null) return;
+		LiveLink.onRunEnd(won);
 		GhostSnapshot s = GhostSnapshot.fromHero(Dungeon.hero, won);
 		loadLocal();
 		local.add(0, s);

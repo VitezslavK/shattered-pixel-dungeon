@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+import com.shatteredpixel.shatteredpixeldungeon.online.LiveLink;
 import com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.Puzzle;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist.Mutations;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.RunModifier;
@@ -867,6 +868,7 @@ public class Hero extends Char {
 		fieldOfView = Dungeon.level.heroFOV;
 
 		Puzzle.tick(this);
+		LiveLink.tick(this);
 
 		if (buff(Endure.EndureTracker.class) != null){
 			buff(Endure.EndureTracker.class).endEnduring();
