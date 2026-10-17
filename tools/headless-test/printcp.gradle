@@ -1,0 +1,5 @@
+gradle.projectsEvaluated {
+  def p = rootProject.project(':desktop')
+  def cp = p.sourceSets.main.runtimeClasspath
+  p.tasks.register('printCp') { dependsOn 'classes'; doLast { println "CP=" + cp.asPath } }
+}

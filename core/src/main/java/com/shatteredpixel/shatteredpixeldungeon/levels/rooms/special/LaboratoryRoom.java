@@ -103,7 +103,8 @@ public class LaboratoryRoom extends SpecialRoom {
 		if(!missingPages.isEmpty() && chapter >= chapterTarget){
 			
 			//for each chapter ahead of the target chapter, drop 1 additional page
-			int pagesToDrop = Math.min(missingPages.size(), (chapter - chapterTarget) + 1);
+			//capped at 3, deeper floors (the abyss) would otherwise try to fit more pages than the room has space for
+			int pagesToDrop = Math.min(missingPages.size(), Math.min(3, (chapter - chapterTarget) + 1));
 			
 			for (int i = 0; i < pagesToDrop; i++) {
 				AlchemyPage p = new AlchemyPage();

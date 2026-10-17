@@ -98,7 +98,7 @@ public class ExitRoom extends StandardRoom {
 		rooms.add(RitualExitRoom.class);
 	}
 
-	private static float[][] chances = new float[27][];
+	private static float[][] chances = new float[32][];
 	static {
 		//floor 1 only uses simpler exit rooms
 		chances[1] =  new float[]{4,3,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
@@ -116,6 +116,8 @@ public class ExitRoom extends StandardRoom {
 
 		chances[21] = new float[]{0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 4,3,2,1};
 		chances[26] = chances[25] = chances[24] = chances[23] = chances[22] = chances[21];
+		//floors 27-31 (the abyss) reuse the demon halls rooms
+		for (int i = 27; i < chances.length; i++) chances[i] = chances[26];
 	}
 
 	public static StandardRoom createExit(){
