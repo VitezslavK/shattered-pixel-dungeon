@@ -57,4 +57,14 @@ codesign -f -s "$IDENTITY" --entitlements "$WORK/ent.plist" --generate-entitleme
 codesign --verify --deep --strict "$APP"
 (cd "$WORK" && zip -qr fixed.ipa Payload)
 xcrun devicectl device install app --device "$DEVICE" "$WORK/fixed.ipa"
+
+# keep this build for tools/ios-autorefresh.sh, which re-signs it before the 7 days run out
+mkdir -p "$HOME/.spd-refresh"
+cp "$WORK/fixed.ipa" "$HOME/.spd-refresh/base.ipa"
+cp "$WORK/ent.plist" "$HOME/.spd-refresh/ent.plist"
+PROFILE=$(ls -t "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"/*.mobileprovision 2>/dev/null | head -1)
+if [ -n "$PROFILE" ]; then
+  EXP=$(security cms -D -i "$PROFILE" 2>/dev/null | plutil -extract ExpirationDate raw -o - - 2>/dev/null)
+  [ -n "$EXP" ] && date -j -u -f "%Y-%m-%dT%H:%M:%SZ" "$EXP" +%s > "$HOME/.spd-refresh/expires"
+fi
 echo "Installed. First time only: iPhone Settings > General > VPN & Device Management > trust your Apple ID."
