@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -284,33 +286,14 @@ public class RatMatriarch extends Mob {
 	public static class MatriarchSprite extends RatSprite {
 		public MatriarchSprite(){
 			super();
-			scale.set(1.35f);
-		}
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.6f, 0.1f, 0.3f, 0.35f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+			ModMobFrames.apply( this, "sprites/mod/rat_matriarch.png", 24, 17, 2, 10 );
 		}
 	}
 
 	public static class BroodSprite extends RatSprite {
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.4f, 0.3f, 0.2f, 0.25f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+		public BroodSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/rat_brood.png", 13, 10, 3, 12 );
 		}
 	}
 }

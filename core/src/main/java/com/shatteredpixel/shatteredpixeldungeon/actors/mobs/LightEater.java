@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -72,16 +74,9 @@ public class LightEater extends Warlock {
 	}
 
 	public static class EaterSprite extends WarlockSprite {
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0f, 0f, 0f, 0.55f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+		public EaterSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/light_eater.png", 16, 16, 3, 8 );
 		}
 	}
 }

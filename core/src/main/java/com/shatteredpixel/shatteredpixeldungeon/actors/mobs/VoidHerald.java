@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -239,19 +241,7 @@ public class VoidHerald extends Warlock {
 	public static class HeraldSprite extends WarlockSprite {
 		public HeraldSprite(){
 			super();
-			scale.set(1.6f);
-		}
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.35f, 0f, 0.45f, 0.6f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+			ModMobFrames.apply( this, "sprites/mod/void_herald.png", 22, 24, 4, 8 );
 		}
 	}
 }

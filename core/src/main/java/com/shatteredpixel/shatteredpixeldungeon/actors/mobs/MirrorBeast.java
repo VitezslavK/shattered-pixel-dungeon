@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
@@ -57,16 +59,9 @@ public class MirrorBeast extends Mob {
 	}
 
 	public static class MirrorSprite extends StatueSprite {
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.8f, 0.9f, 1f, 0.45f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+		public MirrorSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/mirror_beast.png", 18, 14, 3, 14 );
 		}
 	}
 }

@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
 import com.watabou.utils.Random;
@@ -47,10 +49,9 @@ public class PrisonHound extends Mob {
 	public int drRoll() { return super.drRoll() + Random.NormalIntRange(0, 2); }
 
 	public static class HoundSprite extends RatSprite {
-		public HoundSprite(){ super(); scale.set(1.25f); }
-		@Override
-		public void resetColor() { super.resetColor(); tint(0.25f, 0.2f, 0.15f, 0.55f); }
-		@Override
-		public void link(Char ch) { super.link(ch); resetColor(); }
+		public HoundSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/prison_hound.png", 18, 14, 3, 14 );
+		}
 	}
 }

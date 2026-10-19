@@ -21,13 +21,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GhostSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -93,17 +95,10 @@ public class FallenAngel extends Mob {
 		healCooldown = bundle.getInt(HEAL_CD);
 	}
 
-	public static class AngelSprite extends GhostSprite {
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(1f, 0.8f, 0.3f, 0.4f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+	public static class AngelSprite extends MobSprite {
+		public AngelSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/fallen_angel.png", 18, 17, 4, 8 );
 		}
 	}
 }

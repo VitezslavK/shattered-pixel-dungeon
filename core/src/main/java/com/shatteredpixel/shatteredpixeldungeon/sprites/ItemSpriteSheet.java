@@ -194,14 +194,14 @@ public class ItemSpriteSheet {
 		assignItemRect(TORN_PAGE,       11, 13);
 
 		assignItemRect(TRINKET_CATA,    12, 11);
-		assignItemRect(CRACKED_LANTERN, 10, 13);
-		assignItemRect(ESSENCE,         12, 12);
-		assignItemRect(ARCANE_CODEX,    13, 16);
-		assignItemRect(RUNE_FRAGMENT,   11, 13);
-		assignItemRect(FIELD_CAULDRON,  14, 13);
-		assignItemRect(BROKEN_FLASK,    12, 12);
-		assignItemRect(RUNE_TABLET,     11, 13);
-		assignItemRect(SPIRIT_BELL,     11, 13);
+		assignItemRect(CRACKED_LANTERN, 10, 12);
+		assignItemRect(ESSENCE, 9, 10);
+		assignItemRect(ARCANE_CODEX, 13, 15);
+		assignItemRect(RUNE_FRAGMENT, 9, 8);
+		assignItemRect(FIELD_CAULDRON, 12, 11);
+		assignItemRect(BROKEN_FLASK, 10, 11);
+		assignItemRect(RUNE_TABLET, 11, 13);
+		assignItemRect(SPIRIT_BELL, 10, 12);
 	}
 	
 	private static final int BOMBS          =                               xy(1, 6);   //16 slots
@@ -248,7 +248,7 @@ public class ItemSpriteSheet {
 		assignItemRect(RAPIER,          13, 14);
 		assignItemRect(DAGGER,          12, 13);
 		assignItemRect(MAGES_STAFF,     15, 16);
-		assignItemRect(BONE_SICKLE,     15, 15);
+		assignItemRect(BONE_SICKLE, 13, 15);
 	}
 
 	private static final int WEP_TIER2      =                               xy(9, 7);   //8 slots
@@ -281,7 +281,7 @@ public class ItemSpriteSheet {
 		assignItemRect(SCIMITAR,        13, 16);
 		assignItemRect(ROUND_SHIELD,    16, 16);
 		assignItemRect(SAI,             16, 16);
-		assignItemRect(SCYTHE,          15, 15);
+		assignItemRect(SCYTHE, 14, 15);
 		assignItemRect(WHIP,            14, 14);
 	}
 
@@ -301,7 +301,7 @@ public class ItemSpriteSheet {
 		assignItemRect(RUNIC_BLADE,     14, 14);
 		assignItemRect(ASSASSINS_BLADE, 14, 15);
 		assignItemRect(CROSSBOW,        15, 15);
-		assignItemRect(MORNING_STAR,    14, 14);
+		assignItemRect(MORNING_STAR, 12, 13);
 		assignItemRect(KATANA,          15, 16);
 	}
 
@@ -321,7 +321,7 @@ public class ItemSpriteSheet {
 		assignItemRect(GREATAXE,    12, 16);
 		assignItemRect(GREATSHIELD, 12, 16);
 		assignItemRect(GAUNTLETS,   13, 15);
-		assignItemRect(VOID_BLADE,      14, 15);
+		assignItemRect(VOID_BLADE, 13, 15);
 		assignItemRect(WAR_SCYTHE,  14, 15);
 	}
 
@@ -420,9 +420,9 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_HUNTRESS,  13, 15);
 		assignItemRect(ARMOR_DUELIST,   12, 13);
 		assignItemRect(ARMOR_CLERIC,    13, 14);
-		assignItemRect(ARMOR_NECROMANCER, 15, 15);
-		assignItemRect(ARMOR_ARCANIST,  15, 15);
-		assignItemRect(ARMOR_ALCHEMIST, 14, 13);
+		assignItemRect(ARMOR_NECROMANCER, 14, 14);
+		assignItemRect(ARMOR_ARCANIST, 13, 13);
+		assignItemRect(ARMOR_ALCHEMIST, 11, 13);
 	}
 
 	                                                                                    //16 free slots
@@ -519,7 +519,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ARTIFACT_ROSE3,      14, 14);
 		assignItemRect(ARTIFACT_TOME,       14, 16);
 		assignItemRect(ARTIFACT_KEY,        8,  16);
-		assignItemRect(ARTIFACT_LANTERN,    10, 15);
+		assignItemRect(ARTIFACT_LANTERN, 8, 14);
 	}
 
 	private static final int TRINKETS        =                               xy(1, 18);  //32 slots
@@ -688,10 +688,35 @@ public class ItemSpriteSheet {
 	public static final int ELIXIR_CRYSTAL  = xy(9, 31);
 	public static final int ELIXIR_ARCANUM  = xy(10, 31);
 	public static final int MUTAGEN         = xy(11, 31);
+	public static final int PUZZLE_NOTE     = xy(8, 32);
+	//golden items, see items/gold
+	public static final int GOLD_INGOT = xy(8, 31);
+	public static final int GILDED_DAGGER = xy(11, 31);
+	public static final int GOLDEN_SABRE = xy(12, 31);
+	public static final int MIDAS_HAMMER = xy(13, 31);
+	public static final int GOLD_BOMB = xy(14, 31);
+	public static final int LUCKY_COIN = xy(15, 31);
+	public static final int ELIXIR_GOLDSKIN = xy(16, 31);
+	public static final int GOLDEN_IDOL = xy(9, 32);
+	public static final int MERCHANT_SEAL = xy(10, 32);
+	public static final int GOLDEN_HEART = xy(11, 32);
+	public static final int MYSTERY_BOX = xy(13, 32);
 	static{
-		assignItemRect(ELIXIR_CRYSTAL, 12, 14);
-		assignItemRect(ELIXIR_ARCANUM, 12, 14);
-		assignItemRect(MUTAGEN,        12, 14);
+		assignItemRect(ELIXIR_CRYSTAL, 8, 12);
+		assignItemRect(ELIXIR_ARCANUM, 8, 12);
+		assignItemRect(MUTAGEN, 8, 12);
+		assignItemRect(PUZZLE_NOTE, 11, 12);
+		assignItemRect(GOLD_INGOT, 12, 8);
+		assignItemRect(GILDED_DAGGER, 10, 11);
+		assignItemRect(GOLDEN_SABRE, 14, 14);
+		assignItemRect(MIDAS_HAMMER, 12, 14);
+		assignItemRect(GOLD_BOMB, 9, 12);
+		assignItemRect(LUCKY_COIN, 8, 8);
+		assignItemRect(ELIXIR_GOLDSKIN, 8, 12);
+		assignItemRect(GOLDEN_IDOL, 9, 13);
+		assignItemRect(MERCHANT_SEAL, 10, 12);
+		assignItemRect(GOLDEN_HEART, 10, 9);
+		assignItemRect(MYSTERY_BOX, 13, 14);
 	}
 
 	private static final int ELIXIRS        =                               xy(9, 26);  //8 slots
@@ -820,11 +845,11 @@ public class ItemSpriteSheet {
 		assignItemRect(BLOB,    10,  9);
 		assignItemRect(SHARD,    8, 10);
 		assignItemRect(ESCAPE,   8, 16);
-		assignItemRect(PLAGUE_GLAND, 11, 10);
-		assignItemRect(CHAIN_LINK,   12, 12);
-		assignItemRect(CRYSTAL_HEART,12, 12);
-		assignItemRect(ARCANE_CORE,  12, 12);
-		assignItemRect(VOID_SHARD,   10, 13);
+		assignItemRect(PLAGUE_GLAND, 9, 10);
+		assignItemRect(CHAIN_LINK, 11, 11);
+		assignItemRect(CRYSTAL_HEART, 9, 8);
+		assignItemRect(ARCANE_CORE, 9, 9);
+		assignItemRect(VOID_SHARD, 9, 10);
 	}
 
 	private static final int BAGS       =                                   xy(1, 31);  //16 slots

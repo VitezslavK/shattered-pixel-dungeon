@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -241,19 +243,7 @@ public class GolemArchmage extends Warlock {
 	public static class ArchmageSprite extends WarlockSprite {
 		public ArchmageSprite(){
 			super();
-			scale.set(1.3f);
-		}
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.2f, 0.7f, 1f, 0.35f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+			ModMobFrames.apply( this, "sprites/mod/golem_archmage.png", 20, 22, 3, 8 );
 		}
 	}
 }

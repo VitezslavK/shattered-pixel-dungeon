@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -56,9 +58,9 @@ public class SewerLeech extends Mob {
 	}
 
 	public static class LeechSprite extends SnakeSprite {
-		@Override
-		public void resetColor() { super.resetColor(); tint(0.6f, 0.05f, 0.1f, 0.5f); }
-		@Override
-		public void link(Char ch) { super.link(ch); resetColor(); }
+		public LeechSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/sewer_leech.png", 16, 12, 4, 8 );
+		}
 	}
 }

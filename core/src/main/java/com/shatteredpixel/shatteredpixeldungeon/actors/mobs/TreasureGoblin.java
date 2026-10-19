@@ -21,13 +21,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GnollTricksterSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 
@@ -94,10 +96,10 @@ public class TreasureGoblin extends Mob {
 		fleeTime = bundle.getInt(FLEE);
 	}
 
-	public static class GoblinSprite extends GnollTricksterSprite {
-		@Override
-		public void resetColor() { super.resetColor(); tint(1f, 0.8f, 0.1f, 0.4f); }
-		@Override
-		public void link(Char ch) { super.link(ch); resetColor(); }
+	public static class GoblinSprite extends MobSprite {
+		public GoblinSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/treasure_goblin.png", 14, 15, 3, 14 );
+		}
 	}
 }

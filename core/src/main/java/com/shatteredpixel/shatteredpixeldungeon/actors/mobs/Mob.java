@@ -961,6 +961,7 @@ public abstract class Mob extends Char {
 		}
 
 		dropBonus += ShardOfOblivion.lootChanceMultiplier()-1f;
+		dropBonus += com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fortune.lootMultiplier(Dungeon.hero)-1f;
 
 		return lootChance * dropBonus;
 	}

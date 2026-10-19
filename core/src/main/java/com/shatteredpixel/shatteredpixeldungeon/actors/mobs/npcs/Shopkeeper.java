@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -55,6 +56,7 @@ import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
+import com.watabou.utils.Random;
 import com.watabou.utils.PathFinder;
 
 import java.util.ArrayList;
@@ -72,6 +74,11 @@ public class Shopkeeper extends NPC {
 
 	private int turnsSinceHarmed = -1;
 
+	//haggling: once per shop the hero can try for a better price, see haggle()
+	public float priceMult = 1f;
+	public boolean haggled = false;
+	private boolean greeted = false;
+
 	@Override
 	public Notes.Landmark landmark() {
 		return Notes.Landmark.SHOP;
@@ -85,6 +92,10 @@ public class Shopkeeper extends NPC {
 		}
 
 		sprite.turnTo( pos, Dungeon.hero.pos );
+		if (!greeted && Dungeon.level.heroFOV[pos] && Dungeon.level.distance(pos, Dungeon.hero.pos) <= 4){
+			greeted = true;
+			yell(Messages.get(this, "greet_" + Random.Int(6)));
+		}
 		spend( TICK );
 		return super.act();
 	}
@@ -199,7 +210,35 @@ public class Shopkeeper extends NPC {
 
 	//shopkeepers are greedy!
 	public static int sellPrice(Item item){
-		return item.value() * 5 * (Dungeon.depth / 5 + 1);
+		float price = item.value() * 5 * (Dungeon.depth / 5 + 1);
+		price *= com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MerchantsSeal.priceMultiplier();
+		if (Dungeon.level != null){
+			for (Mob m : Dungeon.level.mobs){
+				if (m instanceof Shopkeeper) price *= ((Shopkeeper) m).priceMult;
+			}
+		}
+		return Math.max(1, Math.round(price));
+	}
+
+	//the outcome of haggling, decided once per shop
+	public void haggle(){
+		haggled = true;
+		int roll = Random.Int(100);
+		if (roll < 10){
+			priceMult = 0.9f;
+			yell(Messages.get(this, "haggle_gift"));
+			Item coin = new com.shatteredpixel.shatteredpixeldungeon.items.gold.LuckyCoin();
+			if (!coin.doPickUp(Dungeon.hero)) Dungeon.level.drop(coin, Dungeon.hero.pos);
+		} else if (roll < 50){
+			priceMult = 0.8f;
+			yell(Messages.get(this, "haggle_win"));
+		} else if (roll < 80){
+			yell(Messages.get(this, "haggle_meh"));
+		} else {
+			priceMult = 1.15f;
+			yell(Messages.get(this, "haggle_lose"));
+		}
+		GLog.i(Messages.get(this, "haggle_result", Math.round((priceMult - 1f) * 100)));
 	}
 	
 	public static WndBag sell() {
@@ -242,11 +281,12 @@ public class Shopkeeper extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				String[] options = new String[2+ buybackItems.size()];
+				String[] options = new String[3+ buybackItems.size()];
 				int maxLen = PixelScene.landscape() ? 30 : 25;
 				int i = 0;
 				options[i++] = Messages.get(Shopkeeper.this, "sell");
 				options[i++] = Messages.get(Shopkeeper.this, "talk");
+				options[i++] = Messages.get(Shopkeeper.this, haggled ? "haggle_done" : "haggle");
 				for (Item item : buybackItems){
 					options[i] = Messages.get(Heap.class, "for_sale", item.value(), Messages.titleCase(item.title()));
 					if (options[i].length() > maxLen) options[i] = options[i].substring(0, maxLen-3) + "...";
@@ -261,9 +301,11 @@ public class Shopkeeper extends NPC {
 							sell();
 						} else if (index == 1){
 							GameScene.show(new WndTitledMessage(sprite(), Messages.titleCase(name()), chatText()));
-						} else if (index > 1){
+						} else if (index == 2){
+							haggle();
+						} else if (index > 2){
 							GLog.i(Messages.get(Shopkeeper.this, "buyback"));
-							Item returned = buybackItems.remove(index-2);
+							Item returned = buybackItems.remove(index-3);
 							Dungeon.gold -= returned.value();
 							Statistics.goldCollected -= returned.value();
 							if (returned instanceof MissileWeapon && returned.isUpgradable()){
@@ -277,8 +319,10 @@ public class Shopkeeper extends NPC {
 
 					@Override
 					protected boolean enabled(int index) {
-						if (index > 1){
-							return Dungeon.gold >= buybackItems.get(index-2).value();
+						if (index == 2){
+							return !haggled;
+						} else if (index > 2){
+							return Dungeon.gold >= buybackItems.get(index-3).value();
 						} else {
 							return super.enabled(index);
 						}
@@ -286,13 +330,13 @@ public class Shopkeeper extends NPC {
 
 					@Override
 					protected boolean hasIcon(int index) {
-						return index > 1;
+						return index > 2;
 					}
 
 					@Override
 					protected Image getIcon(int index) {
-						if (index > 1){
-							return new ItemSprite(buybackItems.get(index-2));
+						if (index > 2){
+							return new ItemSprite(buybackItems.get(index-3));
 						}
 						return null;
 					}
@@ -327,12 +371,18 @@ public class Shopkeeper extends NPC {
 	public static String BUYBACK_ITEMS = "buyback_items";
 
 	public static String TURNS_SINCE_HARMED = "turns_since_harmed";
+	private static final String PRICE_MULT = "price_mult";
+	private static final String HAGGLED = "haggled";
+	private static final String GREETED = "greeted";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
 		bundle.put(BUYBACK_ITEMS, buybackItems);
 		bundle.put(TURNS_SINCE_HARMED, turnsSinceHarmed);
+		bundle.put(PRICE_MULT, priceMult);
+		bundle.put(HAGGLED, haggled);
+		bundle.put(GREETED, greeted);
 	}
 
 	@Override
@@ -345,5 +395,8 @@ public class Shopkeeper extends NPC {
 			}
 		}
 		turnsSinceHarmed = bundle.contains(TURNS_SINCE_HARMED) ? bundle.getInt(TURNS_SINCE_HARMED) : -1;
+		priceMult = bundle.contains(PRICE_MULT) ? bundle.getFloat(PRICE_MULT) : 1f;
+		haggled = bundle.getBoolean(HAGGLED);
+		greeted = bundle.getBoolean(GREETED);
 	}
 }

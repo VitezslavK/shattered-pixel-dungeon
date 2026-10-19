@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -209,19 +211,7 @@ public class CrystalQueen extends CrystalWisp {
 	public static class QueenSprite extends CrystalWispSprite.Red {
 		public QueenSprite(){
 			super();
-			scale.set(1.6f);
-		}
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(1f, 0.4f, 1f, 0.35f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+			ModMobFrames.apply( this, "sprites/mod/crystal_queen.png", 20, 22, 4, 8 );
 		}
 	}
 }

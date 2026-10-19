@@ -113,19 +113,9 @@ public class AmuletGuardian extends Eye {
 	public static class GuardianSprite extends EyeSprite {
 		public GuardianSprite(){
 			super();
+			//drawn on the Eye's own layout (16x18 frames, 256x32 sheet) so its charging animation lines up
+			texture( "sprites/mod/amulet_guardian.png" );
 			scale.set(1.5f);
-		}
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(1f, 0.85f, 0.3f, 0.4f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
 		}
 	}
 }

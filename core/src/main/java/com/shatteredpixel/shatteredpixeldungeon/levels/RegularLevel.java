@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.shatteredpixel.shatteredpixeldungeon.levels.puzzles.RegionTreasure;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.PuzzleRoom;
 import com.shatteredpixel.shatteredpixeldungeon.online.OnlineExtras;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.GoldenAltar;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shrine;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TreasureGoblin;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -248,6 +249,24 @@ public abstract class RegularLevel extends Level {
 			if (Dungeon.branch == 0 && !Dungeon.bossLevel()){
 				if (event == FloorEvent.TREASURE_GOBLIN) toPlace.add(new TreasureGoblin());
 				if (shrine && Dungeon.depth >= 2) toPlace.add(Shrine.random());
+			}
+			//golden altars greet the hero near the entrance of each region's first floor
+			if (Dungeon.branch == 0 && !Dungeon.bossLevel() && GoldenAltar.appearsOn(Dungeon.depth)){
+				PathFinder.buildDistanceMap(entrance(), passable, 6);
+				ArrayList<Integer> spots = new ArrayList<>();
+				for (int cell = 0; cell < length(); cell++){
+					if (PathFinder.distance[cell] >= 2 && PathFinder.distance[cell] <= 6
+							&& passable[cell] && !solid[cell] && findMob(cell) == null
+							&& cell != exit() && heaps.get(cell) == null && traps.get(cell) == null
+							&& map[cell] != Terrain.DOOR && map[cell] != Terrain.OPEN_DOOR){
+						spots.add(cell);
+					}
+				}
+				if (!spots.isEmpty()){
+					GoldenAltar altar = GoldenAltar.create();
+					altar.pos = Random.element(spots);
+					mobs.add(altar);
+				}
 			}
 			for (Mob m : toPlace){
 				for (int tries = 0; tries < 50; tries++){

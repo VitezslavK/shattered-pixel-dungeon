@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.alchemist;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -261,17 +263,9 @@ public class Homunculus extends DirectableAlly {
 	}
 
 	public static class HomunculusSprite extends SlimeSprite {
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(1f, 0.45f, 0.6f, 0.45f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+		public HomunculusSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/homunculus.png", 13, 12, 3, 12 );
 		}
 	}
 }

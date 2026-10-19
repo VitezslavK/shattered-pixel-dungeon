@@ -1,0 +1,606 @@
+"""The mod's item icons, drawn as text grids. Each grid is cropped to its content and placed at the
+top left of its cell in sprites/items.png (see build_all.py, which also updates assignItemRect)."""
+from pix import Canvas, hexcol
+
+PAL = {
+	'k': hexcol('#16141a'),
+	# iron / steel
+	'i': hexcol('#3c3f4a'), 'I': hexcol('#5d6270'), 'j': hexcol('#8b91a0'), 'J': hexcol('#c4c9d4'),
+	# soul green
+	'g': hexcol('#1f7a4a'), 'G': hexcol('#3fd07a'), 'h': hexcol('#b6ffd2'),
+	# glass
+	'q': hexcol('#2c4a4a', 170), 'Q': hexcol('#5c8c86', 190),
+	# bone
+	'b': hexcol('#8f8169'), 'B': hexcol('#c9bea3'), 'n': hexcol('#efe8d4'),
+	# wood / leather
+	'w': hexcol('#4a2f1c'), 'W': hexcol('#7a4e2c'), 'x': hexcol('#a8733f'),
+	# red
+	'r': hexcol('#7a1d1d'), 'R': hexcol('#c43a2a'), 'm': hexcol('#ff7a6a'),
+	# gold
+	'y': hexcol('#ffd76a'), 'Y': hexcol('#b8862a'),
+	# arcane blue / cyan
+	'c': hexcol('#7af3ff'), 'C': hexcol('#2a8ad0'), 'u': hexcol('#1c3c7a'), 'U': hexcol('#2e58a8'),
+	# violet / void
+	'v': hexcol('#b878f0'), 'V': hexcol('#5c2f8f'), 'z': hexcol('#22123a'), 'Z': hexcol('#3a2262'),
+	# plague
+	'p': hexcol('#9ac040'), 'P': hexcol('#5a7a22'), 'o': hexcol('#3a2a14'),
+	# pink crystal
+	'e': hexcol('#ff9ae8'), 'E': hexcol('#b04cbc'),
+	# parchment
+	'a': hexcol('#e8dcb4'), 'A': hexcol('#b8a77a'),
+	# bright and deep gold
+	'l': hexcol('#fff2a8'), 'd': hexcol('#7a5414'),
+	'.': None,
+	'*': hexcol('#ffffff'),
+}
+
+ITEMS = {}
+
+ITEMS['ARTIFACT_LANTERN'] = [
+	"..kkkk..",
+	".kjIIjk.",
+	".kk..kk.",
+	"kkIIIIkk",
+	"kiIjjIik",
+	"kIkqGqkk",
+	"kIqGhGqk",
+	"kIqGhGqk",
+	"kIqgGgqk",
+	"kIkqgqkk",
+	"kIQqqQIk",
+	"kiIIIIik",
+	".kiijik.",
+	"..kkkk..",
+]
+ITEMS['CRACKED_LANTERN'] = [
+	"...kkkk...",
+	"..kIiiIk..",
+	"..kk..kk..",
+	".kkiiiikk.",
+	"kiIIIIIIik",
+	"kIkqqkqkIk",
+	"kIq*kqqqIk",
+	"kIqqqkqqIk",
+	"kIkqkqqkIk",
+	"kiIIIIIIik",
+	".kiikiiik.",
+	"..kkk.kk..",
+]
+ITEMS['ESSENCE'] = [
+	"....k....",
+	"...kyk...",
+	"..kynyk..",
+	".kynnnyk.",
+	"kyynnnyyk",
+	"kyn***nyk",
+	"kyynnnyyk",
+	".kyyyyYk.",
+	"..kYYYk..",
+	"...kkk...",
+]
+ITEMS['ARCANE_CODEX'] = [
+	".kkkkkkkkkkk.",
+	"kUUUUUUUUUUuk",
+	"kUuuuuuuuuUuk",
+	"kUukkkkkkuUuk",
+	"kUuyuuuuyuUuk",
+	"kUuuycyyuuUyk",
+	"kUuuuyccuuUyk",
+	"kUuuycyyuuUyk",
+	"kUuyuuuuyuUuk",
+	"kUukkkkkkuUuk",
+	"kUuuuuuuuuUuk",
+	"kUUUUUUUUUUuk",
+	"kaaaaaaaaaaUk",
+	"kAAAAAAAAAAuk",
+	".kkkkkkkkkkk.",
+]
+ITEMS['RUNE_FRAGMENT'] = [
+	"...kkkk...",
+	"..kjjIIk..",
+	".kjIcIIik.",
+	"kjIIcIIik.",
+	"kIIccIiik.",
+	"kIIIcIik..",
+	".kIIIik...",
+	"..kkkk....",
+]
+ITEMS['FIELD_CAULDRON'] = [
+	"..kkkkkkkk..",
+	".kj......jk.",
+	"k..........k",
+	"kkkkkkkkkkkk",
+	"kIGGGhGGGGIk",
+	"kIkkkkkkkkIk",
+	".kIjIIIIIIk.",
+	".kIjIIIIIik.",
+	".kIIIIIIiik.",
+	"..kiiiiiik..",
+	"..kk.kk.kk..",
+]
+ITEMS['BROKEN_FLASK'] = [
+	"...kk..k..",
+	"..kQk.kQk.",
+	"..kqk.kk..",
+	".kqQkk....",
+	"kqGGqqk...",
+	"kqGhGqqk..",
+	"kqGGGGqk..",
+	".kqGGqk.k.",
+	"..kkkk.kGk",
+	".......kGk",
+	"........k.",
+]
+ITEMS['RUNE_TABLET'] = [
+	".kkkkkkkkk.",
+	"kjjjjjjjjIk",
+	"kjIIIIIIIik",
+	"kjIcIIcIIik",
+	"kjIIcIcIIik",
+	"kjIIIcIIIik",
+	"kjIcIIIcIik",
+	"kjIIcIcIIik",
+	"kjIIIIIIIik",
+	"kjIcIcIIcik",
+	"kjIIIIIIIik",
+	"kIiiiiiiiik",
+	".kkkkkkkkk.",
+]
+ITEMS['SPIRIT_BELL'] = [
+	"c...kk...c",
+	"...kWWk...",
+	"....kk....",
+	"...kJJk...",
+	"..kJjjIk..",
+	"..kJjjIk..",
+	".kJjjjjIk.",
+	".kJjjjjIk.",
+	"kJjjjjjjIk",
+	"kkkkkkkkkk",
+	"....kJk...",
+	"c...kk...c",
+]
+ITEMS['BONE_SICKLE'] = [
+	"....kkkkk......",
+	"..kknnnnBkk....",
+	".knnBBkkkBbk...",
+	".knBkk...kbbk..",
+	"knBk......kbk..",
+	"kBBk.......kk..",
+	"kBbk...........",
+	".kbbk..........",
+	".kkbk..........",
+	"..kwk..........",
+	"..kWk..........",
+	"..kwxk.........",
+	"..kWxk.........",
+	"..kRRk.........",
+	"...kk..........",
+]
+ITEMS['SCYTHE'] = [
+	"....kkkkkkk....",
+	"..kkJJJJJJJkk..",
+	".kJJjjkkkkjJJk.",
+	"kJjkk.....kkJk.",
+	"kjk.........kk.",
+	"kk.......kxk...",
+	".........kWk...",
+	"........kWk....",
+	"........kWk....",
+	".......kWk.....",
+	".......kWk.....",
+	"......kWxk.....",
+	"......kWk......",
+	".....kWk.......",
+	".....kkk.......",
+]
+ITEMS['MORNING_STAR'] = [
+	".....k.k.k.",
+	"......kjk..",
+	"...k.kjJjk.",
+	"....kjJJjIk",
+	"...kjJjjjIkk",
+	"....kIjjIik.",
+	"...k.kIiik..",
+	"....kWkkk.k.",
+	"...kWk......",
+	"..kWk.......",
+	".kWk........",
+	"kxk.........",
+	"kk..........",
+]
+ITEMS['VOID_BLADE'] = [
+	"..........kk.",
+	".........kvzk",
+	"........kvZzk",
+	".......kvZ*k.",
+	"......kvZzk..",
+	".....kvZzk...",
+	"....kv*zk....",
+	"...kvZzk.....",
+	"kk.kZzk......",
+	"kYkkzk.......",
+	".kYYk........",
+	"..kYkk.......",
+	".kZkYk.......",
+	"kZk.kk.......",
+	"kk...........",
+]
+ITEMS['ARMOR_NECROMANCER'] = [
+	"..kkk...kkk....",
+	".kBnBkkkZZZk...",
+	"kBnnBkZZZZZZk..",
+	"kBBBkZZzGzZZZk.",
+	".kkkZZzzzzzZZk.",
+	"..kZZZZzzzZZZk.",
+	"..kZZkZZZZkZZk.",
+	"..kZZkZZZZkZZk.",
+	"..kZkZZZZZZkZk.",
+	"..kkkZZzZZZkkk.",
+	"....kZZzZZZk...",
+	"...kZZzzzZZZk..",
+	"...kZzzzzzzZk..",
+	"...kkkkkkkkkk..",
+]
+ITEMS['ARMOR_ARCANIST'] = [
+	"..kkkk.kkkk....",
+	".kUUUUkUUUUk...",
+	"kUUUyUUUyUUUk..",
+	"kUUuUUyUUuUUk..",
+	"kUkUuUUUuUkUk..",
+	"kUkUUucuUUkUk..",
+	"kUkUuuuuuUkUk..",
+	"kkkUUuyuUUkkk..",
+	"..kUUuuuUUk....",
+	"..kUyUUUyUk....",
+	".kUUUUUUUUUk...",
+	".kuUuUuUuUuk...",
+	".kkkkkkkkkkk...",
+]
+ITEMS['ARMOR_ALCHEMIST'] = [
+	"...kkk.kkk.....",
+	"..kWWWkWWWk....",
+	".kWWRGCWWWWk...",
+	".kWxkkkkkxWk...",
+	".kWxxxxxxxWk...",
+	".kWkxxxxxkWk...",
+	".kWkxxYxxkWk...",
+	".kkkxxxxxkkk...",
+	"...kxxxxxk.....",
+	"...kxWxWxk.....",
+	"...kxxxxxk.....",
+	"...kWxxxWk.....",
+	"...kkkkkkk.....",
+]
+ITEMS['WAND_PLAGUE'] = [
+	"..........kk..",
+	".........kPpk.",
+	"........kPopk.",
+	".......kPPpk..",
+	"......kwPkk...",
+	".....kwk..p...",
+	"....kWk.......",
+	"...kwk....p...",
+	"..kWk.........",
+	".kwk..........",
+	"kWk...........",
+	"kk............",
+]
+ITEMS['RING_JADE'] = [
+	"..kkkk..",
+	".kGhGgk.",
+	".kgGGgk.",
+	"..kkkk..",
+	".kj..jk.",
+	"kj....Ik",
+	"kj....Ik",
+	".kI..Ik.",
+	"..kkkk..",
+]
+ITEMS['BREW_PLAGUE'] = [
+	"....kk....",
+	"...kBBk...",
+	"....kk....",
+	"...kqqk...",
+	"..kpppPk..",
+	".kpkpkpPk.",
+	"kppkpkppPk",
+	"kpppkpppPk",
+	"kPpkpkpPPk",
+	".kPPPPPPk.",
+	"..kkkkkk..",
+]
+ITEMS['BREW_BINDING'] = [
+	"....kk....",
+	"...kBBk...",
+	"....kk....",
+	"...kqqk...",
+	"..kvvvVk..",
+	".kjjjjjjk.",
+	"kvvjvvjvVk",
+	"kjjjjjjjjk",
+	"kVvjvvjVVk",
+	".kVVVVVVk.",
+	"..kkkkkk..",
+]
+ITEMS['ELIXIR_CRYSTAL'] = [
+	"...kkkk...",
+	"...kyyk...",
+	"....kk....",
+	"...kqqk...",
+	"...kqqk...",
+	"..kqcCqk..",
+	".kqcc*Cqk.",
+	".kqCcCcqk.",
+	".kcCqcCqk.",
+	".kqcCqcqk.",
+	".kqqcCqqk.",
+	"..kkkkkk..",
+]
+ITEMS['ELIXIR_ARCANUM'] = [
+	"...kkkk...",
+	"...kyyk...",
+	"....kk....",
+	"...kqqk...",
+	"...kqqk...",
+	"..kuUUuk..",
+	".kuU*UvUk.",
+	".kUvUUvuk.",
+	".kUUvvUuk.",
+	".kuUUvUuk.",
+	".kuuUUuuk.",
+	"..kkkkkk..",
+]
+ITEMS['MUTAGEN'] = [
+	"...kkkk...",
+	"...kyyk...",
+	"....kk....",
+	"...kqqk...",
+	"...kqek...",
+	"..kGqGek..",
+	".kGeGqeGk.",
+	".kqGeGeqk.",
+	".keGqGeGk.",
+	".kGeqeGqk.",
+	".kqGeGqGk.",
+	"..kkkkkk..",
+]
+ITEMS['PLAGUE_GLAND'] = [
+	"..kkkk...",
+	".kpPPPk..",
+	"kppoPPPk.",
+	"kpPPPoPk.",
+	"kPPoPPPPk",
+	"kPPPPoPPk",
+	".kPoPPPk.",
+	"..kPPPk..",
+	"...kpk...",
+	"....k....",
+]
+ITEMS['CHAIN_LINK'] = [
+	".kkk.......",
+	"kJjIk......",
+	"kjkjk......",
+	"kIkIkkk....",
+	".kIkJjIk...",
+	"..kkjkjk...",
+	"...kIkIkkk.",
+	"....kIkJjIk",
+	".....kkjkjk",
+	"......kIkIk",
+	".......kkk.",
+]
+ITEMS['CRYSTAL_HEART'] = [
+	".kkk.kkk.",
+	"ke*ekeeEk",
+	"ke*eeeeEk",
+	"keeeeeEEk",
+	".keeeeEk.",
+	"..keeEk..",
+	"...kEk...",
+	"....k....",
+]
+ITEMS['ARCANE_CORE'] = [
+	"...kkk...",
+	"..kYyYk..",
+	".kYkckYk.",
+	"kYkc*ckYk",
+	"kykcccCyk",
+	"kYkCcCkYk",
+	".kYkCkYk.",
+	"..kYyYk..",
+	"...kkk...",
+]
+ITEMS['VOID_SHARD'] = [
+	"......kk..",
+	".....kvzk.",
+	"....kvZzk.",
+	"...kvZ*zk.",
+	"..kvZzzk..",
+	".kvZzZzk..",
+	"kvZ*zzk...",
+	"kZzzZk....",
+	".kZzk.....",
+	"..kk......",
+]
+ITEMS['PUZZLE_NOTE'] = [
+	".kkkkkkkkk.",
+	"kaaaaaaaaAk",
+	"kaRaaGaaaAk",
+	"kaaaaaaaaAk",
+	"kaaCaaayaAk",
+	"kaaaaaaaaAk",
+	"kakkkkkkaAk",
+	"kaaaaaaaaAk",
+	"kakkkkkaaAk",
+	"kaaaaaaaaAk",
+	"kAAAAAAAAAk",
+	".kkkkkkkkk.",
+]
+
+# ------------------------------------------------ golden items
+ITEMS['GOLD_INGOT'] = [
+	"....kkkkkkk.",
+	"...kllllllYk",
+	"..kllyyyyyYk",
+	".kyyyyyyyYdk",
+	"kyyyyyyyYYdk",
+	"kYYYYYYYYdk.",
+	"kdddddddddk.",
+	".kkkkkkkkk..",
+]
+ITEMS['GILDED_DAGGER'] = [
+	"........kk",
+	".......kJk",
+	"......kJjk",
+	".....kJjk.",
+	"....kJjk..",
+	"...kJjk...",
+	".kkJjk....",
+	"kyykk.....",
+	".kdyk.....",
+	"kdkkyk....",
+	"kk..kk....",
+]
+ITEMS['GOLDEN_SABRE'] = [
+	"............kk",
+	"...........kyk",
+	"..........klyk",
+	".........klyk.",
+	"........klyk..",
+	".......klyk...",
+	"......klyk....",
+	".....klyk.....",
+	"..kk.kyk......",
+	".kyYkyk.......",
+	"..kYdk........",
+	".kdkYYk.......",
+	"kdk..kk.......",
+	"kk............",
+]
+ITEMS['MIDAS_HAMMER'] = [
+	"......kkkkkk..",
+	".....klllyyYk.",
+	".....kyyyyyYk.",
+	".....kyyRyyYk.",
+	".....kYyyyYdk.",
+	"......kkWkkk..",
+	".......kWk....",
+	"......kWk.....",
+	".....kWk......",
+	"....kWk.......",
+	"...kWk........",
+	"..kyk.........",
+	".kyk..........",
+	".kk...........",
+]
+ITEMS['GOLD_BOMB'] = [
+	".......y..",
+	"......yRy.",
+	".......kk.",
+	"......kWk.",
+	"...kkkkk..",
+	"..kyyyyYk.",
+	".kylyyyyYk",
+	".kylyyyyYk",
+	".kyyyyyYYk",
+	".kYyyyYYdk",
+	"..kYYYddk.",
+	"...kkkkk..",
+]
+ITEMS['LUCKY_COIN'] = [
+	"..kkkk..",
+	".kllyyk.",
+	"kllyGyYk",
+	"klyGGyYk",
+	"kyyGyYYk",
+	"kyyyYYdk",
+	".kYYddk.",
+	"..kkkk..",
+]
+ITEMS['ELIXIR_GOLDSKIN'] = [
+	"...kkkk...",
+	"...kyyk...",
+	"....kk....",
+	"...kqqk...",
+	"...kqqk...",
+	"..kyyyYk..",
+	".kylyyyYk.",
+	".kylyyyYk.",
+	".kyyyyYYk.",
+	".kYyyyYdk.",
+	".kdYYYddk.",
+	"..kkkkkk..",
+]
+ITEMS['GOLDEN_IDOL'] = [
+	"...kkk...",
+	"..kllyk..",
+	"..kyRyk..",
+	"..kyyYk..",
+	".kkyyYkk.",
+	"kylkyYkYk",
+	"kyykyYkdk",
+	".kkyyYkk.",
+	"..kyyYk..",
+	"..kyk.k..",
+	".kYYddYk.",
+	"kdddddddk",
+	".kkkkkkk.",
+]
+ITEMS['MERCHANT_SEAL'] = [
+	"....kkkk....",
+	"...kllyyk...",
+	"..klykkyYk..",
+	".kyykyykYdk.",
+	".kykyyyykdk.",
+	".kyykyykYdk.",
+	"..kYykkYdk..",
+	"...kYYddk...",
+	"....kkkk....",
+	"...kRk.kRk..",
+	"..kRk...kRk.",
+	"..kk.....kk.",
+]
+ITEMS['GOLDEN_HEART'] = [
+	".kkk..kkk.",
+	"kllyk.kyyk",
+	"klyyykyyYk",
+	"kyyyyyyYYk",
+	"kyyyyyyYdk",
+	".kyyyyYdk.",
+	"..kyyYdk..",
+	"...kYdk...",
+	"....kk....",
+]
+ITEMS['MYSTERY_BOX'] = [
+	".kkkkkkkkkkk.",
+	"kxxxxyyxxxxWk",
+	"kWWWWyyWWWWwk",
+	"kkkkkkkkkkkkk",
+	"kxxxxxxxxxxWk",
+	"kxxxxyyyxxxWk",
+	"kxxxyxxxyxxWk",
+	"kxxxxxxxyxxWk",
+	"kxxxxxyyxxxWk",
+	"kxxxxxyxxxxWk",
+	"kxxxxxxxxxxWk",
+	"kxxxxxyxxxxWk",
+	"kWWWWWWWWWWwk",
+	".kkkkkkkkkkk.",
+]
+
+
+def icon(name):
+	rows = ITEMS[name]
+	w = max(len(r) for r in rows)
+	c = Canvas(16, 16)
+	c.grid([r.ljust(w, '.') for r in rows], {k: v for k, v in PAL.items() if v is not None})
+	return c
+
+
+def soul_lantern():
+	return icon('ARTIFACT_LANTERN')
+
+
+def bone_sickle():
+	return icon('BONE_SICKLE')

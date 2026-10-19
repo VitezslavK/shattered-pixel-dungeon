@@ -232,9 +232,11 @@ public enum Catalog {
 		ARTIFACTS.addItems(Generator.Category.ARTIFACT.classes);
 
 		TRINKETS.addItems(Generator.Category.TRINKET.classes);
+		TRINKETS.addItems(com.shatteredpixel.shatteredpixeldungeon.items.trinkets.GoldenIdol.class, com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MerchantsSeal.class, com.shatteredpixel.shatteredpixeldungeon.items.trinkets.GoldenHeart.class);
 
 		MISC_EQUIPMENT.addItems(BrokenSeal.class, SpiritBow.class, Waterskin.class, VelvetPouch.class,
 				PotionBandolier.class, ScrollHolder.class, MagicalHolster.class, Amulet.class);
+		MISC_EQUIPMENT.addItems(com.shatteredpixel.shatteredpixeldungeon.items.gold.GildedDagger.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldenSabre.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.MidasHammer.class);
 
 
 
@@ -275,6 +277,7 @@ public enum Catalog {
 				ArcaneCodex.class, FieldCauldron.class, GooBlob.class, PlagueGland.class, ChainLink.class, CrystalHeart.class, ArcaneCore.class, VoidShard.class, TengusMask.class, MetalShard.class, KingsCrown.class, EssenceOfAscension.class,
 				LiquidMetal.class, ArcaneResin.class,
 				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, CrackedLantern.class, RuneFragment.class, BrokenFlask.class);
+		MISC_CONSUMABLES.addItems(com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldIngot.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.LuckyCoin.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldBomb.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.ElixirOfGoldenSkin.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.MysteryBox.class);
 
 	}
 

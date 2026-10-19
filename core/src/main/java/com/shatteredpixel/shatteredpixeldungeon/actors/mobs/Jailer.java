@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -260,19 +262,7 @@ public class Jailer extends Mob {
 	public static class JailerSprite extends GuardSprite {
 		public JailerSprite(){
 			super();
-			scale.set(1.3f);
-		}
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.15f, 0.15f, 0.3f, 0.4f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+			ModMobFrames.apply( this, "sprites/mod/jailer.png", 20, 22, 2, 10 );
 		}
 	}
 }

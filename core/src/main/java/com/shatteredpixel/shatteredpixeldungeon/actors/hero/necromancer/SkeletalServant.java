@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.necromancer;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.evolution.Evolution;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -355,33 +357,16 @@ public class SkeletalServant extends DirectableAlly {
 	}
 
 	public static class ServantSprite extends SkeletonSprite {
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.3f, 1f, 0.5f, 0.25f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+		public ServantSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/skeletal_servant.png", 12, 15, 3, 14 );
 		}
 	}
 
 	public static class RisenSprite extends SkeletonSprite {
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			alpha(0.8f);
-			tint(0.5f, 0.3f, 1f, 0.35f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+		public RisenSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/risen.png", 12, 15, 3, 12 );
 		}
 	}
 

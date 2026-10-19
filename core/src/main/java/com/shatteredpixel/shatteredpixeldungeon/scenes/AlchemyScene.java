@@ -529,9 +529,42 @@ public class AlchemyScene extends PixelScene {
 		};
 		btnGuide.icon(new ItemSprite(ItemSpriteSheet.ALCH_PAGE));
 		btnGuide.setSize(btnGuide.reqWidth()+4, 18);
-		btnGuide.setPos(centerW - btnGuide.width()/2f, energyAdd.top()- btnGuide.height()-2);
+
+		//smelting turns gold into ingots, the ingredient of the mod's golden items
+		final int ingotPrice = com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldItems.INGOT_PRICE;
+		StyledButton btnSmelt = new StyledButton( Chrome.Type.TOAST_TR, Messages.get(AlchemyScene.class, "smelt", ingotPrice)){
+			@Override
+			protected void onClick() {
+				super.onClick();
+				if (Dungeon.gold < ingotPrice){
+					AlchemyScene.this.addToFront(new com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage(
+							Messages.get(AlchemyScene.class, "smelt_poor", ingotPrice, Dungeon.gold)));
+					return;
+				}
+				Dungeon.gold -= ingotPrice;
+				com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldIngot ingot = new com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldIngot();
+				if (!ingot.collect()){
+					Dungeon.level.drop(ingot, Dungeon.hero.pos);
+				}
+				Sample.INSTANCE.play( Assets.Sounds.GOLD, 1, 1, 0.8f );
+				sparkEmitter.burst(com.shatteredpixel.shatteredpixeldungeon.effects.Speck.factory(com.shatteredpixel.shatteredpixeldungeon.effects.Speck.COIN), 6);
+			}
+
+			@Override
+			protected String hoverText() {
+				return Messages.get(AlchemyScene.class, "smelt_hover", ingotPrice, Dungeon.gold);
+			}
+		};
+		btnSmelt.icon(new ItemSprite(ItemSpriteSheet.GOLD_INGOT));
+		btnSmelt.setSize(btnSmelt.reqWidth()+4, 18);
+
+		float rowW = btnGuide.width() + 2 + btnSmelt.width();
+		btnGuide.setPos(centerW - rowW/2f, energyAdd.top()- btnGuide.height()-2);
+		btnSmelt.setPos(btnGuide.right() + 2, btnGuide.top());
 		align(btnGuide);
+		align(btnSmelt);
 		add(btnGuide);
+		add(btnSmelt);
 
 		TrinketCatalyst cata = Dungeon.hero.belongings.getItem(TrinketCatalyst.class);
 		if (cata != null && cata.hasRolledTrinkets()){

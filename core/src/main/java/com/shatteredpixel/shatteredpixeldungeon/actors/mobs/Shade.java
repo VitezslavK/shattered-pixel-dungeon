@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WraithSprite;
@@ -63,9 +65,9 @@ public class Shade extends Mob {
 	}
 
 	public static class ShadeSprite extends WraithSprite {
-		@Override
-		public void resetColor() { super.resetColor(); tint(0f, 0f, 0.1f, 0.6f); }
-		@Override
-		public void link(Char ch) { super.link(ch); resetColor(); }
+		public ShadeSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/shade.png", 14, 16, 4, 8 );
+		}
 	}
 }

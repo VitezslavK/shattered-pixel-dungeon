@@ -198,6 +198,7 @@ public abstract class Recipe {
 		new SummonElemental.Recipe(),
 		new StewedMeat.oneMeat(),
 		new TrinketCatalyst.Recipe(),
+		new com.shatteredpixel.shatteredpixeldungeon.items.gold.LuckyCoin.Recipe(),
 		new Trinket.UpgradeTrinket()
 	};
 	
@@ -218,6 +219,12 @@ public abstract class Recipe {
 		new CurseInfusion.Recipe(),
 		new ReclaimTrap.Recipe(),
 		new WildEnergy.Recipe(),
+		new com.shatteredpixel.shatteredpixeldungeon.items.gold.GildRecipe(),
+		new com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldBomb.Recipe(),
+		new com.shatteredpixel.shatteredpixeldungeon.items.gold.ElixirOfGoldenSkin.Recipe(),
+		new com.shatteredpixel.shatteredpixeldungeon.items.trinkets.GoldenIdol.Recipe(),
+		new com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MerchantsSeal.Recipe(),
+		new com.shatteredpixel.shatteredpixeldungeon.items.trinkets.GoldenHeart.Recipe(),
 		new StewedMeat.twoMeat()
 	};
 	
@@ -265,6 +272,10 @@ public abstract class Recipe {
 	public static boolean usableInRecipe(Item item){
 		//only upgradeable thrown weapons and wands allowed among equipment items
 		if (item instanceof EquipableItem){
+			//melee weapons can be gilded with gold ingots, see GildRecipe
+			if (com.shatteredpixel.shatteredpixeldungeon.items.gold.GildRecipe.gildable(item)){
+				return item.cursedKnown && !item.cursed;
+			}
 			return item.cursedKnown && !item.cursed &&
 					item instanceof MissileWeapon && item.isUpgradable();
 		} else if (item instanceof Wand) {

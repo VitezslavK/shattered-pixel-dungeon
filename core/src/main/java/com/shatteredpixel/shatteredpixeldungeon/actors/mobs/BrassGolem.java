@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -57,9 +59,9 @@ public class BrassGolem extends Mob {
 	}
 
 	public static class BrassSprite extends GolemSprite {
-		@Override
-		public void resetColor() { super.resetColor(); tint(0.9f, 0.6f, 0.2f, 0.45f); }
-		@Override
-		public void link(Char ch) { super.link(ch); resetColor(); }
+		public BrassSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/brass_golem.png", 18, 20, 3, 10 );
+		}
 	}
 }

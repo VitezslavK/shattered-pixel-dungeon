@@ -30,7 +30,7 @@ import com.watabou.utils.Bundle;
 public class PuzzleNote extends Item {
 
 	{
-		image = ItemSpriteSheet.TORN_PAGE;
+		image = ItemSpriteSheet.PUZZLE_NOTE;
 		unique = true;
 		bones = false;
 	}

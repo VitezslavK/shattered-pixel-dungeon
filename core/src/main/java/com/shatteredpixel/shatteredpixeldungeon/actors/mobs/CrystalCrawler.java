@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CrabSprite;
 import com.watabou.utils.Random;
@@ -48,9 +50,9 @@ public class CrystalCrawler extends Mob {
 	public int drRoll() { return super.drRoll() + Random.NormalIntRange(2, 10); }
 
 	public static class CrawlerSprite extends CrabSprite {
-		@Override
-		public void resetColor() { super.resetColor(); tint(0.4f, 0.9f, 1f, 0.5f); }
-		@Override
-		public void link(Char ch) { super.link(ch); resetColor(); }
+		public CrawlerSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/crystal_crawler.png", 16, 13, 3, 12 );
+		}
 	}
 }

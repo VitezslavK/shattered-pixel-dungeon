@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
@@ -218,13 +219,15 @@ public class Shrine extends NPC {
 		@Override
 		public void link(Char ch) {
 			super.link(ch);
+			String sheet = "sprites/mod/shrine_arcane.png";
 			if (ch instanceof Shrine){
 				switch (((Shrine) ch).type){
-					case BLOOD: tint(0.8f, 0.1f, 0.1f, 0.4f); break;
-					case GOLD:  tint(1f, 0.85f, 0.2f, 0.4f); break;
-					default:    tint(0.4f, 0.4f, 1f, 0.4f); break;
+					case BLOOD: sheet = "sprites/mod/shrine_blood.png"; break;
+					case GOLD:  sheet = "sprites/mod/shrine_gold.png"; break;
+					default: break;
 				}
 			}
+			ModMobFrames.apply( this, sheet, 14, 16, 3, 3 );
 		}
 	}
 }

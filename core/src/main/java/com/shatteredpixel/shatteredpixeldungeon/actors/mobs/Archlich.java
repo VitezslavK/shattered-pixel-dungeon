@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -182,19 +184,7 @@ public class Archlich extends Mob {
 	public static class LichSprite extends SkeletonSprite {
 		public LichSprite(){
 			super();
-			scale.set(1.5f);
-		}
-
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.3f, 0.9f, 0.6f, 0.45f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+			ModMobFrames.apply( this, "sprites/mod/archlich.png", 18, 22, 3, 8 );
 		}
 	}
 }

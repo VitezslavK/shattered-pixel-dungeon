@@ -66,6 +66,14 @@ public class Gold extends Item {
 
 		if (Runes.Rune.FEHU.active()) quantity = Math.round(quantity * 1.1f);
 		quantity = Math.max(1, Math.round(quantity * RunModifier.goldFactor()));
+		quantity = Math.max(1, Math.round(quantity
+				* com.shatteredpixel.shatteredpixeldungeon.items.trinkets.GoldenIdol.goldMultiplier()
+				* com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fortune.goldMultiplier(hero)));
+		int goldHeal = Math.min(hero.HT - hero.HP, com.shatteredpixel.shatteredpixeldungeon.items.trinkets.GoldenHeart.healFor(quantity));
+		if (goldHeal > 0){
+			hero.HP += goldHeal;
+			hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(goldHeal), FloatingText.HEALING );
+		}
 		Dungeon.gold += quantity;
 		Statistics.goldCollected += quantity;
 		Badges.validateGoldCollected();

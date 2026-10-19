@@ -280,6 +280,11 @@ public class ShopRoom extends SpecialRoom {
 
 		itemsToSpawn.add( new ScrollOfIdentify() );
 		itemsToSpawn.add( new ScrollOfRemoveCurse() );
+
+		//the mod's golden goods: a sealed mystery box and one golden item
+		itemsToSpawn.add( new com.shatteredpixel.shatteredpixeldungeon.items.gold.MysteryBox() );
+		itemsToSpawn.add( com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldItems.random(
+				Random.oneOf(com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldItems.Kind.values()), Dungeon.depth) );
 		itemsToSpawn.add( new ScrollOfMagicMapping() );
 
 		for (int i=0; i < 2; i++)

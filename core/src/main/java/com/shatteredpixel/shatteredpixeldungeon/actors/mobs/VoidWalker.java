@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ModMobFrames;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -92,16 +94,9 @@ public class VoidWalker extends Mob {
 	}
 
 	public static class VoidSprite extends SuccubusSprite {
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			tint(0.2f, 0f, 0.3f, 0.55f);
-		}
-
-		@Override
-		public void link(Char ch) {
-			super.link(ch);
-			resetColor();
+		public VoidSprite(){
+			super();
+			ModMobFrames.apply( this, "sprites/mod/void_walker.png", 12, 17, 4, 10 );
 		}
 	}
 }
