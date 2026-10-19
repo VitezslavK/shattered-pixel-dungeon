@@ -9,8 +9,8 @@ BUNDLE=${1:?bundle id, e.g. com.example.spdmod}
 TEAM=${2:?team id from Xcode, e.g. ABCDE12345}
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 export JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21}
-DEVICE=$(xcrun devicectl list devices 2>/dev/null | awk '/physical/ && /connected/ {for(i=1;i<=NF;i++) if ($i ~ /^[0-9A-F]{8}-[0-9A-F]{16}$/) print $i}' | head -1)
-[ -n "$DEVICE" ] || { echo "No connected iPhone found (plug it in, unlock it, trust this Mac)"; exit 1; }
+DEVICE=$(xcrun devicectl list devices 2>/dev/null | awk '/physical/ && (/connected/ || /available/) {for(i=1;i<=NF;i++) if ($i ~ /^[0-9A-F]{8}-[0-9A-F]{16}$/) print $i}' | head -1)
+[ -n "$DEVICE" ] || { echo "No iPhone found (plug it in or join the same Wi-Fi, unlock it, trust this Mac)"; exit 1; }
 
 # refresh the provisioning profile through a stub Xcode project
 STUB="${TMPDIR:-/tmp}/spd-ios-stub"
