@@ -23,6 +23,10 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import java.util.Collections;
+import java.util.ArrayList;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague;
@@ -49,14 +53,52 @@ public class WandOfPlague extends Wand {
 		return 6 + 2*lvl;
 	}
 
+	//contagion: from +2 the zap also infects nearby enemies, one more every 2 levels
+	public static int contagion(int lvl){
+		return lvl < 2 ? 0 : 1 + (lvl - 2) / 2;
+	}
+
+	//festering: from +3 the infected take more damage from everything else (10%, +5% per level, max 50%)
+	public static float fester(int lvl){
+		return lvl < 3 ? 0 : Math.min(0.5f, 0.10f + 0.05f * (lvl - 3));
+	}
+
 	@Override
 	public void onZap(Ballistica bolt) {
 		Char ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
+			int lvl = buffedLvl();
 			wandProc(ch, chargesPerCast());
-			Buff.affect(ch, Plague.class).set(duration(buffedLvl()));
+			infect(ch, duration(lvl), fester(lvl));
 			CellEmitter.center(ch.pos).burst(PoisonParticle.SPLASH, 6);
+
+			//the plague leaps to the closest other enemies within 2 tiles
+			int jumps = contagion(lvl);
+			if (jumps > 0){
+				ArrayList<Char> near = new ArrayList<>();
+				for (Char other : Actor.chars()){
+					if (other != ch && other != curUser && other.isAlive() && other.alignment == ch.alignment
+							&& Dungeon.level.distance(other.pos, ch.pos) <= 2 && Dungeon.level.heroFOV[other.pos]){
+						near.add(other);
+					}
+				}
+				Collections.sort(near, (a, b) -> Dungeon.level.distance(a.pos, ch.pos) - Dungeon.level.distance(b.pos, ch.pos));
+				for (int i = 0; i < Math.min(jumps, near.size()); i++){
+					Char victim = near.get(i);
+					infect(victim, duration(lvl) / 2f + 2, fester(lvl));
+					if (victim.sprite != null && ch.sprite != null){
+						curUser.sprite.parent.add(new Beam.LightRay(ch.sprite.center(), victim.sprite.center()));
+						CellEmitter.center(victim.pos).burst(PoisonParticle.SPLASH, 4);
+					}
+				}
+			}
 		}
+	}
+
+	private static void infect(Char ch, float duration, float fester){
+		Plague p = Buff.affect(ch, Plague.class);
+		p.set(duration);
+		p.setFester(fester);
 	}
 
 	@Override
@@ -86,12 +128,26 @@ public class WandOfPlague extends Wand {
 
 	@Override
 	public String statsDesc() {
-		if (levelKnown) return Messages.get(this, "stats_desc", duration(buffedLvl()));
-		else return Messages.get(this, "stats_desc", duration(0));
+		int lvl = levelKnown ? buffedLvl() : 0;
+		String desc = Messages.get(this, "stats_desc", duration(lvl));
+		if (contagion(lvl) > 0) desc += "\n\n" + Messages.get(this, "stats_contagion", contagion(lvl));
+		if (fester(lvl) > 0) desc += "\n\n" + Messages.get(this, "stats_fester", Math.round(fester(lvl) * 100));
+		if (lvl < 3) desc += "\n\n" + Messages.get(this, "stats_locked");
+		return desc;
 	}
 
 	@Override
 	public String upgradeStat1(int level) {
 		return Integer.toString(duration(level));
+	}
+
+	@Override
+	public String upgradeStat2(int level) {
+		return Integer.toString(contagion(level));
+	}
+
+	@Override
+	public String upgradeStat3(int level) {
+		return Math.round(fester(level) * 100) + "%";
 	}
 }

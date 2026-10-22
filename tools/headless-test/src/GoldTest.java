@@ -148,6 +148,26 @@ public class GoldTest {
     Shopkeeper sk2 = new Shopkeeper(); sk2.restoreFromBundle(b);
     check(sk2.priceMult == 0.8f && sk2.haggled, "haggling result survives a save");
 
+
+    // --- wand of plague level effects and the spirit bell
+    check(com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague.contagion(1) == 0
+        && com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague.contagion(2) == 1
+        && com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague.contagion(6) == 3, "plague contagion: +1:0, +2:1, +6:3");
+    check(com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague.fester(2) == 0
+        && Math.abs(com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague.fester(3) - 0.10f) < 0.001f
+        && com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague.fester(20) == 0.5f, "plague festering: +2:0, +3:10%, max 50%");
+    com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat rat = new com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat();
+    rat.HP = rat.HT = 100;
+    com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague pl = com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff.affect(rat, com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague.class);
+    pl.set(10); pl.setFester(0.2f);
+    rat.damage(10, new GoldBomb());
+    check(rat.HP == 88, "a festering target takes 20% more damage (100 -> " + rat.HP + ")");
+    b = new com.watabou.utils.Bundle(); pl.storeInBundle(b);
+    com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague pl2 = new com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague(); pl2.restoreFromBundle(b);
+    check(Math.abs(pl2.fester() - 0.2f) < 0.001f, "festering survives a save");
+    check(new com.shatteredpixel.shatteredpixeldungeon.items.SpiritBell().actions(hero).contains(Item.AC_DROP), "the spirit bell can be dropped");
+    check(!new com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPlague().info().contains("NO TEXT"), "wand of plague texts");
+
     // --- texts
     for (Item i : new Item[]{new GoldIngot(), new GildedDagger(), new GoldenSabre(), new MidasHammer(), new GoldBomb(), new LuckyCoin(),
         new ElixirOfGoldenSkin(), new MysteryBox(), new GoldenIdol(), new MerchantsSeal(), new GoldenHeart()}){

@@ -67,8 +67,6 @@ public class SpiritBell extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		actions.remove(AC_DROP);
-		actions.remove(AC_THROW);
 		if (!used) actions.add(AC_RING);
 		actions.add(AC_FRIEND);
 		actions.add(AC_NAME);

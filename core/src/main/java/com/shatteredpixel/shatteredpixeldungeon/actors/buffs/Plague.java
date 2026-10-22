@@ -39,6 +39,8 @@ import com.watabou.utils.PathFinder;
 public class Plague extends Buff implements Hero.Doom {
 
 	protected float left;
+	//extra damage the infected takes from other sources, set by a high level wand of plague
+	protected float fester = 0;
 
 	{
 		type = buffType.NEGATIVE;
@@ -47,6 +49,14 @@ public class Plague extends Buff implements Hero.Doom {
 
 	public void set( float duration ) {
 		this.left = Math.max(duration, left);
+	}
+
+	public void setFester( float bonus ) {
+		this.fester = Math.max(bonus, fester);
+	}
+
+	public float fester(){
+		return fester;
 	}
 
 	//damage scales gently with depth
@@ -82,7 +92,9 @@ public class Plague extends Buff implements Hero.Doom {
 		for (int i : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(target.pos + i);
 			if (ch != null && ch.isAlive() && ch.alignment == target.alignment){
-				Buff.affect(ch, Plague.class).set(Math.max(3, left));
+				Plague p = Buff.affect(ch, Plague.class);
+				p.set(Math.max(3, left));
+				p.setFester(fester);
 			}
 		}
 		if (target.sprite != null) CellEmitter.center(target.pos).burst( PoisonParticle.SPLASH, 8 );
@@ -115,16 +127,19 @@ public class Plague extends Buff implements Hero.Doom {
 	}
 
 	private static final String LEFT	= "left";
+	private static final String FESTER	= "fester";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( LEFT, left );
+		bundle.put( FESTER, fester );
 	}
 
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		left = bundle.getFloat( LEFT );
+		fester = bundle.getFloat( FESTER );
 	}
 }

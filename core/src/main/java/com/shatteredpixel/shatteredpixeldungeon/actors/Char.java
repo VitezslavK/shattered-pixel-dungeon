@@ -841,6 +841,12 @@ public abstract class Char extends Actor {
 			return;
 		}
 
+		//a festering plague (high level wand of plague) makes every other source hurt more
+		com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague plague = buff(com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague.class);
+		if (plague != null && plague.fester() > 0 && !(src instanceof com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Plague)){
+			dmg = Math.round(dmg * (1f + plague.fester()));
+		}
+
 		if (!(src instanceof LifeLink || src instanceof Hunger) && buff(LifeLink.class) != null){
 			HashSet<LifeLink> links = buffs(LifeLink.class);
 			for (LifeLink link : links.toArray(new LifeLink[0])){
