@@ -31,6 +31,13 @@ fmt_date(){ date -r "$1" '+%d.%m.%Y v %H:%M'; }
 
 send_mail(){
 	local subject="$1" body="$2"
+	# a quiet notification on the Mac as well
+	osascript -e "display notification \"$subject\" with title \"SPD Mod\"" 2>/dev/null
+	# Mail is started hidden in the background and quit again afterwards if it wasn't open,
+	# so it never jumps in front of whatever the user is doing
+	local was_running
+	was_running=$(osascript -e 'application "Mail" is running' 2>/dev/null)
+	[ "$was_running" = "true" ] || { open -g -j -a Mail; sleep 8; }
 	osascript - "$EMAIL" "$subject" "$body" <<'OSA'
 on run argv
 	tell application "Mail"
@@ -40,6 +47,14 @@ on run argv
 	end tell
 end run
 OSA
+	if [ "$was_running" != "true" ]; then
+		# give the message time to leave the outbox, then close Mail again
+		for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+			sleep 5
+			[ "$(osascript -e 'tell application "Mail" to count messages of outbox' 2>/dev/null)" -le 1 ] 2>/dev/null && break
+		done
+		osascript -e 'tell application "Mail" to quit' 2>/dev/null
+	fi
 }
 
 fail(){
@@ -54,6 +69,13 @@ fail(){
 	else
 		when="Nevím, dokdy hra na iPhonu platí."
 	fi
+	local last
+	last=$(cat "$DIR/last_fail_mail" 2>/dev/null || echo 0)
+	if [ $(( now - last )) -lt 72000 ]; then
+		echo "failure email already sent today"
+		exit 1
+	fi
+	echo "$now" > "$DIR/last_fail_mail"
 	send_mail "SPD Mod: obnova na iPhonu se NEPOVEDLA" "Automatická obnova hry SPD Mod na iPhonu se nepovedla.
 
 Důvod: $1
@@ -101,7 +123,7 @@ for p in "$PROFILES"/*.mobileprovision; do
 done
 (cd "$STUB" && xcodebuild -quiet -project SPDModStub.xcodeproj -scheme SPDModStub -destination "id=$DEVICE" \
 	-allowProvisioningUpdates -allowProvisioningDeviceRegistration -derivedDataPath "$STUB/dd" build) \
-	|| fail "Apple nevydal nové podepsání (zkontroluj, že jsi v Xcode > Settings > Accounts přihlášený)"
+	|| fail "Apple nevydal nové podepsání. Nejspíš jsi odhlášený z Xcode: otevři Xcode > Settings > Accounts a přihlas se svým Apple ID"
 PROFILE=$(ls -t "$PROFILES"/*.mobileprovision 2>/dev/null | head -1)
 [ -n "$PROFILE" ] || fail "Apple nevydal nové podepsání"
 exp_iso=$(security cms -D -i "$PROFILE" 2>/dev/null | plutil -extract ExpirationDate raw -o - - 2>/dev/null)
