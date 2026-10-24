@@ -17,4 +17,4 @@ Hra běží přímo v prohlížeči, bez instalace a bez obnovování:
 - Uložené hry a nastavení jsou v prohlížeči. Když v Safari smažeš data webových stránek, přijdeš o ně.
 - Webová verze má vlastní hráčský kód (jiný než aplikace). Kamarádům pošli kód z okna **Online**.
 - První spuštění stahuje asi 40 MB, další spuštění jsou rychlá.
-- Nová verze se objeví sama, jakmile se na GitHub nahrají změny. Stačí hru zavřít a znovu otevřít.
+- Nová verze se objeví sama, jakmile se změny nahrají do větve master na GitHubu. Stačí hru zavřít a znovu otevřít.
