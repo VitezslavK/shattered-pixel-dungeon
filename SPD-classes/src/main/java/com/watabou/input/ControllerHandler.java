@@ -66,6 +66,10 @@ public class ControllerHandler implements ControllerListener {
 	public static boolean controllersSupported() {
 		if (failedInit) {
 			return false;
+		} else if (com.watabou.utils.DeviceCompat.isWeb()){
+			//browsers have no controller backend in this build
+			failedInit = true;
+			return false;
 		} else if (initialized){
 			return true;
 		} else {

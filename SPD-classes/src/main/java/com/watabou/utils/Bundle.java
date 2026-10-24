@@ -480,7 +480,10 @@ public class Bundle {
 	}
 
 	//useful to turn this off for save data debugging.
-	private static final boolean compressByDefault = true;
+	//browsers have no zlib, so saves there are plain text (reading handles both kinds)
+	private static boolean compressByDefault(){
+		return !DeviceCompat.isWeb();
+	}
 
 	private static final int GZIP_BUFFER = 1024*4; //4 kb
 
@@ -533,7 +536,7 @@ public class Bundle {
 	}
 
 	public static boolean write( Bundle bundle, OutputStream stream ){
-		return write(bundle, stream, compressByDefault);
+		return write(bundle, stream, compressByDefault());
 	}
 
 	public static boolean write( Bundle bundle, OutputStream stream, boolean compressed ) {

@@ -1,0 +1,61 @@
+# Builds the browser version of the mod and publishes it to GitHub Pages on every push to mod-overhaul.
+# Needs two repository secrets (Settings > Secrets and variables > Actions) for online play:
+#   SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY   (the public "publishable" key, never the secret one)
+# and Settings > Pages > Source set to "GitHub Actions".
+name: Web version
+
+on:
+  push:
+    branches: [ mod-overhaul ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Online settings
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_PUBLISHABLE_KEY" ]; then
+            printf 'supabase_url=%s\nsupabase_publishable_key=%s\n' "$SUPABASE_URL" "$SUPABASE_PUBLISHABLE_KEY" > core/src/main/assets/online.properties
+            echo "online play enabled"
+          else
+            echo "::warning::SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY secrets are missing, the web version will play offline"
+          fi
+
+      - name: Build
+        run: ./gradlew --no-daemon -PwebOnly web:buildWeb
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/build/dist/webapp
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

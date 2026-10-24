@@ -21,6 +21,8 @@
 
 package com.watabou.noosa;
 
+import com.watabou.utils.DeviceCompat;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -79,7 +81,8 @@ public class RenderedText extends Image {
 	
 	private synchronized void measure(){
 		
-		if (Thread.currentThread().getName().equals("SHPD Actor Thread")){
+		//(thread names can't be trusted in browsers, where threads are emulated)
+		if (!DeviceCompat.isWeb() && Thread.currentThread().getName().equals("SHPD Actor Thread")){
 			throw new RuntimeException("Text measured from the actor thread!");
 		}
 		

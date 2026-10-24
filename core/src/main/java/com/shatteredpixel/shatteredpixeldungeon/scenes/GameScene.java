@@ -133,6 +133,7 @@ import com.watabou.input.KeyBindings;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
@@ -867,6 +868,7 @@ public class GameScene extends PixelScene {
 
 	//windows build textures, which on mobile only works on the render thread
 	public static boolean onActorThread(){
+		if (DeviceCompat.isWeb()) return actorThread != null && !Game.inRender;
 		return actorThread != null && Thread.currentThread() == actorThread;
 	}
 	

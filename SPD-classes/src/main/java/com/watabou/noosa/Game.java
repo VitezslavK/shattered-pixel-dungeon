@@ -86,7 +86,9 @@ public class Game implements ApplicationListener {
 	@Override
 	public void create() {
 		density = Gdx.graphics.getDensity();
-		if (density == Float.POSITIVE_INFINITY){
+		if (platform != null && platform.densityOverride() > 0){
+			density = platform.densityOverride();
+		} else if (density == Float.POSITIVE_INFINITY){
 			density = 100f / 160f; //assume 100PPI if density can't be found
 		} else if (DeviceCompat.isDesktop()) {
 			int dispWidth = Gdx.graphics.getDisplayMode().width;
@@ -159,16 +161,25 @@ public class Game implements ApplicationListener {
 			if (DeviceCompat.isAndroid()) return;
 		}
 
-		NoosaScript.get().resetCamera();
-		NoosaScriptNoLighting.get().resetCamera();
-		Gdx.gl.glDisable(Gdx.gl.GL_SCISSOR_TEST);
-		Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
-		draw();
+		inRender = true;
+		try {
+			NoosaScript.get().resetCamera();
+			NoosaScriptNoLighting.get().resetCamera();
+			Gdx.gl.glDisable(Gdx.gl.GL_SCISSOR_TEST);
+			Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
+			draw();
 
-		Gdx.gl.glDisable( Gdx.gl.GL_SCISSOR_TEST );
-		
-		step();
+			Gdx.gl.glDisable( Gdx.gl.GL_SCISSOR_TEST );
+
+			step();
+		} finally {
+			inRender = false;
+		}
 	}
+
+	//true while a frame is being drawn and updated. In browsers threads are emulated and
+	// Thread.currentThread() can't tell the render loop from the actor thread, this can.
+	public static volatile boolean inRender = false;
 	
 	@Override
 	public void pause() {

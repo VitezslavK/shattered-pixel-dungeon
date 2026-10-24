@@ -35,8 +35,21 @@ public class Reflection {
 		return ClassReflection.isStaticClass(cls);
 	}
 	
+	//creates objects without reflection where reflection is limited (browsers), returns null if unknown
+	public interface Factory {
+		Object create( Class<?> cls );
+	}
+	public static Factory factory = null;
+
+	@SuppressWarnings("unchecked")
+	private static <T> T fromFactory( Class<T> cls ){
+		return factory == null ? null : (T) factory.create(cls);
+	}
+
 	public static <T> T newInstance( Class<T> cls ){
 		try {
+			T made = fromFactory(cls);
+			if (made != null) return made;
 			return ClassReflection.newInstance(cls);
 		} catch (Exception e) {
 			Game.reportException(e);
@@ -45,6 +58,8 @@ public class Reflection {
 	}
 	
 	public static <T> T newInstanceUnhandled( Class<T> cls ) throws Exception {
+		T made = fromFactory(cls);
+		if (made != null) return made;
 		return ClassReflection.newInstance(cls);
 	}
 	

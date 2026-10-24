@@ -2,9 +2,11 @@
 include ':SPD-classes'
 include ':core'
 
-//platform modules
-include ':android'
-include ':ios'
+//platform modules (-PwebOnly skips the ones that need the Android SDK or RoboVM, used by the web build on GitHub)
+if (!providers.gradleProperty('webOnly').isPresent()) {
+    include ':android'
+    include ':ios'
+}
 include ':desktop'
 
 //service modules
@@ -15,3 +17,5 @@ include ':services'
     //news
     include ':services:news:debugNews'
     include ':services:news:shatteredNews'
+//browser version, see web/build.gradle
+include ':web'

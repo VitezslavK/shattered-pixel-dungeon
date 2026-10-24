@@ -73,7 +73,34 @@ public class NoosaScript extends Script {
 		
 	}
 
+	//WebGL can't read vertices or indices straight from client memory, so in browsers they are
+	// first copied into these buffers on the GPU. Other platforms keep the direct path.
+	private static final boolean STREAM = DeviceCompat.isWeb();
+	private static int streamVertices = -1;
+	private static int streamIndices = -1;
+
+	private void streamAttributes( FloatBuffer vertices, int floats ){
+		if (streamVertices == -1) streamVertices = Gdx.gl.glGenBuffer();
+		Gdx.gl.glBindBuffer( Gdx.gl.GL_ARRAY_BUFFER, streamVertices );
+		((Buffer)vertices).position( 0 );
+		Gdx.gl.glBufferData( Gdx.gl.GL_ARRAY_BUFFER, floats * 4, vertices, Gdx.gl.GL_STREAM_DRAW );
+		aXY.vertexBuffer( 2, 4, 0 );
+		aUV.vertexBuffer( 2, 4, 2 );
+		Gdx.gl.glBindBuffer( Gdx.gl.GL_ARRAY_BUFFER, 0 );
+	}
+
 	public void drawElements( FloatBuffer vertices, ShortBuffer indices, int size ) {
+
+		if (STREAM){
+			streamAttributes( vertices, vertices.limit() );
+			if (streamIndices == -1) streamIndices = Gdx.gl.glGenBuffer();
+			Gdx.gl.glBindBuffer( Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, streamIndices );
+			((Buffer)indices).position( 0 );
+			Gdx.gl.glBufferData( Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, size * 2, indices, Gdx.gl.GL_STREAM_DRAW );
+			Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, size, Gdx.gl20.GL_UNSIGNED_SHORT, 0 );
+			Quad.bindIndices();
+			return;
+		}
 
 		((Buffer)vertices).position( 0 );
 		aXY.vertexPointer( 2, 4, vertices );
@@ -87,6 +114,12 @@ public class NoosaScript extends Script {
 	}
 
 	public void drawQuad( FloatBuffer vertices ) {
+
+		if (STREAM){
+			streamAttributes( vertices, 16 );
+			Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, Quad.SIZE, Gdx.gl20.GL_UNSIGNED_SHORT, 0 );
+			return;
+		}
 
 		((Buffer)vertices).position( 0 );
 		aXY.vertexPointer( 2, 4, vertices );
@@ -114,6 +147,12 @@ public class NoosaScript extends Script {
 	public void drawQuadSet( FloatBuffer vertices, int size ) {
 		
 		if (size == 0) {
+			return;
+		}
+
+		if (STREAM){
+			streamAttributes( vertices, 16 * size );
+			Gdx.gl20.glDrawElements( Gdx.gl20.GL_TRIANGLES, Quad.SIZE * size, Gdx.gl20.GL_UNSIGNED_SHORT, 0 );
 			return;
 		}
 

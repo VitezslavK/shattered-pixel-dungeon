@@ -1,0 +1,51 @@
+apply plugin: 'java'
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+java.sourceCompatibility = java.targetCompatibility = appJavaCompatibility
+
+//The browser version: TeaVM (through gdx-teavm) compiles the game to JavaScript.
+//  ./gradlew web:buildWeb       -> web build in <build dir>/dist/webapp
+ext.gdxTeaVMVersion = '1.5.5'
+
+repositories {
+    maven { url 'https://teavm.org/maven/repository/' }
+}
+
+//GenFactory writes WebFactory (object creation without reflection, see its comments) before compiling
+def factoryDir = layout.buildDirectory.dir('generated/factory')
+sourceSets {
+    gen { java { srcDirs = ['src/gen/java'] } }
+    main { java { srcDir factoryDir } }
+}
+
+dependencies {
+    genImplementation project(':core')
+    implementation project(':core')
+    implementation project(':services:updates:debugUpdates')
+    implementation project(':services:news:debugNews')
+    implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    implementation "com.github.xpenatan.gdx-teavm:backend-web:$gdxTeaVMVersion"
+    implementation "com.github.xpenatan.gdx-teavm:gdx-freetype-teavm:$gdxTeaVMVersion"
+}
+
+tasks.register('genFactory', JavaExec) {
+    dependsOn ':core:classes', ':SPD-classes:classes', 'genClasses'
+    mainClass = 'com.shatteredpixel.shatteredpixeldungeon.web.GenFactory'
+    classpath = sourceSets.gen.runtimeClasspath
+    def classDirs = [':core', ':SPD-classes'].collect { project(it).layout.buildDirectory.dir('classes/java/main').get().asFile.absolutePath }
+    args = [factoryDir.get().asFile.absolutePath] + classDirs
+    outputs.dir factoryDir
+    doFirst { delete factoryDir }
+}
+compileJava.dependsOn genFactory
+
+tasks.register('buildWeb', JavaExec) {
+    dependsOn classes
+    mainClass = 'com.shatteredpixel.shatteredpixeldungeon.web.BuildWeb'
+    classpath = sourceSets.main.runtimeClasspath
+    args = [new File(project(':core').projectDir, 'src/main/assets').absolutePath,
+            layout.buildDirectory.dir('dist').get().asFile.absolutePath,
+            project.findProperty('serve') ?: 'false', 'simple',
+            file('src/main/webapp').absolutePath]
+    maxHeapSize = '4g'
+}

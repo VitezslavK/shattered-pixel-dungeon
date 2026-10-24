@@ -36,6 +36,11 @@ public abstract class PlatformSupport {
 	
 	public abstract void updateDisplaySize();
 
+	//a platform can report its own screen density (pixels per 160 dpi), 0 means use libGDX's value
+	public float densityOverride(){
+		return 0;
+	}
+
 	public boolean supportsFullScreen(){
 		return true; //default
 	}
