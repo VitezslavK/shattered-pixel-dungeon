@@ -292,6 +292,7 @@ public class MeleeWeapon extends Weapon {
 	@Override
 	public int damageRoll(Char owner) {
 		int damage = augment.damageFactor(super.damageRoll( owner ));
+		damage += com.shatteredpixel.shatteredpixeldungeon.actors.hero.smith.Smithing.reinforceDamage(this);
 
 		if (owner instanceof Hero) {
 			int exStr = ((Hero)owner).STR() - STRReq();
@@ -325,6 +326,9 @@ public class MeleeWeapon extends Weapon {
 
 		String statsInfo = statsInfo();
 		if (!statsInfo.equals("")) info += "\n\n" + statsInfo;
+
+		String anvilInfo = com.shatteredpixel.shatteredpixeldungeon.actors.hero.smith.Smithing.weaponInfo(this);
+		if (!anvilInfo.isEmpty()) info += "\n\n" + anvilInfo;
 
 		switch (augment) {
 			case SPEED:

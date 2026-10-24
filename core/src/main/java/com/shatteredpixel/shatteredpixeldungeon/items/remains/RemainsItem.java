@@ -98,6 +98,8 @@ public abstract class RemainsItem extends Item {
 				return new RuneFragment();
 			case ALCHEMIST:
 				return new BrokenFlask();
+			case SMITH:
+				return new BentTongs();
 		}
 	}
 

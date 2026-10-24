@@ -686,6 +686,7 @@ public class Hero extends Char {
 		dr += Evolution.bonusArmor(this);
 		dr += Arcana.bonusArmor(this);
 		dr += Alchemy.bonusArmor(this);
+		dr += com.shatteredpixel.shatteredpixeldungeon.actors.hero.smith.Smithing.bonusArmor(this);
 		if (RunModifier.active(RunModifier.IRONCLAD)) dr += Random.NormalIntRange(1, 3);
 		
 		return dr;
@@ -1688,6 +1689,7 @@ public class Hero extends Char {
 		dmg = Necromancy.soulLink(this, dmg, src);
 		dmg = Evolution.modifyDamageTaken(this, dmg, src);
 		dmg = Alchemy.modifyDamageTaken(this, dmg, src);
+		dmg = com.shatteredpixel.shatteredpixeldungeon.actors.hero.smith.Smithing.modifyDamageTaken(this, dmg, src);
 
 		//we ceil this one to avoid letting the player easily take 0 dmg from tenacity early
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));

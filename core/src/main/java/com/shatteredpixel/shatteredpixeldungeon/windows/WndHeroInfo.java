@@ -85,6 +85,9 @@ public class WndHeroInfo extends WndTabbed {
 			case ALCHEMIST:
 				tabIcon = new ItemSprite(ItemSpriteSheet.FIELD_CAULDRON, null);
 				break;
+			case SMITH:
+				tabIcon = new ItemSprite(ItemSpriteSheet.PORTABLE_ANVIL, null);
+				break;
 		}
 
 		int finalHeight = MIN_HEIGHT;
@@ -232,6 +235,12 @@ public class WndHeroInfo extends WndTabbed {
 					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.FIELD_CAULDRON),
 							new ItemSprite(ItemSpriteSheet.BOMB),
 							new ItemSprite(ItemSpriteSheet.DAGGER),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					break;
+				case SMITH:
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.PORTABLE_ANVIL),
+							new ItemSprite(ItemSpriteSheet.SCRAP),
+							new ItemSprite(ItemSpriteSheet.SMITH_HAMMER),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 			}

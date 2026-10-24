@@ -476,6 +476,8 @@ public enum Icons {
 				return new ItemSprite(ItemSpriteSheet.ARCANE_CODEX);
 			case ALCHEMIST:
 				return new ItemSprite(ItemSpriteSheet.FIELD_CAULDRON);
+			case SMITH:
+				return new ItemSprite(ItemSpriteSheet.PORTABLE_ANVIL);
 			default:
 				return null;
 		}

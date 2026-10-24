@@ -354,6 +354,102 @@ ICONS['POLYMORPH'] = icon([
 	"................",
 ], hexcol('#8a4a7a'))
 
+# ------------------------------------------------ smith
+ICONS['ANVIL_MASTER'] = icon([
+	"................",
+	"................",
+	"...kkkkkkkkkk...",
+	"..kssssssssSSk..",
+	".kSsssssssssSk..",
+	"..kkSSssssSkk...",
+	"....kkSSSSk.....",
+	".....kSSSk......",
+	".....kSSSk......",
+	"....kSSSSSk.....",
+	"...kSSSSSSSk....",
+	"...kkkkkkkkk....",
+	"................",
+	"..y....y....y...",
+	"................",
+	"................",
+], hexcol('#4a5468'))
+
+ICONS['FLAMESMITH'] = icon([
+	"......k.........",
+	".....kok........",
+	".....koyk.......",
+	"....koyyok......",
+	"...koyyyyok.....",
+	"...koywwyok.....",
+	"..koyywwyyok....",
+	"..koyyyyyyok....",
+	"...koyyyyok.....",
+	"....kkkkkk......",
+	"..kkkkkkkkkk....",
+	".kSsssssssSSk...",
+	"..kkSSssSSkk....",
+	"....kSSSSk......",
+	"...kkkkkkkk.....",
+	"................",
+], hexcol('#9a3a1a'))
+
+ICONS['FORGEFIRE'] = icon([
+	"................",
+	"..o....o....o...",
+	"...o...o...o....",
+	"....o.kkk.o.....",
+	".....koyok......",
+	"..ookoywyokoo...",
+	".....koyok......",
+	"....o.kkk.o.....",
+	"...o...o...o....",
+	"..o....o....o...",
+	"................",
+	"..kkkkkkkkkk....",
+	".kSsssssssSSk...",
+	"..kkSSssSSkk....",
+	"....kSSSSk......",
+	"................",
+], hexcol('#b04a14'))
+
+ICONS['QUENCH'] = icon([
+	"................",
+	"...W..W...W.....",
+	"....W..W.W......",
+	"...W..W...W.....",
+	"....W.W..W......",
+	"................",
+	"......kk........",
+	".....kssk.......",
+	".....kssk.......",
+	"..kkkkssk kkk...",
+	".kccCCssCCcck...",
+	".kcCCCCCCCCck...",
+	".kcCCCCCCCCck...",
+	"..kkkkkkkkkk....",
+	"................",
+	"................",
+], hexcol('#2a5a8a'))
+
+ICONS['IRON_WALL'] = icon([
+	"................",
+	".kkkkkkkkkkkkk..",
+	".kssSkssSkssSk..",
+	".kSSSkSSSkSSSk..",
+	".kkkkkkkkkkkkk..",
+	".kSkssSkssSkSk..",
+	".kSkSSSkSSSkSk..",
+	".kkkkkkkkkkkkk..",
+	".kssSkssSkssSk..",
+	".kSSSkSSSkSSSk..",
+	".kkkkkkkkkkkkk..",
+	".kSkssSkssSkSk..",
+	".kSkSSSkSSSkSk..",
+	".kkkkkkkkkkkkk..",
+	"................",
+	"................",
+], hexcol('#3a3e4a'))
+
 # ------------------------------------------------ evolutions, in subclass order
 EVOLUTIONS = [
 	('warlord', [  # berserker: crowned axe
@@ -662,6 +758,40 @@ EVOLUTIONS = [
 		"................",
 		"................",
 		"................"]),
+	('grandsmith', [  # anvil master: crowned anvil
+		"................",
+		"....y.y.y.......",
+		"....yyyyy.......",
+		"................",
+		"..kkkkkkkkkk....",
+		".kyyyyyyyyYYk...",
+		"..kkYyyyyYkk....",
+		"....kYYYYk......",
+		"....kYYYYk......",
+		"...kYYYYYYk.....",
+		"..kkkkkkkkkk....",
+		"................",
+		"................",
+		"................",
+		"................",
+		"................"]),
+	('forge lord', [  # flamesmith: flame with a crown
+		"................",
+		"...y.y.y........",
+		"...yyyyy........",
+		"....kk..........",
+		"...kyyk.........",
+		"..kyyyyk........",
+		"..kyYYyyk.......",
+		".kyyYwYyyk......",
+		".kyYwwwYyk......",
+		".kyYwwwYyk......",
+		"..kyYYYyk.......",
+		"...kkkkk........",
+		"................",
+		"................",
+		"................",
+		"................"]),
 ]
 
 # slot of each icon in hero_icons.png (index = row * 8 + column)
@@ -671,6 +801,7 @@ SLOTS = {
 	'RUNESMITH': 128, 'RELIC_KEEPER': 129, 'ARCANE_DISCHARGE': 130, 'ARTIFACT_OVERLOAD': 131,
 	'MIRROR_BARRIER': 132, 'BOMBARDIER': 133, 'TRANSMUTER': 134, 'ACID_RAIN': 135,
 	'ELIXIR_OF_FURY': 136, 'POLYMORPH': 137,
+	'ANVIL_MASTER': 138, 'FLAMESMITH': 139, 'FORGEFIRE': 140, 'QUENCH': 141, 'IRON_WALL': 142,
 }
 EVOLUTIONS_START, EVOLUTIONS_EXT = 112, 144
 

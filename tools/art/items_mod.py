@@ -589,6 +589,73 @@ ITEMS['MYSTERY_BOX'] = [
 	".kkkkkkkkkkk.",
 ]
 
+# ------------------------------------------------ the Smith
+ITEMS['PORTABLE_ANVIL'] = [
+	"..kkkkkkkkkkkk..",
+	"kkJJJJJJJJJJjjk.",
+	"kIjjjjjjjjjjjIk.",
+	".kkIIjjjjjjIkk..",
+	"...kkIIIIIIk....",
+	".....kIIIik.....",
+	".....kIiiik.....",
+	"....kIIIiiik....",
+	"...kIIIiiiiik...",
+	"...kkkkkkkkkk...",
+]
+ITEMS['SCRAP'] = [
+	"....kkk.....",
+	"...kJjIk.kk.",
+	"..kJjIkkkjk.",
+	"..kjIk.kjIk.",
+	".kkIkkkjIk..",
+	"kJjkJjIIk...",
+	"kjIkjIiik...",
+	".kkkkkkk....",
+]
+ITEMS['SMITH_HAMMER'] = [
+	"........kkkkkk.",
+	".......kJJjjIIk",
+	".......kjjjIIik",
+	".......kJjjIiik",
+	"........kkWkkk.",
+	".......kWk.....",
+	"......kWk......",
+	".....kWk.......",
+	"....kWk........",
+	"...kWk.........",
+	"..kxk..........",
+	".kWk...........",
+	".kk............",
+]
+ITEMS['ARMOR_SMITH'] = [
+	"....kk..kk....",
+	"....kWkkWk....",
+	"...kxWWWWxk...",
+	"..kxWWWWWWxk..",
+	"..kxWjjjjWxk..",
+	"..kxWjIIjWxk..",
+	"..kxWWWWWWxk..",
+	"..kxWWkkWWxk..",
+	"..kxWkJjkWxk..",
+	"..kxWWkkWWxk..",
+	"..kxxWWWWxxk..",
+	"...kkkkkkkk...",
+]
+ITEMS['BENT_TONGS'] = [
+	"kk........kk.",
+	"kJk......kJk.",
+	".kJk....kJk..",
+	"..kJk..kJk...",
+	"...kJkkJk....",
+	"....kJJk.....",
+	"....kjjk.....",
+	"...kjkkjk....",
+	"..kjk..kWk...",
+	".kWk....kWk..",
+	".kxk.....kxk.",
+	".kk.......kk.",
+]
+
 
 def icon(name):
 	rows = ITEMS[name]

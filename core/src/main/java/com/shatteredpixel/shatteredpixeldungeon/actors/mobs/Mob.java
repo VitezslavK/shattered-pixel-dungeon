@@ -908,6 +908,7 @@ public abstract class Mob extends Char {
 				Necromancy.onEnemyKilledByHero(this);
 				Evolution.onKill(Dungeon.hero, this);
 				Alchemy.onKill(Dungeon.hero, this);
+				com.shatteredpixel.shatteredpixeldungeon.actors.hero.smith.Smithing.onKill(Dungeon.hero, this);
 				if (Dungeon.hero.hasTalent(Talent.LETHAL_MOMENTUM)
 						&& Random.Float() < 0.34f + 0.33f* Dungeon.hero.pointsInTalent(Talent.LETHAL_MOMENTUM)){
 					Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 0f);

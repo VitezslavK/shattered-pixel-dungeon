@@ -7,7 +7,7 @@ import heroes
 ASSETS = os.path.join(os.path.dirname(__file__), '..', '..', 'core', 'src', 'main', 'assets')
 SPRITES = os.path.join(ASSETS, 'sprites')
 
-for cls in (heroes.Necromancer, heroes.Arcanist, heroes.Alchemist):
+for cls in (heroes.Necromancer, heroes.Arcanist, heroes.Alchemist, heroes.Smith):
 	heroes.build(cls, os.path.join(SPRITES, cls.name + '_hero.png'))
 	print('hero', cls.name)
 
@@ -15,7 +15,7 @@ for cls in (heroes.Necromancer, heroes.Arcanist, heroes.Alchemist):
 from PIL import Image
 av_path = os.path.join(SPRITES, 'avatars.png')
 av = Image.open(av_path).convert('RGBA')
-for i, cls in enumerate((heroes.Necromancer, heroes.Arcanist, heroes.Alchemist)):
+for i, cls in enumerate((heroes.Necromancer, heroes.Arcanist, heroes.Alchemist, heroes.Smith)):
 	x = (6 + i) * 24
 	av.paste(Image.new('RGBA', (24, 32), (0, 0, 0, 0)), (x, 0))
 	av.paste(heroes.avatar(cls).image(), (x, 0))
@@ -24,7 +24,7 @@ print('avatars')
 
 # hero select splashes
 import splash
-for n in ('necromancer', 'arcanist', 'alchemist'):
+for n in ('necromancer', 'arcanist', 'alchemist', 'smith'):
 	splash.save(getattr(splash, n)(), os.path.join(ASSETS, 'splashes', n + '.jpg'))
 print('splashes')
 

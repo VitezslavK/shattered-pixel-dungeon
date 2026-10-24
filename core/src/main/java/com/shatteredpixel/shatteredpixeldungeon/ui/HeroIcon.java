@@ -132,6 +132,11 @@ public class HeroIcon extends Image {
 	public static final int ACID_RAIN       = 135;
 	public static final int ELIXIR_OF_FURY  = 136;
 	public static final int POLYMORPH       = 137;
+	public static final int ANVIL_MASTER    = 138;
+	public static final int FLAMESMITH      = 139;
+	public static final int FORGEFIRE       = 140;
+	public static final int QUENCH          = 141;
+	public static final int IRON_WALL       = 142;
 	//evolutions for subclasses past the first 14
 	public static final int EVOLUTIONS_EXT  = 144;
 

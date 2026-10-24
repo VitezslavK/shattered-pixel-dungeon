@@ -58,6 +58,16 @@ public class Waterskin extends Item {
 
 	private static final String VOLUME	= "volume";
 
+	public int volume(){
+		return volume;
+	}
+
+	//used by the Smith's anvil to quench a hot weapon
+	public void useDrops( int drops ){
+		volume = Math.max(0, volume - drops);
+		updateQuickslot();
+	}
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );

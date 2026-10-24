@@ -253,6 +253,7 @@ public class Assets {
 		public static final String NECROMANCER = "splashes/necromancer.jpg";
 		public static final String ARCANIST = "splashes/arcanist.jpg";
 		public static final String ALCHEMIST = "splashes/alchemist.jpg";
+		public static final String SMITH = "splashes/smith.jpg";
 
 		public static final String SEWERS   = "splashes/sewers.jpg";
 		public static final String PRISON   = "splashes/prison.jpg";
@@ -281,6 +282,7 @@ public class Assets {
 		public static final String NECROMANCER = "sprites/necromancer_hero.png";
 		public static final String ARCANIST = "sprites/arcanist_hero.png";
 		public static final String ALCHEMIST = "sprites/alchemist_hero.png";
+		public static final String SMITH = "sprites/smith_hero.png";
 		public static final String AVATARS  = "sprites/avatars.png";
 		public static final String PET      = "sprites/pet.png";
 		public static final String AMULET   = "sprites/amulet.png";

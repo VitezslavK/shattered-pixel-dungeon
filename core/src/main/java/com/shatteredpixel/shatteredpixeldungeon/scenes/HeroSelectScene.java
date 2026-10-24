@@ -256,30 +256,30 @@ public class HeroSelectScene extends PixelScene {
 			title.setPos(insets.left + (leftArea - title.width())/2f, (h-uiHeight)/2f);
 			align(title);
 
-			int btnWidth = HeroBtn.MIN_WIDTH + 15;
 			int btnHeight = HeroBtn.HEIGHT;
 			if (uiHeight >= 180){
 				btnHeight += 6;
 			}
 
-			int cols = (int)Math.ceil(heroBtns.size()/2f);
-			float curX = insets.left + (leftArea - btnWidth * cols + (cols-1))/2f;
-			float curY = title.bottom() + uiSpacing;
+			//with many classes the buttons shrink, then wrap into more rows, so they stay in the left area
+			int n = heroBtns.size();
+			int rows = 2;
+			int cols = (int)Math.ceil(n/(float)rows);
+			int btnWidth = Math.min(HeroBtn.MIN_WIDTH + 15, (int)((leftArea - (cols-1))/cols));
+			while (btnWidth < HeroBtn.MIN_WIDTH && cols > 1){
+				rows++;
+				cols = (int)Math.ceil(n/(float)rows);
+				btnWidth = Math.min(HeroBtn.MIN_WIDTH + 15, (int)((leftArea - (cols-1))/cols));
+			}
 
-			int count = 0;
-			for (StyledButton button : heroBtns){
-				button.setRect(curX, curY, btnWidth, btnHeight);
+			float curY = title.bottom() + uiSpacing;
+			for (int i = 0; i < n; i++){
+				int row = i / cols;
+				int inRow = Math.min(cols, n - row*cols);
+				float rowX = insets.left + (leftArea - btnWidth * inRow - (inRow-1))/2f;
+				StyledButton button = heroBtns.get(i);
+				button.setRect(rowX + (btnWidth+1)*(i % cols), curY + (btnHeight+1)*row, btnWidth, btnHeight);
 				align(button);
-				curX += btnWidth+1;
-				count++;
-				if (count >= (1+heroBtns.size())/2){
-					curX -= btnWidth*count + count;
-					curY += btnHeight+1;
-					if (heroBtns.size()%2 != 0){
-						curX += btnWidth/2f;
-					}
-					count = 0;
-				}
 			}
 
 			heroName = renderTextBlock(9);

@@ -313,6 +313,61 @@ class Alchemist(Hero):
 		return c
 
 
+class Smith(Hero):
+	"""red bandana over dark hair, a thick black beard, bare arms and a leather apron with a hammer loop"""
+	name = 'smith'
+	head = [
+		"..rrrr..",
+		".rrRrrrr",
+		"rrRrrrrr",
+		"hhssssss",
+		"hhsesses",
+		"hbbsbbbb",
+		".bbbbbb.",
+	]
+	torso = [
+		"scaaCs",
+		"scaaCs",
+		"dcaaCd",
+		"dCyaCd",
+		"dd..dd",
+	]
+	pal = {
+		'h': hexcol('#2e211a'), 'b': hexcol('#3a2a20'),
+		's': hexcol('#d9a27a'), 'S': hexcol('#a8714e'),
+		'r': hexcol('#c8382c'), 'R': hexcol('#ff6a4a'),
+		'y': hexcol('#b8b8c4'),
+	}
+	tiers = list(COMMON_TIERS)
+	tiers[0] = tier_pal('#7a4a2a', '#5a3420', '#3a2014', '#a8683a', '#4a3a30', '#33281f', '#211a14')
+	tiers[6] = tier_pal('#5a5e68', '#3c3f4a', '#24262d', '#ff8a2a', '#3c3f4a', '#24262d', '#121216')
+	EMBER = hexcol('#ff9a3a')
+	SPARK = hexcol('#fff2a8', 220)
+
+	def extras(self, c, pose, pal, tier):
+		# sparks fly off the hammer while working at the anvil
+		if pose[3] == 'hold':
+			y = 7 + pose[1]
+			c.set(11, y, self.EMBER)
+			c.set(10 + pose[0], y - 2, self.SPARK)
+
+	def death(self, step, tier):
+		# drops to the ground, the hammer clangs down beside him
+		pal = self.palette(tier)
+		if step == 0:
+			return self.compose((1, 1, 'stand', 'down', 'back'), tier)
+		c = Canvas(FW, FH)
+		if step == 1:
+			c.grid(self.head, pal, 2, 4)
+			c.grid(self.torso[:2] + self.torso[3:4], pal, 3, 11)
+			c.outline(factor=0.42)
+			return c
+		c.grid(["..kkkkkkk..", ".krRbbcaaCk", "krrhbbcaaCk", "kkkkkkkkkkk"], pal, 0, 11)
+		for i, (x, y) in enumerate([(10, 9), (9, 8), (11, 7)][:step - 1]):
+			c.set(x, y - (step - 2), mix(self.EMBER, self.SPARK, (i % 2) * 0.6))
+		return c
+
+
 def build(cls, path):
 	from pix import Canvas as _C
 	from PIL import Image

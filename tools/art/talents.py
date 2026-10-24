@@ -542,6 +542,33 @@ S['robe'] = [
 	"..kkkkkkkkk.",
 	"............"]
 
+S['hammer'] = [
+	"......kkkkk.",
+	".....kssSSk.",
+	".....kssSSk.",
+	"......kNkkk.",
+	".....kNk....",
+	"....kNk.....",
+	"...kNk......",
+	"..kNk.......",
+	".kNk........",
+	".kk.........",
+	"............",
+	"............"]
+S['anvil'] = [
+	"............",
+	"............",
+	".kkkkkkkkkk.",
+	"kssssssssSSk",
+	".kkSsssSSkk.",
+	"...kSSSSk...",
+	"...kSSSSk...",
+	"..kSSSSSSk..",
+	"..kkkkkkkk..",
+	"............",
+	"............",
+	"............"]
+
 for k, rows in S.items():
 	S[k] = [r.ljust(12, '.')[:12] for r in rows]
 
@@ -637,9 +664,22 @@ T = {
 	373: ('flask', 'up', 'copper'), 374: ('flask', 'heart', 'brew'), 375: ('sheep', 'x2', 'wool'),
 	376: ('sheep', 'star', 'wool'), 377: ('sheep', 'coin', 'wool'),
 	378: ('robe', None, 'copper'),
+	# smith
+	384: ('meat', 'flame', 'fire'), 385: ('eye', 'star', 'steel'), 386: ('hammer', 'flame', 'fire'),
+	387: ('anvil', 'plus', 'steel'), 388: ('meat', 'shield', 'copper'), 389: ('flask', 'flame', 'fire'),
+	390: ('scroll', 'shield', 'steel'), 391: ('flame', 'shield', 'fire'), 392: ('anvil', 'clock', 'steel'),
+	393: ('anvil', 'up', 'steel'), 394: ('sword', 'drop', 'ice'), 395: ('swords', 'eye', 'steel'),
+	396: ('anvil', 'x2', 'steel'), 397: ('hammer', 'up', 'steel'), 398: ('sword', 'flame', 'fire'),
+	399: ('blast', 'up', 'fire'), 400: ('boot', 'flame', 'fire'), 401: ('blast', 'x2', 'fire'),
+	402: ('flame', 'up', 'fire'), 403: ('wind', 'shield', 'fire'), 404: ('cloud', 'eye', 'ice'),
+	405: ('shield', 'drop', 'ice'), 406: ('cloud', 'heart', 'ice'), 407: ('shield', 'x2', 'steel'),
+	408: ('shield', 'clock', 'steel'), 409: ('boot', 'shield', 'steel'),
+	410: ('robe', None, 'fire'),
+	310: ('anvil', 'star', 'gold'), 311: ('hammer', 'star', 'gold'), 312: ('shield', 'coin', 'gold'),
+	313: ('flame', 'clock', 'holy'), 314: ('flame', 'skull', 'fire'), 315: ('heart', 'flame', 'holy'),
 }
 
-ROBE_TINT = {250: None, 346: {'P': hexcol('#3a5aaa'), 'g': hexcol('#ffd76a')},
+ROBE_TINT = {250: None, 410: {'P': hexcol('#7a4a2a'), 'g': hexcol('#ff8a2a')}, 346: {'P': hexcol('#3a5aaa'), 'g': hexcol('#ffd76a')},
              378: {'P': hexcol('#9a6a3a'), 'g': hexcol('#55d46b')}}
 
 

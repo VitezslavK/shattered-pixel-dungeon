@@ -186,6 +186,52 @@ def alchemist():
 	return c
 
 
+def smith():
+	rnd = random.Random(23)
+	c = Canvas(W, H)
+	gradient(c, hexcol('#120c0a'), hexcol('#241612'))
+	# soot-stained stone wall
+	stone, stone_d = hexcol('#2e2420'), hexcol('#211a17')
+	for y in range(0, 88, 8):
+		off = 0 if (y // 8) % 2 else 7
+		for x in range(-14 + off, W, 14):
+			c.rect(x + 1, y + 1, x + 12, y + 6, stone)
+			c.line(x + 1, y + 6, x + 12, y + 6, stone_d)
+	# tools hanging on the wall
+	iron, iron_l = hexcol('#4a4c56'), hexcol('#7c808c')
+	wood = hexcol('#5a3a22')
+	for tx in (62, 72, 82):
+		c.line(tx, 22, tx, 40, wood)
+		c.rect(tx - 2, 18, tx + 2, 22, iron)
+		c.set(tx - 2, 18, iron_l)
+	# the forge: a glowing brick hearth on the right
+	brick = hexcol('#5a2a1a')
+	c.rect(128, 50, 180, 88, brick)
+	c.rect(136, 60, 172, 80, hexcol('#1a0a06'))
+	for i in range(140):
+		x, y = rnd.randint(138, 170), rnd.randint(68, 80)
+		c.set(x, y, rnd.choice((hexcol('#ff6a1a'), hexcol('#ffb43a'), hexcol('#ff3a1a'))))
+	glow(c, 154, 70, 42, hexcol('#ff7a2a'), 0.55)
+	# chimney hood
+	c.rect(124, 40, 184, 50, hexcol('#3a2a24'))
+	# the anvil in the middle, right next to the Smith
+	anvil, anvil_d, anvil_l = hexcol('#3c3f4a'), hexcol('#24262d'), hexcol('#8b91a0')
+	c.rect(96, 76, 122, 80, anvil)
+	c.line(96, 76, 122, 76, anvil_l)
+	c.rect(91, 76, 96, 78, anvil)
+	c.rect(104, 81, 114, 88, anvil_d)
+	c.rect(99, 88, 119, 90, anvil)
+	# a glowing blade on the anvil, sparks flying
+	c.line(98, 75, 118, 75, hexcol('#ffb43a'))
+	c.line(102, 74, 114, 74, hexcol('#ff6a1a'))
+	for i in range(22):
+		x, y = 108 + rnd.randint(-14, 14), 74 - rnd.randint(1, 26)
+		c.set(x, y, rnd.choice((hexcol('#fff2a8'), hexcol('#ffb43a'))))
+	floor(c, 90, hexcol('#2a1e18'), hexcol('#211812'), rnd)
+	paste_big(c, figure(heroes.Smith), 86 - 12, 90 - 32, 1)
+	return c
+
+
 def save(c, path):
 	# must stay 800x450: the hero select screen sets its zoom from the first splash's size
 	im = c.image().convert('RGB').resize((W * 4, H * 4), Image.NEAREST)

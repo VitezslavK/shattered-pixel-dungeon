@@ -121,7 +121,8 @@ public enum HeroClass {
 	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN ),
 	NECROMANCER( HeroSubClass.BONELORD, HeroSubClass.SOUL_REAPER ),
 	ARCANIST( HeroSubClass.RUNESMITH, HeroSubClass.RELIC_KEEPER ),
-	ALCHEMIST( HeroSubClass.BOMBARDIER, HeroSubClass.TRANSMUTER );
+	ALCHEMIST( HeroSubClass.BOMBARDIER, HeroSubClass.TRANSMUTER ),
+	SMITH( HeroSubClass.ANVIL_MASTER, HeroSubClass.FLAMESMITH );
 
 	private HeroSubClass[] subClasses;
 
@@ -184,6 +185,10 @@ public enum HeroClass {
 			case ALCHEMIST:
 				initAlchemist( hero );
 				break;
+
+			case SMITH:
+				initSmith( hero );
+				break;
 		}
 
 		//every hero can call on a friend's ghost once per run
@@ -235,6 +240,8 @@ public enum HeroClass {
 				return Badges.Badge.MASTERY_ARCANIST;
 			case ALCHEMIST:
 				return Badges.Badge.MASTERY_ALCHEMIST;
+			case SMITH:
+				return Badges.Badge.MASTERY_SMITH;
 		}
 		return null;
 	}
@@ -385,6 +392,22 @@ public enum HeroClass {
 		new PotionOfFrost().identify();
 	}
 
+	private static void initSmith( Hero hero ) {
+
+		(hero.belongings.weapon = new com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SmithHammer()).identify();
+		hero.belongings.weapon.activate(hero);
+
+		com.shatteredpixel.shatteredpixeldungeon.items.PortableAnvil anvil = new com.shatteredpixel.shatteredpixeldungeon.items.PortableAnvil();
+		anvil.identify().collect();
+		new com.shatteredpixel.shatteredpixeldungeon.items.Scrap().quantity(10).collect();
+		com.shatteredpixel.shatteredpixeldungeon.actors.hero.smith.Smithing.heat(hero);
+
+		Dungeon.quickslot.setSlot(0, anvil);
+
+		new ScrollOfUpgrade().identify();
+		new PotionOfLiquidFlame().identify();
+	}
+
 	public String title() {
 		return Messages.get(HeroClass.class, name());
 	}
@@ -421,6 +444,10 @@ public enum HeroClass {
 				return new ArmorAbility[]{new ArcaneDischarge(), new ArtifactOverload(), new MirrorBarrier()};
 			case ALCHEMIST:
 				return new ArmorAbility[]{new AcidRain(), new ElixirOfFury(), new Polymorph()};
+			case SMITH:
+				return new ArmorAbility[]{new com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.smith.Forgefire(),
+						new com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.smith.Quench(),
+						new com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.smith.IronWall()};
 		}
 	}
 
@@ -444,6 +471,8 @@ public enum HeroClass {
 				return Assets.Sprites.ARCANIST;
 			case ALCHEMIST:
 				return Assets.Sprites.ALCHEMIST;
+			case SMITH:
+				return Assets.Sprites.SMITH;
 		}
 	}
 
@@ -467,6 +496,8 @@ public enum HeroClass {
 				return Assets.Splashes.ARCANIST;
 			case ALCHEMIST:
 				return Assets.Splashes.ALCHEMIST;
+			case SMITH:
+				return Assets.Splashes.SMITH;
 		}
 	}
 	
@@ -490,6 +521,7 @@ public enum HeroClass {
 			case NECROMANCER:
 			case ARCANIST:
 			case ALCHEMIST:
+			case SMITH:
 				return true;
 		}
 	}

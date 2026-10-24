@@ -274,9 +274,9 @@ public enum Catalog {
 				IronKey.class, GoldenKey.class, CrystalKey.class, WornKey.class,
 				TrinketCatalyst.class, Stylus.class, Torch.class, Honeypot.class, Ankh.class,
 				CorpseDust.class, Embers.class, CeremonialCandle.class, DarkGold.class, DwarfToken.class,
-				ArcaneCodex.class, FieldCauldron.class, GooBlob.class, PlagueGland.class, ChainLink.class, CrystalHeart.class, ArcaneCore.class, VoidShard.class, TengusMask.class, MetalShard.class, KingsCrown.class, EssenceOfAscension.class,
+				ArcaneCodex.class, FieldCauldron.class, com.shatteredpixel.shatteredpixeldungeon.items.PortableAnvil.class, com.shatteredpixel.shatteredpixeldungeon.items.Scrap.class, GooBlob.class, PlagueGland.class, ChainLink.class, CrystalHeart.class, ArcaneCore.class, VoidShard.class, TengusMask.class, MetalShard.class, KingsCrown.class, EssenceOfAscension.class,
 				LiquidMetal.class, ArcaneResin.class,
-				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, CrackedLantern.class, RuneFragment.class, BrokenFlask.class);
+				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, CrackedLantern.class, RuneFragment.class, BrokenFlask.class, com.shatteredpixel.shatteredpixeldungeon.items.remains.BentTongs.class);
 		MISC_CONSUMABLES.addItems(com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldIngot.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.LuckyCoin.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.GoldBomb.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.ElixirOfGoldenSkin.class, com.shatteredpixel.shatteredpixeldungeon.items.gold.MysteryBox.class);
 
 	}

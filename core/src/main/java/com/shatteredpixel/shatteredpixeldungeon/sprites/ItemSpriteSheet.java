@@ -165,6 +165,9 @@ public class ItemSpriteSheet {
 	public static final int BROKEN_FLASK    = MISC_CONSUMABLE +28;
 	public static final int RUNE_TABLET     = MISC_CONSUMABLE +29;
 	public static final int SPIRIT_BELL     = MISC_CONSUMABLE +30;
+	public static final int PORTABLE_ANVIL  = MISC_CONSUMABLE +31;
+	public static final int SCRAP           = xy(14, 32);
+	public static final int BENT_TONGS      = xy(15, 32);
 
 	static{
 		assignItemRect(ANKH,            10, 16);
@@ -202,6 +205,9 @@ public class ItemSpriteSheet {
 		assignItemRect(BROKEN_FLASK, 10, 11);
 		assignItemRect(RUNE_TABLET, 11, 13);
 		assignItemRect(SPIRIT_BELL, 10, 12);
+		assignItemRect(PORTABLE_ANVIL, 15, 10);
+		assignItemRect(SCRAP, 11, 8);
+		assignItemRect(BENT_TONGS, 12, 12);
 	}
 	
 	private static final int BOMBS          =                               xy(1, 6);   //16 slots
@@ -241,6 +247,7 @@ public class ItemSpriteSheet {
 	public static final int DAGGER          = WEP_TIER1+4;
 	public static final int MAGES_STAFF     = WEP_TIER1+5;
 	public static final int BONE_SICKLE     = WEP_TIER1+6;
+	public static final int SMITH_HAMMER    = WEP_TIER1+7;
 	static{
 		assignItemRect(WORN_SHORTSWORD, 13, 13);
 		assignItemRect(CUDGEL,          15, 15);
@@ -249,6 +256,7 @@ public class ItemSpriteSheet {
 		assignItemRect(DAGGER,          12, 13);
 		assignItemRect(MAGES_STAFF,     15, 16);
 		assignItemRect(BONE_SICKLE, 13, 15);
+		assignItemRect(SMITH_HAMMER, 14, 13);
 	}
 
 	private static final int WEP_TIER2      =                               xy(9, 7);   //8 slots
@@ -408,6 +416,7 @@ public class ItemSpriteSheet {
 	public static final int ARMOR_NECROMANCER = ARMOR+11;
 	public static final int ARMOR_ARCANIST  = ARMOR+12;
 	public static final int ARMOR_ALCHEMIST = ARMOR+13;
+	public static final int ARMOR_SMITH     = ARMOR+14;
 	static{
 		assignItemRect(ARMOR_CLOTH,     15, 12);
 		assignItemRect(ARMOR_LEATHER,   14, 13);
@@ -423,6 +432,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_NECROMANCER, 14, 14);
 		assignItemRect(ARMOR_ARCANIST, 13, 13);
 		assignItemRect(ARMOR_ALCHEMIST, 11, 13);
+		assignItemRect(ARMOR_SMITH, 10, 12);
 	}
 
 	                                                                                    //16 free slots

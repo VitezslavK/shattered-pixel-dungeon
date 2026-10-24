@@ -90,6 +90,20 @@ abstract public class Weapon extends KindOfWeapon {
 	public float	DLY	= 1f;	// Speed modifier
 	public int      RCH = 1;    // Reach modifier (only applies to melee hits)
 
+	//the Smith's anvil work (see actors/hero/smith/Smithing): fused weapons keep the best reach,
+	// speed and accuracy of what was fused into them, reinforcement adds flat damage
+	public int      fusions = 0;
+	public String   fusedNames = "";
+	public int      reinforced = 0;
+	private int     fusedRCH = 0;
+	private float   fusedDLY = 0, fusedACC = 0;
+
+	public void applyFusion( int rch, float dly, float acc ){
+		fusedRCH = RCH = rch;
+		fusedDLY = DLY = dly;
+		fusedACC = ACC = acc;
+	}
+
 	public enum Augment {
 		SPEED   (0.7f, 2/3f),
 		DAMAGE  (1.5f, 5/3f),
@@ -226,6 +240,12 @@ abstract public class Weapon extends KindOfWeapon {
 	private static final String CURSE_INFUSION_BONUS = "curse_infusion_bonus";
 	private static final String MASTERY_POTION_BONUS = "mastery_potion_bonus";
 	private static final String AUGMENT	        = "augment";
+	private static final String FUSIONS         = "fusions";
+	private static final String FUSED_NAMES     = "fused_names";
+	private static final String FUSED_RCH       = "fused_rch";
+	private static final String FUSED_DLY       = "fused_dly";
+	private static final String FUSED_ACC       = "fused_acc";
+	private static final String REINFORCED      = "reinforced";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -237,6 +257,14 @@ abstract public class Weapon extends KindOfWeapon {
 		bundle.put( CURSE_INFUSION_BONUS, curseInfusionBonus );
 		bundle.put( MASTERY_POTION_BONUS, masteryPotionBonus );
 		bundle.put( AUGMENT, augment );
+		if (fusions > 0){
+			bundle.put( FUSIONS, fusions );
+			bundle.put( FUSED_NAMES, fusedNames );
+			bundle.put( FUSED_RCH, fusedRCH );
+			bundle.put( FUSED_DLY, fusedDLY );
+			bundle.put( FUSED_ACC, fusedACC );
+		}
+		if (reinforced > 0) bundle.put( REINFORCED, reinforced );
 	}
 	
 	@Override
@@ -250,6 +278,13 @@ abstract public class Weapon extends KindOfWeapon {
 		masteryPotionBonus = bundle.getBoolean( MASTERY_POTION_BONUS );
 
 		augment = bundle.getEnum(AUGMENT, Augment.class);
+
+		fusions = bundle.getInt( FUSIONS );
+		if (fusions > 0){
+			fusedNames = bundle.getString( FUSED_NAMES );
+			applyFusion( bundle.getInt( FUSED_RCH ), bundle.getFloat( FUSED_DLY ), bundle.getFloat( FUSED_ACC ) );
+		}
+		reinforced = bundle.getInt( REINFORCED );
 	}
 	
 	@Override
